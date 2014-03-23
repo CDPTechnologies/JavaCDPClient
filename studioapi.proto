@@ -4,9 +4,10 @@
 // code is generated which contains methods for serializing and deserializing
 // the messages contained in this .proto file.
 
-package StudioAPIProtobuf;
+package StudioAPI.Proto;
 
 option optimize_for = LITE_RUNTIME;
+option java_package = "no.icd.studioapi.proto";
 
 // Used in structure response message to indicate each node's type
 enum CDPNodeType {
@@ -28,8 +29,8 @@ eMessageTypeStructureResponse = 2;
 eMessageTypeValueGetterRequest = 3;
 eMessageTypeValueGetterResponse = 4;
 eMessageTypeValueSetterRequest = 5;
-eMessageTypeConfigurationChangeSubscription = 6;
-eMessageTypeConfigurationChangeResponse = 7;
+eMessageTypeStructureChangeSubscription = 6;
+eMessageTypeStructureChangeResponse = 7;
 eMessageTypeOther = 8; // e.g. an empty message with only PBError in it
 }
 
@@ -51,10 +52,10 @@ eSTRING = 12;
 }
 
 // used to indicate type of structure change in PBStructureChangeResponse
-enum ConfigurationChangeType {
-  eValueChanged = 0;  // the value of a property of this node has changed
-  eStructureChanged = 1;  // a child node got added or removed
-  eCurrentNodeDeleted = 2;  // the subscribed-to node got deleted
+enum StructureChangeType {
+  eChildAdded = 0;         // a (grand)child was added
+  eChildRemoved = 1;       // a (grand)child was removed
+  eSubscribedNodeLost = 2; // the node that was subscribed to no longer exists
 }
 
 // used as a container for all other messages so that StudioApiTransport class
@@ -70,8 +71,8 @@ optional PBValueRequest getterRequest = 6;
 repeated PBVariantValue getterResponse = 7;
 repeated PBVariantValue setterRequest = 8;
 repeated PBNode structureResponse = 9;
-optional PBConfigurationSubscription configChangeSubscription = 10;
-repeated PBConfigurationChangeResponse configChangeResponse = 11;
+optional PBStructureChangeSubscription structureChangeSubscription = 10;
+repeated PBStructureChangeResponse structureChangeResponse = 11;
 extensions 100 to max; // Allow external extensions
 }
 
@@ -96,7 +97,9 @@ optional string serverAddr = 7; // If this node signifies another CDP applicatio
                                    // this field will be the IP of said application's StudioAPIServer
 optional uint32 serverPort = 8; // .. and this is the port of the application's StudioAPIServer
 optional bool isResponder = 9; // if multiple applications are sent back from the server,
-                                               // this flag is set to true for the app that the data was requested from
+                               // this flag is set to true for the app that the data was requested from
+optional bool valueIsPersistent = 10; // if this flag is true, the node's value is stored in XML
+
 extensions 100 to max; // Allow external extensions to Info message
 }
 
@@ -137,22 +140,23 @@ optional bool stop = 3; // If true target must stop updates on the provided valu
 extensions 100 to max; // Allow external extensions to PBValueRequest message
 }
 
-message PBConfigurationSubscription {
+message PBStructureChangeSubscription {
 repeated uint32 nodeID = 1;
-optional double fs = 2;
-optional uint32 depth = 3; /* if 0, all child (and their children) node changes are reported; if 1,
+optional uint32 depth = 2; /* if 0, all child (and their children) node changes are reported; if 1,
                             only current node’s direct changes are reported */
-optional bool stop = 4; // if true, the request is an unsubscription request
+optional bool stop = 3; // stop subscription to node
 extensions 100 to max;
 }
 
-message PBConfigurationChangeResponse {
-required uint32 nodeId = 1;
-optional ConfigurationChangeType changeType = 2;
-optional uint32 firstValidParent = 3; // If subscribed-to node was deleted, this
-                                      // reflects the first (lowest) parent node
-                                      // that is still valid
-optional string changer = 4; // identifies the client who performed the structure change
+message PBStructureChangeResponse {
+required StructureChangeType changeType = 1; // type of structure change
+optional uint32 nodeID = 2;      // nodeID that subscription was made to
+optional double timestamp = 3;   // timestamp of change event
+optional PBNode changedNode = 4; // if (grand)child is added/removed,
+                                 // this PBNode describes the structure of its parent
+optional uint32 changedChildID = 5; // this id identifies the child of the previous PBNode which was added
+                                    // or removed. in the latter case this node no longer exists remotely
+optional string changer = 6;     // identifies the client who performed the structure change
 extensions 100 to max;
 }
 
