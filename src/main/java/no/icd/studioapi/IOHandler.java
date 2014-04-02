@@ -3,44 +3,54 @@ package no.icd.studioapi;
 import no.icd.studioapi.proto.Studioapi.*;
 
 import java.net.URI;
-import java.nio.ByteBuffer;
-
-import org.java_websocket.client.*;
-import org.java_websocket.drafts.Draft_17;
-import org.java_websocket.handshake.ServerHandshake;
-
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import com.google.protobuf.InvalidProtocolBufferException;
 
-public class IOHandler extends WebSocketClient {
+class IOHandler {
 
+  private BlockingQueue<byte[]> queue;
+  private Transport transport;
   private IOListener listener;
 
-  public IOHandler(URI serverUri) {
-    super(serverUri, new Draft_17());
+  IOHandler(URI serverUri) {
+    queue = new LinkedBlockingQueue<byte[]>();
+    transport = new Transport(serverUri, queue);
     listener = null;
   }
 
-  public void setListener(IOListener listener) {
+  boolean init(IOListener listener) throws Exception {
     this.listener = listener;
+    return transport.connectBlocking();
+  }
+  
+  /**
+   * Check the incoming queue and parse any messages in it.
+   */
+  void pollEvents() {
+    while (!queue.isEmpty()) {
+      byte[] buffer = queue.poll();
+      parse(buffer);
+    }
   }
 
-  public void nodeRequest(Node node) {
+  void nodeRequest(Node node) {
     PBContainer.Builder pb = PBContainer.newBuilder()
         .setMessageType(CDPMessageType.eMessageTypeStructureRequest);
 
     if (node != null)
       pb.addStructureRequest(node.getNodeID());
 
-    this.send(pb.build().toByteArray());
+    transport.send(pb.build().toByteArray());
     System.out.println("<<<< OUT MESSAGE " + (node != null ? node.getNodeID() : ""));
   }
 
-  /** Handle incoming server messages. StudioAPI only uses binary data. */
-  @Override
-  public void onMessage(ByteBuffer buf) {
-    System.out.println(">>>> INC MESSAGE");
+  /** 
+   * Parse a message from a buffer.
+   * @param buf - Byte array read from Transport queue. */
+  void parse(byte[] buf) {
     try {
-      PBContainer pb = PBContainer.parseFrom(buf.array());
+      PBContainer pb = PBContainer.parseFrom(buf);
 
       switch (pb.getMessageType()) {
       case eMessageTypeStructureResponse:
@@ -49,8 +59,7 @@ public class IOHandler extends WebSocketClient {
         for (PBNode pbNode : pb.getStructureResponseList()) {
           PBInfo info = pbNode.getInfo();
           Node node = new Node(
-              info.getNodeID(), 
-              info.getObjectHandle(),
+              info.getNodeID(),
               info.getNodeType(),
               info.getValueType(),
               info.getName());
@@ -58,8 +67,7 @@ public class IOHandler extends WebSocketClient {
           for (PBNode child : pbNode.getNodeList()) {
             info = child.getInfo();
             node.addChild(new Node(
-                info.getNodeID(), 
-                info.getObjectHandle(),
+                info.getNodeID(),
                 info.getNodeType(),
                 info.getValueType(),
                 info.getName()));
@@ -69,7 +77,37 @@ public class IOHandler extends WebSocketClient {
         }
         break;
       case eMessageTypeValueGetterResponse:
-        // TODO
+        
+        for (PBVariantValue variant : pb.getGetterResponseList()) {
+          if (variant.hasDValue())         // double
+            break;
+          else if (variant.hasUi64Value()) // long !
+            break;
+          else if (variant.hasI64Value())  // long
+            break;
+          else if (variant.hasFValue())    // float
+            break;
+          else if (variant.hasUiValue())   // int !
+            break;
+          else if (variant.hasIValue())    // int
+            break;
+          else if (variant.hasUsValue())   // int !
+            break;
+          else if (variant.hasSValue())    // int !
+            break;
+          else if (variant.hasUcValue())   // int !
+            break;
+          else if (variant.hasCValue())    // int !
+            break;
+          else if (variant.hasBValue())    // boolean
+            break;
+          else if (variant.hasStrValue())  // String
+            break;
+          else
+            break;
+            
+        }
+        
         break;
       case eMessageTypeStructureChangeResponse:
         // TODO
@@ -85,28 +123,6 @@ public class IOHandler extends WebSocketClient {
     } catch (InvalidProtocolBufferException e) {
       System.err.println("Failed to parse server data!");
     }
-  }
-
-  @Override
-  public void onOpen(ServerHandshake arg0) {
-    System.err.println("Connection to " + this.uri + " established.");
-  }
-
-  @Override
-  public void onClose(int arg0, String arg1, boolean arg2) {
-    System.err.println("Connection to " + this.uri + " closed.");
-  }
-
-  @Override
-  public void onError(Exception e) {
-    System.err.println("WebSocket thread caught exception!");
-    e.printStackTrace();
-  }
-
-  /** Unused but needs to be defined for java-websocket. */
-  @Override
-  public void onMessage(String s) {
-    System.out.println("Got server message: " + s);
   }
 
 }

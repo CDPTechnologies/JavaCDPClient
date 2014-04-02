@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import no.icd.studioapi.Request.Status;
 import no.icd.studioapi.proto.Studioapi.CDPNodeType;
 
-public class RequestDispatch implements IOListener {
+class RequestDispatch implements IOListener {
   
   private Client client;
   private IOHandler handler;
@@ -16,25 +16,33 @@ public class RequestDispatch implements IOListener {
    * Construct a RequestDispatch instance.
    * @param handler - The underlying connection handler.
    */
-  public RequestDispatch(Client client, IOHandler handler) {
+  RequestDispatch(Client client, IOHandler handler) throws StudioAPIException {
     
     this.client = client;
     this.handler = handler;
     this.pendingRequests = new ArrayList<Request>();
     connectionCache = null;
-    handler.setListener(this);
+    boolean success = false;
     
     try {
-      boolean success = handler.connectBlocking();
-      
-      if (!success)
-        throw new RuntimeException("Failed to connect!");
-      
-      handler.nodeRequest(null);
-      
-    } catch (InterruptedException e) {
-      e.printStackTrace();
+      success = handler.init(this);
+    } catch (Exception e) {
+      throw new StudioAPIException("Failed to connect!");
     }
+    
+    if (!success)
+      throw new StudioAPIException("Faield to connect!");
+    
+    handler.nodeRequest(null);
+  }
+  
+  /**
+   * Event loop mechanism. Polls underlying connection and calls queued 
+   * callbacks
+   */
+  void service() {
+    // TODO queued resolved requests should maybe be resolved here?
+    handler.pollEvents();
   }
   
   /**
@@ -42,7 +50,7 @@ public class RequestDispatch implements IOListener {
    * @param node The node to poll for.
    * @return
    */
-  synchronized Request requestChildrenForNode(Node node) {
+  Request requestChildrenForNode(Node node) {
     System.out.println(connectionCache);
     Request req = new Request();
     pendingRequests.add(req);
@@ -52,13 +60,18 @@ public class RequestDispatch implements IOListener {
 
   @Override
   public void nodeReceived(Node node) {
-    System.out.println(connectionCache);
+    
     // if no cache has been created or supplied, RequestDispatch is responsible
     // for boostrapping the entire Client
     if (connectionCache == null) {
-      client.setGlobalCache(node);
+      
       connectionCache = node.getChild(0); // TODO corresponding...
       connectionCache.setDispatch(this);
+      
+      // Give root to Client.
+      client.setGlobalCache(node);
+      return;
+      
     } else {
       // find the node from the tree and replace it.
       Node found = connectionCache.findChildByID(node.getNodeID());

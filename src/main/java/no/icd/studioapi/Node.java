@@ -1,5 +1,7 @@
 package no.icd.studioapi;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -11,25 +13,25 @@ import no.icd.studioapi.proto.Studioapi.CDPValueType;
 public class Node {
   
   private int nodeID;
-  private int objectHandle;
   private CDPNodeType nodeType;
   private CDPValueType valueType;
   private String name;
+  private String typeName;
   private List<Node> children;
   private Node parent;
   private boolean polledChildren;
+  private Variant value;
   private RequestDispatch dispatch;
   
-  Node(int id, int handle, CDPNodeType ntype, CDPValueType vtype, String name) {
+  private PropertyChangeSupport changes = new PropertyChangeSupport(this);
+  
+  Node(int id, CDPNodeType ntype, CDPValueType vtype, String name) {
     this.nodeID = id;
-    this.objectHandle = handle;
     this.nodeType = ntype;
     this.valueType = vtype;
     this.name = name;
     this.children = new ArrayList<Node>();
-    this.setParent(null);
     this.polledChildren = false;
-    this.dispatch = null;
   }
   
   /* API methods */
@@ -37,6 +39,10 @@ public class Node {
   public Request requestChildNodes() {
     System.out.println("dispatch " + dispatch);
     return dispatch.requestChildrenForNode(this);
+  }
+  
+  public void addPropertyChangeListener(PropertyChangeListener listener) {
+    changes.addPropertyChangeListener(listener);
   }
   
   /* Utility methods */
@@ -123,11 +129,11 @@ public class Node {
     this.polledChildren = polledChildren;
   }
 
-  public RequestDispatch getDispatch() {
+  RequestDispatch getDispatch() {
     return dispatch;
   }
 
-  public void setDispatch(RequestDispatch dispatch) {
+  void setDispatch(RequestDispatch dispatch) {
     this.dispatch = dispatch;
   }
 
@@ -137,6 +143,11 @@ public class Node {
 
   void setParent(Node parent) {
     this.parent = parent;
+  }
+  
+  void setValue(Variant variant) {
+    changes.firePropertyChange("value", this.value, variant);
+    this.value = variant;
   }
   
   @Override
