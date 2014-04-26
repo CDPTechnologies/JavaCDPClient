@@ -8,4 +8,6 @@ public interface NotificationListener {
 
   public void clientReady(Client client);
   
+  public void notificationReceived(int opcode);
+  
 }

@@ -1,16 +1,25 @@
 package no.icd.studioapi;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import no.icd.studioapi.Request.Status;
 import no.icd.studioapi.proto.Studioapi.CDPNodeType;
 
 class RequestDispatch implements IOListener {
   
+  enum State {
+    PENDING,
+    ESTABLISHED,
+    DROPPED
+  }
+  
   private Client client;
   private IOHandler handler;
   private Node connectionCache;
-  private ArrayList<Request> pendingRequests;
+  private List<Request> pendingRequests;
+  private State state;
   
   /**
    * Construct a RequestDispatch instance.
@@ -20,9 +29,10 @@ class RequestDispatch implements IOListener {
     
     this.client = client;
     this.handler = handler;
-    this.pendingRequests = new ArrayList<Request>();
+    this.pendingRequests = new LinkedList<Request>();
     connectionCache = null;
     boolean success = false;
+    state = State.PENDING;
     
     try {
       success = handler.init(this);
@@ -38,7 +48,7 @@ class RequestDispatch implements IOListener {
   
   /**
    * Event loop mechanism. Polls underlying connection and calls queued 
-   * callbacks
+   * callbacks.
    */
   void service() {
     // TODO queued resolved requests should maybe be resolved here?
@@ -47,15 +57,25 @@ class RequestDispatch implements IOListener {
   
   /**
    * Send a request for the children of a given node.
-   * @param node The node to poll for.
-   * @return
+   * @param  node The node to poll for.
+   * @return A request object to track the result.
    */
   Request requestChildrenForNode(Node node) {
-    System.out.println(connectionCache);
     Request req = new Request();
-    pendingRequests.add(req);
-    handler.nodeRequest(node);
+    if (node.hasPolledChildren()) {
+      req.setNode(node);
+      req.setStatus(Status.RESOLVED);
+    } else {
+      req.setExpectedNodeID(node.getNodeID());
+      pendingRequests.add(req);
+      handler.nodeRequest(node);
+    }
     return req;
+  }
+  
+  void subscribeToNodeValues(Node node, double fs) {
+    // TODO verify/hold state
+    handler.valueRequest(node, fs);
   }
 
   @Override
@@ -63,14 +83,11 @@ class RequestDispatch implements IOListener {
     
     // if no cache has been created or supplied, RequestDispatch is responsible
     // for boostrapping the entire Client
-    if (connectionCache == null) {
-      
-      connectionCache = node.getChild(0); // TODO corresponding...
-      connectionCache.setDispatch(this);
-      
-      // Give root to Client.
-      client.setGlobalCache(node);
-      return;
+    if (state == State.PENDING) {
+      if (connectionCache == null)
+        handleInitialResponse(node);
+      else
+        addTopLevelStructure(node);
       
     } else {
       // find the node from the tree and replace it.
@@ -83,25 +100,60 @@ class RequestDispatch implements IOListener {
       }
       
       if (!found.hasPolledChildren()) {
-        found.getParent().replaceChild(node);
-        if (found.getParent().getNodeType() == CDPNodeType.CDP_SYSTEM)
-          connectionCache = node;
+        found.takeChildrenFrom(node);
         System.out.println("replaced " + found.getParent());
-        // TODO intercept node
-        for (Request req : pendingRequests) {
-          pendingRequests.remove(req);
-          req.setNode(node);
-          req.setStatus(Status.RESOLVED);
-        }
+        
+        interceptNode(node);
       }
-
     }
   }
 
+  
   @Override
-  public void valueReceived(int nodeID) {
-    // TODO Auto-generated method stub
+  public void valueReceived(int nodeID, Variant value) {
+    Node node = connectionCache.findChildByID(nodeID);
     
+    if (node != null) {
+      node.setValue(value); // fires PropertyChangeEvent
+    } else {
+      System.err.println("Received value for unknown Node.");
+    }
+    
+  }
+  
+  
+  /** Handle the first CDP_SYSTEM node that this Client receives. */
+  private void handleInitialResponse(Node node) {
+    
+    for (int i = 0; i < node.getChildCount(); i++) {
+      if (node.getCachedChild(i).getConnectionData().correspondsToConnection) {
+        connectionCache = node.getCachedChild(i);
+        connectionCache.setDispatch(this);
+        break;
+      }   
+    }
+    // Since we are the first connection, we'll handle the system node for now
+    node.setDispatch(this);
+    state = State.ESTABLISHED;
+    client.setGlobalCache(node);
+  }
+  
+  
+  /** TODO Add missing top-level components and set the connection dispatch. */
+  private void addTopLevelStructure(Node node) {
+    state = State.ESTABLISHED;
+  }
+  
+  
+  /** Match incoming node against pending structure requests. */
+  private void interceptNode(Node node) {
+    for (Request req : pendingRequests) {
+      if (req.getExpectedNodeID() == node.getNodeID()) {
+        pendingRequests.remove(req);
+        req.setNode(node);
+        req.setStatus(Status.RESOLVED);
+      }
+    }
   }
 
 }

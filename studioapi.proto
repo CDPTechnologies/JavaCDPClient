@@ -88,17 +88,16 @@ extensions 100 to max;
 // b00 for high priority process b01 for normal and b10 for low - b11 is for all other threads and must implement locking for safe calls
 message PBInfo {
 required uint32 nodeID = 1; // Application wide unique ID for each instance in CDP structure
-required uint32 objectHandle = 2; // CDPObject handle of the node or first in parent hierarchy that has cdpHandle
-required string name = 3; // Local short name
-required CDPNodeType nodeType = 4; // Direct base type, type of the class
-optional CDPValueType valueType = 5; // Value primitive type the node holds if node may hold a value
-optional string typeName = 6; // Real class name
-optional string serverAddr = 7; // If this node signifies another CDP application,
+required string name = 2; // Local short name
+required CDPNodeType nodeType = 3; // Direct base type, type of the class
+optional CDPValueType valueType = 4; // Value primitive type the node holds if node may hold a value
+optional string typeName = 5; // Real class name
+optional string serverAddr = 6; // If this node signifies another CDP application,
                                    // this field will be the IP of said application's StudioAPIServer
-optional uint32 serverPort = 8; // .. and this is the port of the application's StudioAPIServer
-optional bool isResponder = 9; // if multiple applications are sent back from the server,
+optional uint32 serverPort = 7; // .. and this is the port of the application's StudioAPIServer
+optional bool isResponder = 8; // if multiple applications are sent back from the server,
                                // this flag is set to true for the app that the data was requested from
-optional bool valueIsPersistent = 10; // if this flag is true, the node's value is stored in XML
+optional bool valueIsPersistent = 9; // if this flag is true, the node's value is stored in XML
 
 extensions 100 to max; // Allow external extensions to Info message
 }
@@ -143,7 +142,7 @@ extensions 100 to max; // Allow external extensions to PBValueRequest message
 message PBStructureChangeSubscription {
 repeated uint32 nodeID = 1;
 optional uint32 depth = 2; /* if 0, all child (and their children) node changes are reported; if 1,
-                            only current node’s direct changes are reported */
+                              only current nodeâ€™s deletion is reported */
 optional bool stop = 3; // stop subscription to node
 extensions 100 to max;
 }

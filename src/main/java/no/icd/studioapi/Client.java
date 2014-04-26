@@ -11,15 +11,14 @@ public class Client implements Runnable {
   private Node globalCache;
   private NotificationListener listener;
 	
-  /**
-   * Create a new StudioAPI Client instance.
-   */
+  /** Create a new StudioAPI Client instance. */
 	public Client() {
 		connections = new ArrayList<RequestDispatch>();
 		globalCache = null;
 		listener = null;
 	}
 	
+	/** Initialise the client. Connects to server and notifies @a listener. */
 	public void init(String addr, int port, NotificationListener listener) 
 	    throws StudioAPIException {
 	  this.listener = listener;
@@ -33,16 +32,19 @@ public class Client implements Runnable {
     }
 	}
 
+	/** Get a reference to the global node cache. */
 	public Node getGlobalCache() {
 	  return globalCache;
 	}
 	
+	/** Event-loop method for use in single-threaded applications. */
 	public void process() {
 	  for (RequestDispatch d : connections) {
 	    d.service();
 	  }
 	}
 
+	/** Runnable-interface auto-creates event loop in a new Thread. */
 	@Override
 	public void run() {
     while (true) {

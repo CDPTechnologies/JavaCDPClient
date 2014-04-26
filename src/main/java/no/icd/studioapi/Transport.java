@@ -4,7 +4,12 @@ import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.concurrent.BlockingQueue;
 
-public class Transport extends org.java_websocket.client.WebSocketClient {
+/** 
+ * The Transport class wraps the WebSocket connection and writes all received
+ * data into a thread-safe buffer queue. This is picked up by IOHandler for
+ * data serialization.
+ */
+class Transport extends org.java_websocket.client.WebSocketClient {
   
   private BlockingQueue<byte[]> queue;
   

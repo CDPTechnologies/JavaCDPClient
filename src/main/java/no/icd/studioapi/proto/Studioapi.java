@@ -3019,27 +3019,9 @@ public final class Studioapi {
      */
     int getNodeID();
 
-    // required uint32 objectHandle = 2;
+    // required string name = 2;
     /**
-     * <code>required uint32 objectHandle = 2;</code>
-     *
-     * <pre>
-     * CDPObject handle of the node or first in parent hierarchy that has cdpHandle
-     * </pre>
-     */
-    boolean hasObjectHandle();
-    /**
-     * <code>required uint32 objectHandle = 2;</code>
-     *
-     * <pre>
-     * CDPObject handle of the node or first in parent hierarchy that has cdpHandle
-     * </pre>
-     */
-    int getObjectHandle();
-
-    // required string name = 3;
-    /**
-     * <code>required string name = 3;</code>
+     * <code>required string name = 2;</code>
      *
      * <pre>
      * Local short name
@@ -3047,7 +3029,7 @@ public final class Studioapi {
      */
     boolean hasName();
     /**
-     * <code>required string name = 3;</code>
+     * <code>required string name = 2;</code>
      *
      * <pre>
      * Local short name
@@ -3055,7 +3037,7 @@ public final class Studioapi {
      */
     java.lang.String getName();
     /**
-     * <code>required string name = 3;</code>
+     * <code>required string name = 2;</code>
      *
      * <pre>
      * Local short name
@@ -3064,9 +3046,9 @@ public final class Studioapi {
     com.google.protobuf.ByteString
         getNameBytes();
 
-    // required .StudioAPI.Proto.CDPNodeType nodeType = 4;
+    // required .StudioAPI.Proto.CDPNodeType nodeType = 3;
     /**
-     * <code>required .StudioAPI.Proto.CDPNodeType nodeType = 4;</code>
+     * <code>required .StudioAPI.Proto.CDPNodeType nodeType = 3;</code>
      *
      * <pre>
      * Direct base type, type of the class
@@ -3074,7 +3056,7 @@ public final class Studioapi {
      */
     boolean hasNodeType();
     /**
-     * <code>required .StudioAPI.Proto.CDPNodeType nodeType = 4;</code>
+     * <code>required .StudioAPI.Proto.CDPNodeType nodeType = 3;</code>
      *
      * <pre>
      * Direct base type, type of the class
@@ -3082,9 +3064,9 @@ public final class Studioapi {
      */
     no.icd.studioapi.proto.Studioapi.CDPNodeType getNodeType();
 
-    // optional .StudioAPI.Proto.CDPValueType valueType = 5;
+    // optional .StudioAPI.Proto.CDPValueType valueType = 4;
     /**
-     * <code>optional .StudioAPI.Proto.CDPValueType valueType = 5;</code>
+     * <code>optional .StudioAPI.Proto.CDPValueType valueType = 4;</code>
      *
      * <pre>
      * Value primitive type the node holds if node may hold a value
@@ -3092,7 +3074,7 @@ public final class Studioapi {
      */
     boolean hasValueType();
     /**
-     * <code>optional .StudioAPI.Proto.CDPValueType valueType = 5;</code>
+     * <code>optional .StudioAPI.Proto.CDPValueType valueType = 4;</code>
      *
      * <pre>
      * Value primitive type the node holds if node may hold a value
@@ -3100,9 +3082,9 @@ public final class Studioapi {
      */
     no.icd.studioapi.proto.Studioapi.CDPValueType getValueType();
 
-    // optional string typeName = 6;
+    // optional string typeName = 5;
     /**
-     * <code>optional string typeName = 6;</code>
+     * <code>optional string typeName = 5;</code>
      *
      * <pre>
      * Real class name
@@ -3110,7 +3092,7 @@ public final class Studioapi {
      */
     boolean hasTypeName();
     /**
-     * <code>optional string typeName = 6;</code>
+     * <code>optional string typeName = 5;</code>
      *
      * <pre>
      * Real class name
@@ -3118,7 +3100,7 @@ public final class Studioapi {
      */
     java.lang.String getTypeName();
     /**
-     * <code>optional string typeName = 6;</code>
+     * <code>optional string typeName = 5;</code>
      *
      * <pre>
      * Real class name
@@ -3127,9 +3109,9 @@ public final class Studioapi {
     com.google.protobuf.ByteString
         getTypeNameBytes();
 
-    // optional string serverAddr = 7;
+    // optional string serverAddr = 6;
     /**
-     * <code>optional string serverAddr = 7;</code>
+     * <code>optional string serverAddr = 6;</code>
      *
      * <pre>
      * If this node signifies another CDP application,
@@ -3137,7 +3119,7 @@ public final class Studioapi {
      */
     boolean hasServerAddr();
     /**
-     * <code>optional string serverAddr = 7;</code>
+     * <code>optional string serverAddr = 6;</code>
      *
      * <pre>
      * If this node signifies another CDP application,
@@ -3145,7 +3127,7 @@ public final class Studioapi {
      */
     java.lang.String getServerAddr();
     /**
-     * <code>optional string serverAddr = 7;</code>
+     * <code>optional string serverAddr = 6;</code>
      *
      * <pre>
      * If this node signifies another CDP application,
@@ -3154,9 +3136,9 @@ public final class Studioapi {
     com.google.protobuf.ByteString
         getServerAddrBytes();
 
-    // optional uint32 serverPort = 8;
+    // optional uint32 serverPort = 7;
     /**
-     * <code>optional uint32 serverPort = 8;</code>
+     * <code>optional uint32 serverPort = 7;</code>
      *
      * <pre>
      * this field will be the IP of said application's StudioAPIServer
@@ -3164,7 +3146,7 @@ public final class Studioapi {
      */
     boolean hasServerPort();
     /**
-     * <code>optional uint32 serverPort = 8;</code>
+     * <code>optional uint32 serverPort = 7;</code>
      *
      * <pre>
      * this field will be the IP of said application's StudioAPIServer
@@ -3172,9 +3154,9 @@ public final class Studioapi {
      */
     int getServerPort();
 
-    // optional bool isResponder = 9;
+    // optional bool isResponder = 8;
     /**
-     * <code>optional bool isResponder = 9;</code>
+     * <code>optional bool isResponder = 8;</code>
      *
      * <pre>
      * if multiple applications are sent back from the server,
@@ -3182,7 +3164,7 @@ public final class Studioapi {
      */
     boolean hasIsResponder();
     /**
-     * <code>optional bool isResponder = 9;</code>
+     * <code>optional bool isResponder = 8;</code>
      *
      * <pre>
      * if multiple applications are sent back from the server,
@@ -3190,9 +3172,9 @@ public final class Studioapi {
      */
     boolean getIsResponder();
 
-    // optional bool valueIsPersistent = 10;
+    // optional bool valueIsPersistent = 9;
     /**
-     * <code>optional bool valueIsPersistent = 10;</code>
+     * <code>optional bool valueIsPersistent = 9;</code>
      *
      * <pre>
      * this flag is set to true for the app that the data was requested from
@@ -3200,7 +3182,7 @@ public final class Studioapi {
      */
     boolean hasValueIsPersistent();
     /**
-     * <code>optional bool valueIsPersistent = 10;</code>
+     * <code>optional bool valueIsPersistent = 9;</code>
      *
      * <pre>
      * this flag is set to true for the app that the data was requested from
@@ -3262,56 +3244,51 @@ public final class Studioapi {
               nodeID_ = input.readUInt32();
               break;
             }
-            case 16: {
+            case 18: {
               bitField0_ |= 0x00000002;
-              objectHandle_ = input.readUInt32();
-              break;
-            }
-            case 26: {
-              bitField0_ |= 0x00000004;
               name_ = input.readBytes();
               break;
             }
-            case 32: {
+            case 24: {
               int rawValue = input.readEnum();
               no.icd.studioapi.proto.Studioapi.CDPNodeType value = no.icd.studioapi.proto.Studioapi.CDPNodeType.valueOf(rawValue);
               if (value != null) {
-                bitField0_ |= 0x00000008;
+                bitField0_ |= 0x00000004;
                 nodeType_ = value;
               }
               break;
             }
-            case 40: {
+            case 32: {
               int rawValue = input.readEnum();
               no.icd.studioapi.proto.Studioapi.CDPValueType value = no.icd.studioapi.proto.Studioapi.CDPValueType.valueOf(rawValue);
               if (value != null) {
-                bitField0_ |= 0x00000010;
+                bitField0_ |= 0x00000008;
                 valueType_ = value;
               }
               break;
             }
-            case 50: {
-              bitField0_ |= 0x00000020;
+            case 42: {
+              bitField0_ |= 0x00000010;
               typeName_ = input.readBytes();
               break;
             }
-            case 58: {
-              bitField0_ |= 0x00000040;
+            case 50: {
+              bitField0_ |= 0x00000020;
               serverAddr_ = input.readBytes();
+              break;
+            }
+            case 56: {
+              bitField0_ |= 0x00000040;
+              serverPort_ = input.readUInt32();
               break;
             }
             case 64: {
               bitField0_ |= 0x00000080;
-              serverPort_ = input.readUInt32();
+              isResponder_ = input.readBool();
               break;
             }
             case 72: {
               bitField0_ |= 0x00000100;
-              isResponder_ = input.readBool();
-              break;
-            }
-            case 80: {
-              bitField0_ |= 0x00000200;
               valueIsPersistent_ = input.readBool();
               break;
             }
@@ -3366,45 +3343,21 @@ public final class Studioapi {
       return nodeID_;
     }
 
-    // required uint32 objectHandle = 2;
-    public static final int OBJECTHANDLE_FIELD_NUMBER = 2;
-    private int objectHandle_;
-    /**
-     * <code>required uint32 objectHandle = 2;</code>
-     *
-     * <pre>
-     * CDPObject handle of the node or first in parent hierarchy that has cdpHandle
-     * </pre>
-     */
-    public boolean hasObjectHandle() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
-    }
-    /**
-     * <code>required uint32 objectHandle = 2;</code>
-     *
-     * <pre>
-     * CDPObject handle of the node or first in parent hierarchy that has cdpHandle
-     * </pre>
-     */
-    public int getObjectHandle() {
-      return objectHandle_;
-    }
-
-    // required string name = 3;
-    public static final int NAME_FIELD_NUMBER = 3;
+    // required string name = 2;
+    public static final int NAME_FIELD_NUMBER = 2;
     private java.lang.Object name_;
     /**
-     * <code>required string name = 3;</code>
+     * <code>required string name = 2;</code>
      *
      * <pre>
      * Local short name
      * </pre>
      */
     public boolean hasName() {
-      return ((bitField0_ & 0x00000004) == 0x00000004);
+      return ((bitField0_ & 0x00000002) == 0x00000002);
     }
     /**
-     * <code>required string name = 3;</code>
+     * <code>required string name = 2;</code>
      *
      * <pre>
      * Local short name
@@ -3425,7 +3378,7 @@ public final class Studioapi {
       }
     }
     /**
-     * <code>required string name = 3;</code>
+     * <code>required string name = 2;</code>
      *
      * <pre>
      * Local short name
@@ -3445,21 +3398,21 @@ public final class Studioapi {
       }
     }
 
-    // required .StudioAPI.Proto.CDPNodeType nodeType = 4;
-    public static final int NODETYPE_FIELD_NUMBER = 4;
+    // required .StudioAPI.Proto.CDPNodeType nodeType = 3;
+    public static final int NODETYPE_FIELD_NUMBER = 3;
     private no.icd.studioapi.proto.Studioapi.CDPNodeType nodeType_;
     /**
-     * <code>required .StudioAPI.Proto.CDPNodeType nodeType = 4;</code>
+     * <code>required .StudioAPI.Proto.CDPNodeType nodeType = 3;</code>
      *
      * <pre>
      * Direct base type, type of the class
      * </pre>
      */
     public boolean hasNodeType() {
-      return ((bitField0_ & 0x00000008) == 0x00000008);
+      return ((bitField0_ & 0x00000004) == 0x00000004);
     }
     /**
-     * <code>required .StudioAPI.Proto.CDPNodeType nodeType = 4;</code>
+     * <code>required .StudioAPI.Proto.CDPNodeType nodeType = 3;</code>
      *
      * <pre>
      * Direct base type, type of the class
@@ -3469,21 +3422,21 @@ public final class Studioapi {
       return nodeType_;
     }
 
-    // optional .StudioAPI.Proto.CDPValueType valueType = 5;
-    public static final int VALUETYPE_FIELD_NUMBER = 5;
+    // optional .StudioAPI.Proto.CDPValueType valueType = 4;
+    public static final int VALUETYPE_FIELD_NUMBER = 4;
     private no.icd.studioapi.proto.Studioapi.CDPValueType valueType_;
     /**
-     * <code>optional .StudioAPI.Proto.CDPValueType valueType = 5;</code>
+     * <code>optional .StudioAPI.Proto.CDPValueType valueType = 4;</code>
      *
      * <pre>
      * Value primitive type the node holds if node may hold a value
      * </pre>
      */
     public boolean hasValueType() {
-      return ((bitField0_ & 0x00000010) == 0x00000010);
+      return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
-     * <code>optional .StudioAPI.Proto.CDPValueType valueType = 5;</code>
+     * <code>optional .StudioAPI.Proto.CDPValueType valueType = 4;</code>
      *
      * <pre>
      * Value primitive type the node holds if node may hold a value
@@ -3493,21 +3446,21 @@ public final class Studioapi {
       return valueType_;
     }
 
-    // optional string typeName = 6;
-    public static final int TYPENAME_FIELD_NUMBER = 6;
+    // optional string typeName = 5;
+    public static final int TYPENAME_FIELD_NUMBER = 5;
     private java.lang.Object typeName_;
     /**
-     * <code>optional string typeName = 6;</code>
+     * <code>optional string typeName = 5;</code>
      *
      * <pre>
      * Real class name
      * </pre>
      */
     public boolean hasTypeName() {
-      return ((bitField0_ & 0x00000020) == 0x00000020);
+      return ((bitField0_ & 0x00000010) == 0x00000010);
     }
     /**
-     * <code>optional string typeName = 6;</code>
+     * <code>optional string typeName = 5;</code>
      *
      * <pre>
      * Real class name
@@ -3528,7 +3481,7 @@ public final class Studioapi {
       }
     }
     /**
-     * <code>optional string typeName = 6;</code>
+     * <code>optional string typeName = 5;</code>
      *
      * <pre>
      * Real class name
@@ -3548,21 +3501,21 @@ public final class Studioapi {
       }
     }
 
-    // optional string serverAddr = 7;
-    public static final int SERVERADDR_FIELD_NUMBER = 7;
+    // optional string serverAddr = 6;
+    public static final int SERVERADDR_FIELD_NUMBER = 6;
     private java.lang.Object serverAddr_;
     /**
-     * <code>optional string serverAddr = 7;</code>
+     * <code>optional string serverAddr = 6;</code>
      *
      * <pre>
      * If this node signifies another CDP application,
      * </pre>
      */
     public boolean hasServerAddr() {
-      return ((bitField0_ & 0x00000040) == 0x00000040);
+      return ((bitField0_ & 0x00000020) == 0x00000020);
     }
     /**
-     * <code>optional string serverAddr = 7;</code>
+     * <code>optional string serverAddr = 6;</code>
      *
      * <pre>
      * If this node signifies another CDP application,
@@ -3583,7 +3536,7 @@ public final class Studioapi {
       }
     }
     /**
-     * <code>optional string serverAddr = 7;</code>
+     * <code>optional string serverAddr = 6;</code>
      *
      * <pre>
      * If this node signifies another CDP application,
@@ -3603,21 +3556,21 @@ public final class Studioapi {
       }
     }
 
-    // optional uint32 serverPort = 8;
-    public static final int SERVERPORT_FIELD_NUMBER = 8;
+    // optional uint32 serverPort = 7;
+    public static final int SERVERPORT_FIELD_NUMBER = 7;
     private int serverPort_;
     /**
-     * <code>optional uint32 serverPort = 8;</code>
+     * <code>optional uint32 serverPort = 7;</code>
      *
      * <pre>
      * this field will be the IP of said application's StudioAPIServer
      * </pre>
      */
     public boolean hasServerPort() {
-      return ((bitField0_ & 0x00000080) == 0x00000080);
+      return ((bitField0_ & 0x00000040) == 0x00000040);
     }
     /**
-     * <code>optional uint32 serverPort = 8;</code>
+     * <code>optional uint32 serverPort = 7;</code>
      *
      * <pre>
      * this field will be the IP of said application's StudioAPIServer
@@ -3627,21 +3580,21 @@ public final class Studioapi {
       return serverPort_;
     }
 
-    // optional bool isResponder = 9;
-    public static final int ISRESPONDER_FIELD_NUMBER = 9;
+    // optional bool isResponder = 8;
+    public static final int ISRESPONDER_FIELD_NUMBER = 8;
     private boolean isResponder_;
     /**
-     * <code>optional bool isResponder = 9;</code>
+     * <code>optional bool isResponder = 8;</code>
      *
      * <pre>
      * if multiple applications are sent back from the server,
      * </pre>
      */
     public boolean hasIsResponder() {
-      return ((bitField0_ & 0x00000100) == 0x00000100);
+      return ((bitField0_ & 0x00000080) == 0x00000080);
     }
     /**
-     * <code>optional bool isResponder = 9;</code>
+     * <code>optional bool isResponder = 8;</code>
      *
      * <pre>
      * if multiple applications are sent back from the server,
@@ -3651,21 +3604,21 @@ public final class Studioapi {
       return isResponder_;
     }
 
-    // optional bool valueIsPersistent = 10;
-    public static final int VALUEISPERSISTENT_FIELD_NUMBER = 10;
+    // optional bool valueIsPersistent = 9;
+    public static final int VALUEISPERSISTENT_FIELD_NUMBER = 9;
     private boolean valueIsPersistent_;
     /**
-     * <code>optional bool valueIsPersistent = 10;</code>
+     * <code>optional bool valueIsPersistent = 9;</code>
      *
      * <pre>
      * this flag is set to true for the app that the data was requested from
      * </pre>
      */
     public boolean hasValueIsPersistent() {
-      return ((bitField0_ & 0x00000200) == 0x00000200);
+      return ((bitField0_ & 0x00000100) == 0x00000100);
     }
     /**
-     * <code>optional bool valueIsPersistent = 10;</code>
+     * <code>optional bool valueIsPersistent = 9;</code>
      *
      * <pre>
      * this flag is set to true for the app that the data was requested from
@@ -3677,7 +3630,6 @@ public final class Studioapi {
 
     private void initFields() {
       nodeID_ = 0;
-      objectHandle_ = 0;
       name_ = "";
       nodeType_ = no.icd.studioapi.proto.Studioapi.CDPNodeType.CDP_UNDEFINED;
       valueType_ = no.icd.studioapi.proto.Studioapi.CDPValueType.eUNDEFINED;
@@ -3693,10 +3645,6 @@ public final class Studioapi {
       if (isInitialized != -1) return isInitialized == 1;
 
       if (!hasNodeID()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasObjectHandle()) {
         memoizedIsInitialized = 0;
         return false;
       }
@@ -3726,31 +3674,28 @@ public final class Studioapi {
         output.writeUInt32(1, nodeID_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeUInt32(2, objectHandle_);
+        output.writeBytes(2, getNameBytes());
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
-        output.writeBytes(3, getNameBytes());
+        output.writeEnum(3, nodeType_.getNumber());
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
-        output.writeEnum(4, nodeType_.getNumber());
+        output.writeEnum(4, valueType_.getNumber());
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
-        output.writeEnum(5, valueType_.getNumber());
+        output.writeBytes(5, getTypeNameBytes());
       }
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
-        output.writeBytes(6, getTypeNameBytes());
+        output.writeBytes(6, getServerAddrBytes());
       }
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
-        output.writeBytes(7, getServerAddrBytes());
+        output.writeUInt32(7, serverPort_);
       }
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
-        output.writeUInt32(8, serverPort_);
+        output.writeBool(8, isResponder_);
       }
       if (((bitField0_ & 0x00000100) == 0x00000100)) {
-        output.writeBool(9, isResponder_);
-      }
-      if (((bitField0_ & 0x00000200) == 0x00000200)) {
-        output.writeBool(10, valueIsPersistent_);
+        output.writeBool(9, valueIsPersistent_);
       }
       extensionWriter.writeUntil(536870912, output);
     }
@@ -3767,39 +3712,35 @@ public final class Studioapi {
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(2, objectHandle_);
+          .computeBytesSize(2, getNameBytes());
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(3, getNameBytes());
+          .computeEnumSize(3, nodeType_.getNumber());
       }
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(4, nodeType_.getNumber());
+          .computeEnumSize(4, valueType_.getNumber());
       }
       if (((bitField0_ & 0x00000010) == 0x00000010)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeEnumSize(5, valueType_.getNumber());
+          .computeBytesSize(5, getTypeNameBytes());
       }
       if (((bitField0_ & 0x00000020) == 0x00000020)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(6, getTypeNameBytes());
+          .computeBytesSize(6, getServerAddrBytes());
       }
       if (((bitField0_ & 0x00000040) == 0x00000040)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(7, getServerAddrBytes());
+          .computeUInt32Size(7, serverPort_);
       }
       if (((bitField0_ & 0x00000080) == 0x00000080)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeUInt32Size(8, serverPort_);
+          .computeBoolSize(8, isResponder_);
       }
       if (((bitField0_ & 0x00000100) == 0x00000100)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(9, isResponder_);
-      }
-      if (((bitField0_ & 0x00000200) == 0x00000200)) {
-        size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(10, valueIsPersistent_);
+          .computeBoolSize(9, valueIsPersistent_);
       }
       size += extensionsSerializedSize();
       memoizedSerializedSize = size;
@@ -3900,24 +3841,22 @@ public final class Studioapi {
         super.clear();
         nodeID_ = 0;
         bitField0_ = (bitField0_ & ~0x00000001);
-        objectHandle_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000002);
         name_ = "";
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000002);
         nodeType_ = no.icd.studioapi.proto.Studioapi.CDPNodeType.CDP_UNDEFINED;
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000004);
         valueType_ = no.icd.studioapi.proto.Studioapi.CDPValueType.eUNDEFINED;
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ = (bitField0_ & ~0x00000008);
         typeName_ = "";
-        bitField0_ = (bitField0_ & ~0x00000020);
+        bitField0_ = (bitField0_ & ~0x00000010);
         serverAddr_ = "";
-        bitField0_ = (bitField0_ & ~0x00000040);
+        bitField0_ = (bitField0_ & ~0x00000020);
         serverPort_ = 0;
-        bitField0_ = (bitField0_ & ~0x00000080);
+        bitField0_ = (bitField0_ & ~0x00000040);
         isResponder_ = false;
-        bitField0_ = (bitField0_ & ~0x00000100);
+        bitField0_ = (bitField0_ & ~0x00000080);
         valueIsPersistent_ = false;
-        bitField0_ = (bitField0_ & ~0x00000200);
+        bitField0_ = (bitField0_ & ~0x00000100);
         return this;
       }
 
@@ -3948,37 +3887,33 @@ public final class Studioapi {
         if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
           to_bitField0_ |= 0x00000002;
         }
-        result.objectHandle_ = objectHandle_;
+        result.name_ = name_;
         if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
           to_bitField0_ |= 0x00000004;
         }
-        result.name_ = name_;
+        result.nodeType_ = nodeType_;
         if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
           to_bitField0_ |= 0x00000008;
         }
-        result.nodeType_ = nodeType_;
+        result.valueType_ = valueType_;
         if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
           to_bitField0_ |= 0x00000010;
         }
-        result.valueType_ = valueType_;
+        result.typeName_ = typeName_;
         if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
           to_bitField0_ |= 0x00000020;
         }
-        result.typeName_ = typeName_;
+        result.serverAddr_ = serverAddr_;
         if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
           to_bitField0_ |= 0x00000040;
         }
-        result.serverAddr_ = serverAddr_;
+        result.serverPort_ = serverPort_;
         if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
           to_bitField0_ |= 0x00000080;
         }
-        result.serverPort_ = serverPort_;
+        result.isResponder_ = isResponder_;
         if (((from_bitField0_ & 0x00000100) == 0x00000100)) {
           to_bitField0_ |= 0x00000100;
-        }
-        result.isResponder_ = isResponder_;
-        if (((from_bitField0_ & 0x00000200) == 0x00000200)) {
-          to_bitField0_ |= 0x00000200;
         }
         result.valueIsPersistent_ = valueIsPersistent_;
         result.bitField0_ = to_bitField0_;
@@ -3990,11 +3925,8 @@ public final class Studioapi {
         if (other.hasNodeID()) {
           setNodeID(other.getNodeID());
         }
-        if (other.hasObjectHandle()) {
-          setObjectHandle(other.getObjectHandle());
-        }
         if (other.hasName()) {
-          bitField0_ |= 0x00000004;
+          bitField0_ |= 0x00000002;
           name_ = other.name_;
           
         }
@@ -4005,12 +3937,12 @@ public final class Studioapi {
           setValueType(other.getValueType());
         }
         if (other.hasTypeName()) {
-          bitField0_ |= 0x00000020;
+          bitField0_ |= 0x00000010;
           typeName_ = other.typeName_;
           
         }
         if (other.hasServerAddr()) {
-          bitField0_ |= 0x00000040;
+          bitField0_ |= 0x00000020;
           serverAddr_ = other.serverAddr_;
           
         }
@@ -4029,10 +3961,6 @@ public final class Studioapi {
 
       public final boolean isInitialized() {
         if (!hasNodeID()) {
-          
-          return false;
-        }
-        if (!hasObjectHandle()) {
           
           return false;
         }
@@ -4119,69 +4047,20 @@ public final class Studioapi {
         return this;
       }
 
-      // required uint32 objectHandle = 2;
-      private int objectHandle_ ;
-      /**
-       * <code>required uint32 objectHandle = 2;</code>
-       *
-       * <pre>
-       * CDPObject handle of the node or first in parent hierarchy that has cdpHandle
-       * </pre>
-       */
-      public boolean hasObjectHandle() {
-        return ((bitField0_ & 0x00000002) == 0x00000002);
-      }
-      /**
-       * <code>required uint32 objectHandle = 2;</code>
-       *
-       * <pre>
-       * CDPObject handle of the node or first in parent hierarchy that has cdpHandle
-       * </pre>
-       */
-      public int getObjectHandle() {
-        return objectHandle_;
-      }
-      /**
-       * <code>required uint32 objectHandle = 2;</code>
-       *
-       * <pre>
-       * CDPObject handle of the node or first in parent hierarchy that has cdpHandle
-       * </pre>
-       */
-      public Builder setObjectHandle(int value) {
-        bitField0_ |= 0x00000002;
-        objectHandle_ = value;
-        
-        return this;
-      }
-      /**
-       * <code>required uint32 objectHandle = 2;</code>
-       *
-       * <pre>
-       * CDPObject handle of the node or first in parent hierarchy that has cdpHandle
-       * </pre>
-       */
-      public Builder clearObjectHandle() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        objectHandle_ = 0;
-        
-        return this;
-      }
-
-      // required string name = 3;
+      // required string name = 2;
       private java.lang.Object name_ = "";
       /**
-       * <code>required string name = 3;</code>
+       * <code>required string name = 2;</code>
        *
        * <pre>
        * Local short name
        * </pre>
        */
       public boolean hasName() {
-        return ((bitField0_ & 0x00000004) == 0x00000004);
+        return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>required string name = 3;</code>
+       * <code>required string name = 2;</code>
        *
        * <pre>
        * Local short name
@@ -4199,7 +4078,7 @@ public final class Studioapi {
         }
       }
       /**
-       * <code>required string name = 3;</code>
+       * <code>required string name = 2;</code>
        *
        * <pre>
        * Local short name
@@ -4219,7 +4098,7 @@ public final class Studioapi {
         }
       }
       /**
-       * <code>required string name = 3;</code>
+       * <code>required string name = 2;</code>
        *
        * <pre>
        * Local short name
@@ -4230,26 +4109,26 @@ public final class Studioapi {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000004;
+  bitField0_ |= 0x00000002;
         name_ = value;
         
         return this;
       }
       /**
-       * <code>required string name = 3;</code>
+       * <code>required string name = 2;</code>
        *
        * <pre>
        * Local short name
        * </pre>
        */
       public Builder clearName() {
-        bitField0_ = (bitField0_ & ~0x00000004);
+        bitField0_ = (bitField0_ & ~0x00000002);
         name_ = getDefaultInstance().getName();
         
         return this;
       }
       /**
-       * <code>required string name = 3;</code>
+       * <code>required string name = 2;</code>
        *
        * <pre>
        * Local short name
@@ -4260,26 +4139,26 @@ public final class Studioapi {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000004;
+  bitField0_ |= 0x00000002;
         name_ = value;
         
         return this;
       }
 
-      // required .StudioAPI.Proto.CDPNodeType nodeType = 4;
+      // required .StudioAPI.Proto.CDPNodeType nodeType = 3;
       private no.icd.studioapi.proto.Studioapi.CDPNodeType nodeType_ = no.icd.studioapi.proto.Studioapi.CDPNodeType.CDP_UNDEFINED;
       /**
-       * <code>required .StudioAPI.Proto.CDPNodeType nodeType = 4;</code>
+       * <code>required .StudioAPI.Proto.CDPNodeType nodeType = 3;</code>
        *
        * <pre>
        * Direct base type, type of the class
        * </pre>
        */
       public boolean hasNodeType() {
-        return ((bitField0_ & 0x00000008) == 0x00000008);
+        return ((bitField0_ & 0x00000004) == 0x00000004);
       }
       /**
-       * <code>required .StudioAPI.Proto.CDPNodeType nodeType = 4;</code>
+       * <code>required .StudioAPI.Proto.CDPNodeType nodeType = 3;</code>
        *
        * <pre>
        * Direct base type, type of the class
@@ -4289,7 +4168,7 @@ public final class Studioapi {
         return nodeType_;
       }
       /**
-       * <code>required .StudioAPI.Proto.CDPNodeType nodeType = 4;</code>
+       * <code>required .StudioAPI.Proto.CDPNodeType nodeType = 3;</code>
        *
        * <pre>
        * Direct base type, type of the class
@@ -4299,39 +4178,39 @@ public final class Studioapi {
         if (value == null) {
           throw new NullPointerException();
         }
-        bitField0_ |= 0x00000008;
+        bitField0_ |= 0x00000004;
         nodeType_ = value;
         
         return this;
       }
       /**
-       * <code>required .StudioAPI.Proto.CDPNodeType nodeType = 4;</code>
+       * <code>required .StudioAPI.Proto.CDPNodeType nodeType = 3;</code>
        *
        * <pre>
        * Direct base type, type of the class
        * </pre>
        */
       public Builder clearNodeType() {
-        bitField0_ = (bitField0_ & ~0x00000008);
+        bitField0_ = (bitField0_ & ~0x00000004);
         nodeType_ = no.icd.studioapi.proto.Studioapi.CDPNodeType.CDP_UNDEFINED;
         
         return this;
       }
 
-      // optional .StudioAPI.Proto.CDPValueType valueType = 5;
+      // optional .StudioAPI.Proto.CDPValueType valueType = 4;
       private no.icd.studioapi.proto.Studioapi.CDPValueType valueType_ = no.icd.studioapi.proto.Studioapi.CDPValueType.eUNDEFINED;
       /**
-       * <code>optional .StudioAPI.Proto.CDPValueType valueType = 5;</code>
+       * <code>optional .StudioAPI.Proto.CDPValueType valueType = 4;</code>
        *
        * <pre>
        * Value primitive type the node holds if node may hold a value
        * </pre>
        */
       public boolean hasValueType() {
-        return ((bitField0_ & 0x00000010) == 0x00000010);
+        return ((bitField0_ & 0x00000008) == 0x00000008);
       }
       /**
-       * <code>optional .StudioAPI.Proto.CDPValueType valueType = 5;</code>
+       * <code>optional .StudioAPI.Proto.CDPValueType valueType = 4;</code>
        *
        * <pre>
        * Value primitive type the node holds if node may hold a value
@@ -4341,7 +4220,7 @@ public final class Studioapi {
         return valueType_;
       }
       /**
-       * <code>optional .StudioAPI.Proto.CDPValueType valueType = 5;</code>
+       * <code>optional .StudioAPI.Proto.CDPValueType valueType = 4;</code>
        *
        * <pre>
        * Value primitive type the node holds if node may hold a value
@@ -4351,39 +4230,39 @@ public final class Studioapi {
         if (value == null) {
           throw new NullPointerException();
         }
-        bitField0_ |= 0x00000010;
+        bitField0_ |= 0x00000008;
         valueType_ = value;
         
         return this;
       }
       /**
-       * <code>optional .StudioAPI.Proto.CDPValueType valueType = 5;</code>
+       * <code>optional .StudioAPI.Proto.CDPValueType valueType = 4;</code>
        *
        * <pre>
        * Value primitive type the node holds if node may hold a value
        * </pre>
        */
       public Builder clearValueType() {
-        bitField0_ = (bitField0_ & ~0x00000010);
+        bitField0_ = (bitField0_ & ~0x00000008);
         valueType_ = no.icd.studioapi.proto.Studioapi.CDPValueType.eUNDEFINED;
         
         return this;
       }
 
-      // optional string typeName = 6;
+      // optional string typeName = 5;
       private java.lang.Object typeName_ = "";
       /**
-       * <code>optional string typeName = 6;</code>
+       * <code>optional string typeName = 5;</code>
        *
        * <pre>
        * Real class name
        * </pre>
        */
       public boolean hasTypeName() {
-        return ((bitField0_ & 0x00000020) == 0x00000020);
+        return ((bitField0_ & 0x00000010) == 0x00000010);
       }
       /**
-       * <code>optional string typeName = 6;</code>
+       * <code>optional string typeName = 5;</code>
        *
        * <pre>
        * Real class name
@@ -4401,7 +4280,7 @@ public final class Studioapi {
         }
       }
       /**
-       * <code>optional string typeName = 6;</code>
+       * <code>optional string typeName = 5;</code>
        *
        * <pre>
        * Real class name
@@ -4421,7 +4300,7 @@ public final class Studioapi {
         }
       }
       /**
-       * <code>optional string typeName = 6;</code>
+       * <code>optional string typeName = 5;</code>
        *
        * <pre>
        * Real class name
@@ -4432,26 +4311,26 @@ public final class Studioapi {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000020;
+  bitField0_ |= 0x00000010;
         typeName_ = value;
         
         return this;
       }
       /**
-       * <code>optional string typeName = 6;</code>
+       * <code>optional string typeName = 5;</code>
        *
        * <pre>
        * Real class name
        * </pre>
        */
       public Builder clearTypeName() {
-        bitField0_ = (bitField0_ & ~0x00000020);
+        bitField0_ = (bitField0_ & ~0x00000010);
         typeName_ = getDefaultInstance().getTypeName();
         
         return this;
       }
       /**
-       * <code>optional string typeName = 6;</code>
+       * <code>optional string typeName = 5;</code>
        *
        * <pre>
        * Real class name
@@ -4462,26 +4341,26 @@ public final class Studioapi {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000020;
+  bitField0_ |= 0x00000010;
         typeName_ = value;
         
         return this;
       }
 
-      // optional string serverAddr = 7;
+      // optional string serverAddr = 6;
       private java.lang.Object serverAddr_ = "";
       /**
-       * <code>optional string serverAddr = 7;</code>
+       * <code>optional string serverAddr = 6;</code>
        *
        * <pre>
        * If this node signifies another CDP application,
        * </pre>
        */
       public boolean hasServerAddr() {
-        return ((bitField0_ & 0x00000040) == 0x00000040);
+        return ((bitField0_ & 0x00000020) == 0x00000020);
       }
       /**
-       * <code>optional string serverAddr = 7;</code>
+       * <code>optional string serverAddr = 6;</code>
        *
        * <pre>
        * If this node signifies another CDP application,
@@ -4499,7 +4378,7 @@ public final class Studioapi {
         }
       }
       /**
-       * <code>optional string serverAddr = 7;</code>
+       * <code>optional string serverAddr = 6;</code>
        *
        * <pre>
        * If this node signifies another CDP application,
@@ -4519,7 +4398,7 @@ public final class Studioapi {
         }
       }
       /**
-       * <code>optional string serverAddr = 7;</code>
+       * <code>optional string serverAddr = 6;</code>
        *
        * <pre>
        * If this node signifies another CDP application,
@@ -4530,26 +4409,26 @@ public final class Studioapi {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000040;
+  bitField0_ |= 0x00000020;
         serverAddr_ = value;
         
         return this;
       }
       /**
-       * <code>optional string serverAddr = 7;</code>
+       * <code>optional string serverAddr = 6;</code>
        *
        * <pre>
        * If this node signifies another CDP application,
        * </pre>
        */
       public Builder clearServerAddr() {
-        bitField0_ = (bitField0_ & ~0x00000040);
+        bitField0_ = (bitField0_ & ~0x00000020);
         serverAddr_ = getDefaultInstance().getServerAddr();
         
         return this;
       }
       /**
-       * <code>optional string serverAddr = 7;</code>
+       * <code>optional string serverAddr = 6;</code>
        *
        * <pre>
        * If this node signifies another CDP application,
@@ -4560,26 +4439,26 @@ public final class Studioapi {
         if (value == null) {
     throw new NullPointerException();
   }
-  bitField0_ |= 0x00000040;
+  bitField0_ |= 0x00000020;
         serverAddr_ = value;
         
         return this;
       }
 
-      // optional uint32 serverPort = 8;
+      // optional uint32 serverPort = 7;
       private int serverPort_ ;
       /**
-       * <code>optional uint32 serverPort = 8;</code>
+       * <code>optional uint32 serverPort = 7;</code>
        *
        * <pre>
        * this field will be the IP of said application's StudioAPIServer
        * </pre>
        */
       public boolean hasServerPort() {
-        return ((bitField0_ & 0x00000080) == 0x00000080);
+        return ((bitField0_ & 0x00000040) == 0x00000040);
       }
       /**
-       * <code>optional uint32 serverPort = 8;</code>
+       * <code>optional uint32 serverPort = 7;</code>
        *
        * <pre>
        * this field will be the IP of said application's StudioAPIServer
@@ -4589,46 +4468,46 @@ public final class Studioapi {
         return serverPort_;
       }
       /**
-       * <code>optional uint32 serverPort = 8;</code>
+       * <code>optional uint32 serverPort = 7;</code>
        *
        * <pre>
        * this field will be the IP of said application's StudioAPIServer
        * </pre>
        */
       public Builder setServerPort(int value) {
-        bitField0_ |= 0x00000080;
+        bitField0_ |= 0x00000040;
         serverPort_ = value;
         
         return this;
       }
       /**
-       * <code>optional uint32 serverPort = 8;</code>
+       * <code>optional uint32 serverPort = 7;</code>
        *
        * <pre>
        * this field will be the IP of said application's StudioAPIServer
        * </pre>
        */
       public Builder clearServerPort() {
-        bitField0_ = (bitField0_ & ~0x00000080);
+        bitField0_ = (bitField0_ & ~0x00000040);
         serverPort_ = 0;
         
         return this;
       }
 
-      // optional bool isResponder = 9;
+      // optional bool isResponder = 8;
       private boolean isResponder_ ;
       /**
-       * <code>optional bool isResponder = 9;</code>
+       * <code>optional bool isResponder = 8;</code>
        *
        * <pre>
        * if multiple applications are sent back from the server,
        * </pre>
        */
       public boolean hasIsResponder() {
-        return ((bitField0_ & 0x00000100) == 0x00000100);
+        return ((bitField0_ & 0x00000080) == 0x00000080);
       }
       /**
-       * <code>optional bool isResponder = 9;</code>
+       * <code>optional bool isResponder = 8;</code>
        *
        * <pre>
        * if multiple applications are sent back from the server,
@@ -4638,46 +4517,46 @@ public final class Studioapi {
         return isResponder_;
       }
       /**
-       * <code>optional bool isResponder = 9;</code>
+       * <code>optional bool isResponder = 8;</code>
        *
        * <pre>
        * if multiple applications are sent back from the server,
        * </pre>
        */
       public Builder setIsResponder(boolean value) {
-        bitField0_ |= 0x00000100;
+        bitField0_ |= 0x00000080;
         isResponder_ = value;
         
         return this;
       }
       /**
-       * <code>optional bool isResponder = 9;</code>
+       * <code>optional bool isResponder = 8;</code>
        *
        * <pre>
        * if multiple applications are sent back from the server,
        * </pre>
        */
       public Builder clearIsResponder() {
-        bitField0_ = (bitField0_ & ~0x00000100);
+        bitField0_ = (bitField0_ & ~0x00000080);
         isResponder_ = false;
         
         return this;
       }
 
-      // optional bool valueIsPersistent = 10;
+      // optional bool valueIsPersistent = 9;
       private boolean valueIsPersistent_ ;
       /**
-       * <code>optional bool valueIsPersistent = 10;</code>
+       * <code>optional bool valueIsPersistent = 9;</code>
        *
        * <pre>
        * this flag is set to true for the app that the data was requested from
        * </pre>
        */
       public boolean hasValueIsPersistent() {
-        return ((bitField0_ & 0x00000200) == 0x00000200);
+        return ((bitField0_ & 0x00000100) == 0x00000100);
       }
       /**
-       * <code>optional bool valueIsPersistent = 10;</code>
+       * <code>optional bool valueIsPersistent = 9;</code>
        *
        * <pre>
        * this flag is set to true for the app that the data was requested from
@@ -4687,27 +4566,27 @@ public final class Studioapi {
         return valueIsPersistent_;
       }
       /**
-       * <code>optional bool valueIsPersistent = 10;</code>
+       * <code>optional bool valueIsPersistent = 9;</code>
        *
        * <pre>
        * this flag is set to true for the app that the data was requested from
        * </pre>
        */
       public Builder setValueIsPersistent(boolean value) {
-        bitField0_ |= 0x00000200;
+        bitField0_ |= 0x00000100;
         valueIsPersistent_ = value;
         
         return this;
       }
       /**
-       * <code>optional bool valueIsPersistent = 10;</code>
+       * <code>optional bool valueIsPersistent = 9;</code>
        *
        * <pre>
        * this flag is set to true for the app that the data was requested from
        * </pre>
        */
       public Builder clearValueIsPersistent() {
-        bitField0_ = (bitField0_ & ~0x00000200);
+        bitField0_ = (bitField0_ & ~0x00000100);
         valueIsPersistent_ = false;
         
         return this;
@@ -8045,7 +7924,7 @@ public final class Studioapi {
      *
      * <pre>
      * if 0, all child (and their children) node changes are reported; if 1,
-     *only current node’s direct changes are reported 
+     *only current nodeâ€™s deletion is reported 
      * </pre>
      */
     boolean hasDepth();
@@ -8054,7 +7933,7 @@ public final class Studioapi {
      *
      * <pre>
      * if 0, all child (and their children) node changes are reported; if 1,
-     *only current node’s direct changes are reported 
+     *only current nodeâ€™s deletion is reported 
      * </pre>
      */
     int getDepth();
@@ -8212,7 +8091,7 @@ public final class Studioapi {
      *
      * <pre>
      * if 0, all child (and their children) node changes are reported; if 1,
-     *only current node’s direct changes are reported 
+     *only current nodeâ€™s deletion is reported 
      * </pre>
      */
     public boolean hasDepth() {
@@ -8223,7 +8102,7 @@ public final class Studioapi {
      *
      * <pre>
      * if 0, all child (and their children) node changes are reported; if 1,
-     *only current node’s direct changes are reported 
+     *only current nodeâ€™s deletion is reported 
      * </pre>
      */
     public int getDepth() {
@@ -8572,7 +8451,7 @@ public final class Studioapi {
        *
        * <pre>
        * if 0, all child (and their children) node changes are reported; if 1,
-       *only current node’s direct changes are reported 
+       *only current nodeâ€™s deletion is reported 
        * </pre>
        */
       public boolean hasDepth() {
@@ -8583,7 +8462,7 @@ public final class Studioapi {
        *
        * <pre>
        * if 0, all child (and their children) node changes are reported; if 1,
-       *only current node’s direct changes are reported 
+       *only current nodeâ€™s deletion is reported 
        * </pre>
        */
       public int getDepth() {
@@ -8594,7 +8473,7 @@ public final class Studioapi {
        *
        * <pre>
        * if 0, all child (and their children) node changes are reported; if 1,
-       *only current node’s direct changes are reported 
+       *only current nodeâ€™s deletion is reported 
        * </pre>
        */
       public Builder setDepth(int value) {
@@ -8608,7 +8487,7 @@ public final class Studioapi {
        *
        * <pre>
        * if 0, all child (and their children) node changes are reported; if 1,
-       *only current node’s direct changes are reported 
+       *only current nodeâ€™s deletion is reported 
        * </pre>
        */
       public Builder clearDepth() {

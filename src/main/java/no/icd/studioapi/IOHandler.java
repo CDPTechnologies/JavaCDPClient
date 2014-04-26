@@ -1,39 +1,47 @@
 package no.icd.studioapi;
 
+import no.icd.studioapi.Node.ConnectionData;
 import no.icd.studioapi.proto.Studioapi.*;
 
 import java.net.URI;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+
 import com.google.protobuf.InvalidProtocolBufferException;
 
+/**
+ * IOHandler polls the WebSocket thread for new data and deserializes and 
+ * creates events based on it. It also takes requests, serializes them and
+ * forwards them to WebSocket thread.
+ */
 class IOHandler {
 
   private BlockingQueue<byte[]> queue;
   private Transport transport;
   private IOListener listener;
 
+  /** Initialize an IOHandler with the given server URI. */
   IOHandler(URI serverUri) {
     queue = new LinkedBlockingQueue<byte[]>();
     transport = new Transport(serverUri, queue);
     listener = null;
   }
 
+  /** Create the WebSocket connection and return true if succeeded. */
   boolean init(IOListener listener) throws Exception {
     this.listener = listener;
     return transport.connectBlocking();
   }
   
-  /**
-   * Check the incoming queue and parse any messages in it.
-   */
+  /** Check the incoming queue and parse any messages in it. */
   void pollEvents() {
-    while (!queue.isEmpty()) {
+    while (!queue.isEmpty()) {  // TODO do we want to service the whole queue?
       byte[] buffer = queue.poll();
       parse(buffer);
     }
   }
 
+  /** Create and send a structure request of a Node. */
   void nodeRequest(Node node) {
     PBContainer.Builder pb = PBContainer.newBuilder()
         .setMessageType(CDPMessageType.eMessageTypeStructureRequest);
@@ -42,13 +50,25 @@ class IOHandler {
       pb.addStructureRequest(node.getNodeID());
 
     transport.send(pb.build().toByteArray());
-    System.out.println("<<<< OUT MESSAGE " + (node != null ? node.getNodeID() : ""));
+  }
+  
+  /** Create a value request for a Node. Nonzero fs indicates subscription. */
+  void valueRequest(Node node, double fs) {
+    
+    PBValueRequest.Builder pbv = PBValueRequest.newBuilder()
+        .addNodeID(node.getNodeID());
+    if (fs != 0.0)
+      pbv.setFs(fs);
+    
+    PBContainer.Builder pb = PBContainer.newBuilder()
+        .setMessageType(CDPMessageType.eMessageTypeValueGetterRequest)
+        .setGetterRequest(pbv);
+    
+    transport.send(pb.build().toByteArray());
   }
 
-  /** 
-   * Parse a message from a buffer.
-   * @param buf - Byte array read from Transport queue. */
-  void parse(byte[] buf) {
+  /** Parse a message from a buffer read from the RX queue and call events. */
+  private void parse(byte[] buf) {
     try {
       PBContainer pb = PBContainer.parseFrom(buf);
 
@@ -57,22 +77,7 @@ class IOHandler {
 
         /* Create a Node and forward it to listener. */
         for (PBNode pbNode : pb.getStructureResponseList()) {
-          PBInfo info = pbNode.getInfo();
-          Node node = new Node(
-              info.getNodeID(),
-              info.getNodeType(),
-              info.getValueType(),
-              info.getName());
-
-          for (PBNode child : pbNode.getNodeList()) {
-            info = child.getInfo();
-            node.addChild(new Node(
-                info.getNodeID(),
-                info.getNodeType(),
-                info.getValueType(),
-                info.getName()));
-          }
-
+          Node node = parseNodeData(pbNode);
           listener.nodeReceived(node);
         }
         break;
@@ -123,6 +128,33 @@ class IOHandler {
     } catch (InvalidProtocolBufferException e) {
       System.err.println("Failed to parse server data!");
     }
+  }
+  
+  /** Recursively parse a PBNode into a StudioAPI Node. */
+  private Node parseNodeData(PBNode pb) {
+    
+    PBInfo info = pb.getInfo();
+    Node node = new Node(
+        info.getNodeID(),
+        info.getNodeType(),
+        info.getValueType(),
+        info.getName());
+    
+    if (info.getNodeType() == CDPNodeType.CDP_APPLICATION) {
+      if (info.getIsResponder()) {
+        node.setConnectionData(new Node.ConnectionData());
+      } else {
+        node.setConnectionData(new Node.ConnectionData(
+            info.getServerAddr(),
+            info.getServerPort()));
+      }
+    }
+
+    for (PBNode child : pb.getNodeList()) {
+      node.addChild(parseNodeData(child));
+    }
+    
+    return node;
   }
 
 }

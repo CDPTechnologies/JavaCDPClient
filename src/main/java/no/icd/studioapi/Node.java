@@ -12,6 +12,24 @@ import no.icd.studioapi.proto.Studioapi.CDPValueType;
 
 public class Node {
   
+  /** Connection data structure for Application nodes. */
+  static class ConnectionData {
+    
+    boolean correspondsToConnection;
+    String serverAddr;
+    int serverPort;
+    
+    ConnectionData() {
+      correspondsToConnection = true;
+    }
+    
+    ConnectionData(String addr, int port) {
+      correspondsToConnection = false;
+      serverAddr = addr;
+      serverPort = port;
+    }
+  }
+  
   private int nodeID;
   private CDPNodeType nodeType;
   private CDPValueType valueType;
@@ -22,6 +40,7 @@ public class Node {
   private boolean polledChildren;
   private Variant value;
   private RequestDispatch dispatch;
+  private ConnectionData connectionData = null;
   
   private PropertyChangeSupport changes = new PropertyChangeSupport(this);
   
@@ -41,8 +60,46 @@ public class Node {
     return dispatch.requestChildrenForNode(this);
   }
   
+  public void subscribeToValueChanges(double fs) {
+    dispatch.subscribeToNodeValues(this, fs);
+  }
+  
   public void addPropertyChangeListener(PropertyChangeListener listener) {
     changes.addPropertyChangeListener(listener);
+  }
+  
+  public int getChildCount() {
+    return children.size();
+  }
+  
+  public Node getCachedChild(int n) {
+    return children.get(n);
+  }
+  
+  public CDPNodeType getNodeType() {
+    return nodeType;
+  }
+  
+  public CDPValueType getValueType() {
+    return valueType;
+  }
+  
+  public String getName() {
+    return name;
+  }
+  
+  public String getTypeName() {
+    return typeName;
+  }
+  
+  public String getLongName() {
+    if (parent == null || parent.isRoot())
+      return name;
+    return parent.getLongName() + "." + name;
+  }
+
+  public boolean hasPolledChildren() {
+    return polledChildren;
   }
   
   /* Utility methods */
@@ -58,22 +115,14 @@ public class Node {
     child.setParent(this);
   }
   
-  /** Replace a child with the same nodeID, fix parent and dispatch data */
-  void replaceChild(Node child) {
-    ListIterator<Node> i = children.listIterator();
-    
-    while (i.hasNext()) {
-      Node n = i.next();
-      if (n.nodeID == child.nodeID) {
-        i.remove();
-        i.add(child);
-        child.setDispatch(n.dispatch);
-        for (Node grandchild : child.children) {
-          grandchild.setDispatch(n.dispatch);
-        }
-        child.setParent(this);
-        break;
-      }
+  /** Steal all child nodes from the given parent. */
+  void takeChildrenFrom(Node parent) {
+    this.children = parent.children;
+    parent.children = null;
+
+    for (Node child : children) {
+      child.setParent(this);
+      child.setDispatch(this.dispatch);
     }
   }
   
@@ -90,39 +139,12 @@ public class Node {
   }
   
   /* Accessor methods */
-  
-  public int getChildCount() {
-    return children.size();
-  }
-  
-  public Node getChild(int n) {
-    return children.get(n);
+  void setTypeName(String typeName) {
+    this.typeName = typeName;
   }
   
   int getNodeID() {
     return nodeID;
-  }
-  
-  public CDPNodeType getNodeType() {
-    return nodeType;
-  }
-  
-  public CDPValueType getValueType() {
-    return valueType;
-  }
-  
-  public String getName() {
-    return name;
-  }
-  
-  public String getLongName() {
-    if (this.parent == null)
-      return this.name;
-    return parent.getLongName() + "." + name;
-  }
-
-  public boolean hasPolledChildren() {
-    return polledChildren;
   }
 
   void setPolledChildren(boolean polledChildren) {
@@ -150,6 +172,18 @@ public class Node {
     this.value = variant;
   }
   
+  boolean isRoot() {
+    return nodeType == CDPNodeType.CDP_SYSTEM;
+  }
+  
+  public ConnectionData getConnectionData() {
+    return connectionData;
+  }
+
+  public void setConnectionData(ConnectionData connectionData) {
+    this.connectionData = connectionData;
+  }
+
   @Override
   public String toString() {
     return "Node(" + nodeID + ", " + name + ")\n" + children;
