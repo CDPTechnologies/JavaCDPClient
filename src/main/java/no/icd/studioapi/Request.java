@@ -1,3 +1,7 @@
+/**
+ * (c)2014 ICD Software AS
+ */
+
 package no.icd.studioapi;
 
 /** Request object used for tracking structure requests. */

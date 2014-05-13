@@ -1,3 +1,7 @@
+/**
+ * (c)2014 ICD Software AS
+ */
+
 package no.icd.studioapi;
 
 import java.net.URI;
@@ -19,8 +23,7 @@ public class Client implements Runnable {
 	}
 	
 	/** Initialise the client. Connects to server and notifies @a listener. */
-	public void init(String addr, int port, NotificationListener listener) 
-	    throws StudioAPIException {
+	public void init(String addr, int port, NotificationListener listener) {
 	  this.listener = listener;
     try {
       URI wsURI = new URI("ws", null, addr, port, null, null, null);
@@ -39,9 +42,8 @@ public class Client implements Runnable {
 	
 	/** Event-loop method for use in single-threaded applications. */
 	public void process() {
-	  for (RequestDispatch d : connections) {
+	  for (RequestDispatch d : connections)
 	    d.service();
-	  }
 	}
 
 	/** Runnable-interface auto-creates event loop in a new Thread. */

@@ -1,3 +1,7 @@
+/**
+ * (c)2014 ICD Software AS
+ */
+
 package no.icd.studioapi;
 
 import no.icd.studioapi.proto.Studioapi.CDPValueType;
@@ -9,8 +13,8 @@ public class Variant {
   private final Object value;
   private final double timestamp;
   
-  /** Constructor is private, use Variant.Builder to construct Variants. */
-  private Variant(CDPValueType valueType, Object value, double timestamp) {
+  /** Constructor is internal, use Variant.Builder to construct Variants. */
+  Variant(CDPValueType valueType, Object value, double timestamp) {
     this.valueType = valueType;
     this.value = value;
     this.timestamp = timestamp;
@@ -77,7 +81,7 @@ public class Variant {
         value = new Double(strValue);
         break;
       case eUINT64:
-        // TODO
+        value = new Long(strValue); // sign bit represents top bit
         break;
       case eINT64:
         value = new Long(strValue);
@@ -86,19 +90,24 @@ public class Variant {
         value = new Float(strValue);
         break;
       case eUINT:
-        // TODO
+        value = new Integer(strValue); // sign bit represents top bit
         break;
       case eINT:
         value = new Integer(strValue);
         break;
       case eUSHORT:
-        // TODO
+        Integer v = new Integer(strValue);
+        if (v.intValue() < 0 || v.intValue() > 65535)
+          throw new IllegalArgumentException("unsigned short out of bounds");
+        value = v;
         break;
       case eSHORT:
         value = new Short(strValue);
         break;
       case eUCHAR:
-        // TODO
+        value = new Integer(strValue.charAt(0));
+        if (strValue.charAt(0) > 255 || strValue.charAt(0) < 0)
+          throw new IllegalArgumentException("unsigned char out of bounds");
         break;
       case eCHAR:
         value = new Byte(strValue);

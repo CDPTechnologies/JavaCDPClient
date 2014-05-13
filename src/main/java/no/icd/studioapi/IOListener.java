@@ -1,6 +1,16 @@
+/**
+ * (c)2014 ICD Software AS
+ */
+
 package no.icd.studioapi;
 
 interface IOListener {
+  
+  /** 
+   * Called after connection init is done. 
+   * @param success Denotes whether or not the connection was created.
+   */
+  void initReady(boolean success);
   
   /**
    * Called when IOHandler has received a node from the server.

@@ -30,33 +30,29 @@ public final class Studioapi {
      */
     CDP_APPLICATION(2, 1),
     /**
-     * <code>CDP_TOPLEVEL_COMPONENT = 2;</code>
+     * <code>CDP_COMPONENT = 2;</code>
      */
-    CDP_TOPLEVEL_COMPONENT(3, 2),
+    CDP_COMPONENT(3, 2),
     /**
-     * <code>CDP_COMPONENT = 3;</code>
+     * <code>CDP_OBJECT = 3;</code>
      */
-    CDP_COMPONENT(4, 3),
+    CDP_OBJECT(4, 3),
     /**
-     * <code>CDP_OBJECT = 4;</code>
+     * <code>CDP_MESSAGE = 4;</code>
      */
-    CDP_OBJECT(5, 4),
+    CDP_MESSAGE(5, 4),
     /**
-     * <code>CDP_MESSAGE = 5;</code>
+     * <code>CDP_BASE_OBJECT = 5;</code>
      */
-    CDP_MESSAGE(6, 5),
+    CDP_BASE_OBJECT(6, 5),
     /**
-     * <code>CDP_BASE_OBJECT = 6;</code>
+     * <code>CDP_PROPERTY = 6;</code>
      */
-    CDP_BASE_OBJECT(7, 6),
+    CDP_PROPERTY(7, 6),
     /**
-     * <code>CDP_PROPERTY = 7;</code>
+     * <code>CDP_SETTING = 7;</code>
      */
-    CDP_PROPERTY(8, 7),
-    /**
-     * <code>CDP_SETTING = 8;</code>
-     */
-    CDP_SETTING(9, 8),
+    CDP_SETTING(8, 7),
     ;
 
     /**
@@ -72,33 +68,29 @@ public final class Studioapi {
      */
     public static final int CDP_APPLICATION_VALUE = 1;
     /**
-     * <code>CDP_TOPLEVEL_COMPONENT = 2;</code>
+     * <code>CDP_COMPONENT = 2;</code>
      */
-    public static final int CDP_TOPLEVEL_COMPONENT_VALUE = 2;
+    public static final int CDP_COMPONENT_VALUE = 2;
     /**
-     * <code>CDP_COMPONENT = 3;</code>
+     * <code>CDP_OBJECT = 3;</code>
      */
-    public static final int CDP_COMPONENT_VALUE = 3;
+    public static final int CDP_OBJECT_VALUE = 3;
     /**
-     * <code>CDP_OBJECT = 4;</code>
+     * <code>CDP_MESSAGE = 4;</code>
      */
-    public static final int CDP_OBJECT_VALUE = 4;
+    public static final int CDP_MESSAGE_VALUE = 4;
     /**
-     * <code>CDP_MESSAGE = 5;</code>
+     * <code>CDP_BASE_OBJECT = 5;</code>
      */
-    public static final int CDP_MESSAGE_VALUE = 5;
+    public static final int CDP_BASE_OBJECT_VALUE = 5;
     /**
-     * <code>CDP_BASE_OBJECT = 6;</code>
+     * <code>CDP_PROPERTY = 6;</code>
      */
-    public static final int CDP_BASE_OBJECT_VALUE = 6;
+    public static final int CDP_PROPERTY_VALUE = 6;
     /**
-     * <code>CDP_PROPERTY = 7;</code>
+     * <code>CDP_SETTING = 7;</code>
      */
-    public static final int CDP_PROPERTY_VALUE = 7;
-    /**
-     * <code>CDP_SETTING = 8;</code>
-     */
-    public static final int CDP_SETTING_VALUE = 8;
+    public static final int CDP_SETTING_VALUE = 7;
 
 
     public final int getNumber() { return value; }
@@ -108,13 +100,12 @@ public final class Studioapi {
         case -1: return CDP_UNDEFINED;
         case 0: return CDP_SYSTEM;
         case 1: return CDP_APPLICATION;
-        case 2: return CDP_TOPLEVEL_COMPONENT;
-        case 3: return CDP_COMPONENT;
-        case 4: return CDP_OBJECT;
-        case 5: return CDP_MESSAGE;
-        case 6: return CDP_BASE_OBJECT;
-        case 7: return CDP_PROPERTY;
-        case 8: return CDP_SETTING;
+        case 2: return CDP_COMPONENT;
+        case 3: return CDP_OBJECT;
+        case 4: return CDP_MESSAGE;
+        case 5: return CDP_BASE_OBJECT;
+        case 6: return CDP_PROPERTY;
+        case 7: return CDP_SETTING;
         default: return null;
       }
     }

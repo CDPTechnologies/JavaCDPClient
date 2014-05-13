@@ -1,9 +1,10 @@
+/**
+ * (c)2014 ICD Software AS
+ */
+
 package no.icd.studioapi;
 
-/**
- * StudioAPI Client event handler interface.
- * @author kpu@icd.no
- */
+/** StudioAPI Client main event handler interface. */
 public interface NotificationListener {
 
   public void clientReady(Client client);

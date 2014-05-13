@@ -1,11 +1,17 @@
+/**
+ * (c)2014 ICD Software AS
+ */
+
 package no.icd.studioapi;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import no.icd.studioapi.Request.Status;
 import no.icd.studioapi.proto.Studioapi.CDPNodeType;
+import no.icd.studioapi.proto.Studioapi.CDPValueType;
 
 class RequestDispatch implements IOListener {
   
@@ -25,7 +31,7 @@ class RequestDispatch implements IOListener {
    * Construct a RequestDispatch instance.
    * @param handler - The underlying connection handler.
    */
-  RequestDispatch(Client client, IOHandler handler) throws StudioAPIException {
+  RequestDispatch(Client client, IOHandler handler) {
     
     this.client = client;
     this.handler = handler;
@@ -34,16 +40,7 @@ class RequestDispatch implements IOListener {
     boolean success = false;
     state = State.PENDING;
     
-    try {
-      success = handler.init(this);
-    } catch (Exception e) {
-      throw new StudioAPIException("Failed to connect!");
-    }
-    
-    if (!success)
-      throw new StudioAPIException("Faield to connect!");
-    
-    handler.nodeRequest(null);
+    handler.init(this);
   }
   
   /**
@@ -74,9 +71,31 @@ class RequestDispatch implements IOListener {
   }
   
   void subscribeToNodeValues(Node node, double fs) {
-    // TODO verify/hold state
+    if (node.getValueType() == CDPValueType.eUNDEFINED)
+      throw new UnsupportedOperationException("Node has no value type!");
+    node.hasValueSubscription = true;
     handler.valueRequest(node, fs);
   }
+  
+  void unsubcribeFromNodeValues(Node node) {
+    node.hasValueSubscription = false;
+    handler.cancelValueSubscription(node);
+  }
+  
+
+  void postValueForNode(Node node, Variant value) {
+    // TODO verify
+    handler.setRemoteValue(node, value);
+  }
+  
+  @Override
+  public void initReady(boolean success) {
+    if (success)
+      handler.nodeRequest(null);
+    else
+      state = State.DROPPED;
+  }
+
 
   @Override
   public void nodeReceived(Node node) {
@@ -94,8 +113,7 @@ class RequestDispatch implements IOListener {
       Node found = connectionCache.findChildByID(node.getNodeID());
       
       if (found == null) {
-        // TODO log this
-        System.out.println(connectionCache);
+        System.err.println("Could not place received node in tree!");
         return;
       }
       
@@ -103,7 +121,7 @@ class RequestDispatch implements IOListener {
         found.takeChildrenFrom(node);
         System.out.println("replaced " + found.getParent());
         
-        interceptNode(node);
+        interceptNode(found);
       }
     }
   }
@@ -147,12 +165,21 @@ class RequestDispatch implements IOListener {
   
   /** Match incoming node against pending structure requests. */
   private void interceptNode(Node node) {
-    for (Request req : pendingRequests) {
+    List<Request> resolved = new ArrayList<Request>();
+    Iterator<Request> iter = pendingRequests.iterator();
+    
+    while (iter.hasNext()) {
+      Request req = iter.next();
       if (req.getExpectedNodeID() == node.getNodeID()) {
-        pendingRequests.remove(req);
-        req.setNode(node);
-        req.setStatus(Status.RESOLVED);
+        iter.remove();
+        resolved.add(req);
       }
+    }
+    
+    // callbacks are safe only when called from separate lists
+    for (Request req : resolved) {
+      req.setNode(node);
+      req.setStatus(Status.RESOLVED);
     }
   }
 
