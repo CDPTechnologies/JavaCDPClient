@@ -1,7 +1,11 @@
+/**
+ * (c)2014 ICD Software AS
+ */
+
 package no.icd.studioapi;
 
 import static org.junit.Assert.*;
-import no.icd.studioapi.proto.Studioapi.PBVariantValue;
+import no.icd.studioapi.proto.StudioAPI.PBVariantValue;
 
 import org.junit.Before;
 import org.junit.Test;

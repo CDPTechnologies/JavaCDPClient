@@ -1,8 +1,12 @@
+/**
+ * (c)2014 ICD Software AS
+ */
+
 package no.icd.studioapi;
 
 import static org.junit.Assert.*;
-import no.icd.studioapi.proto.Studioapi.CDPNodeType;
-import no.icd.studioapi.proto.Studioapi.CDPValueType;
+import no.icd.studioapi.proto.StudioAPI.CDPNodeType;
+import no.icd.studioapi.proto.StudioAPI.CDPValueType;
 
 import org.junit.After;
 import org.junit.Before;

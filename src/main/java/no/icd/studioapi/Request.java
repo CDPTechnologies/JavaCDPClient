@@ -4,7 +4,10 @@
 
 package no.icd.studioapi;
 
-/** Request object used for tracking structure requests. */
+/** 
+ * Request object used for tracking structure requests.
+ * @author kpu@icd.no
+ */
 public class Request {
   
   /** Describes the status of the request. */
@@ -38,12 +41,10 @@ public class Request {
   private Status status;
   private RequestListener listener;
   private Node node;
-  private boolean isURIRequest;
   private int expectedNodeID;
 
   Request() {
     this.status = Status.PENDING;
-    this.isURIRequest = false;
   }
   
   void setStatus(Status status) {

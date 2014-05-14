@@ -4,34 +4,34 @@
 
 package no.icd.studioapi;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
-import no.icd.studioapi.proto.Studioapi.CDPNodeType;
-import no.icd.studioapi.proto.Studioapi.CDPValueType;
+import no.icd.studioapi.proto.StudioAPI.CDPNodeType;
+import no.icd.studioapi.proto.StudioAPI.CDPValueType;
 
+/**
+ * The Node class represents a single element of the CDP System hierarchy.
+ * @author kpu@icd.no
+ */
 public class Node {
   
-  /** Connection data structure for Application nodes. */
+  /** Connection data structure for top-level nodes. */
   static class ConnectionData {
     
-    boolean correspondsToConnection;
+    boolean isLocal;
     String serverAddr;
     int serverPort;
     
     ConnectionData() {
-      correspondsToConnection = true;
+      isLocal = true;
     }
     
     ConnectionData(String addr, int port) {
-      correspondsToConnection = false;
+      isLocal = false;
       serverAddr = addr;
       serverPort = port;
     }
@@ -51,7 +51,10 @@ public class Node {
   private RequestDispatch dispatch;
   private ConnectionData connectionData = null;
   private Set<ValueListener> valueListeners;
+  private Set<ValueListener> singleListeners;
+  private Set<StructureListener> structureListeners;
   boolean hasValueSubscription = false;
+  boolean hasStructureSubscription = false;
   
   /** (asynchronous) Send a request for this node's child nodes. */
   public Request requestChildNodes() {
@@ -60,7 +63,8 @@ public class Node {
   
   /** (asynchronous) Subscribe to this node's value changes with @a listener. */
   public void subscribeToValueChanges(double fs, ValueListener listener) {
-    valueListeners.add(listener);
+    if (valueType != CDPValueType.eUNDEFINED)
+      valueListeners.add(listener);
     if (!hasValueSubscription)
       dispatch.subscribeToNodeValues(this, fs);
   }
@@ -74,12 +78,32 @@ public class Node {
   
   /** Request a single value for this node. */
   public void requestValue(ValueListener listener) {
-    // TODO
+    singleListeners.add(listener);
+    dispatch.requestValueForNode(this);
   }
   
   /** (asynchronous) Set the remote value of this node to @a value. */
   public void postValue(Variant value) {
     dispatch.postValueForNode(this, value);
+  }
+  
+  /** 
+   * (asynchronous) Subscribe to the remote structure changes of this node.
+   * @param lvl How many sublevels are included in the subscription. 0 means
+   *        the subscription spans the entire cached node tree.
+   * @param listener Callback listener informed of structure changes. 
+   */
+  public void subscribeToStructureChanges(int lvl, StructureListener listener) {
+    structureListeners.add(listener);
+    if (!hasStructureSubscription)
+      dispatch.subscribeToNodeStructure(this, lvl);
+  }
+  
+  /** (asynchronous) Remove a previously registered structure listener. */
+  public void removeStructureListener(StructureListener listener) {
+    boolean success = structureListeners.remove(listener);
+    if (success && structureListeners.isEmpty())
+      dispatch.cancelNodeStructureSubscription(this);
   }
   
   /** Get the number of cached children this Node has. */
@@ -124,10 +148,12 @@ public class Node {
     return parent.getLongName() + "." + name;
   }
   
+  /** Check if this node's value can not be changed. */
   public boolean valueIsReadOnly() {
     return isReadOnly;
   }
   
+  /** Check if thos node's value is saved to XML when it changes. */
   public boolean valueIsSavedOnChange() {
     return isSaveOnChange;
   }
@@ -147,19 +173,22 @@ public class Node {
     this.polledChildren = false;
     this.value = new Variant(CDPValueType.eUNDEFINED, "", 0.0);
     this.valueListeners = new HashSet<ValueListener>();
+    this.singleListeners = new HashSet<ValueListener>();
+    this.structureListeners = new HashSet<StructureListener>();
     this.isReadOnly = false;
     this.isSaveOnChange = false;
   }
   
-  /** Add a child node to this node. NodeID must be unique. */
-  void addChild(Node child) {
+  /** Add a child with an unique ID to this node. Returns true on success. */
+  boolean addChild(Node child) {
     for (Node existingChild : children) {
       if (existingChild.nodeID == child.nodeID) {
-        return;
+        return false;
       }
     }
     children.add(child);
     child.setParent(this);
+    return true;
   }
   
   /** Steal all child nodes from the given parent. */
@@ -185,7 +214,31 @@ public class Node {
     return null;
   }
   
-  /* Accessor methods */
+  /** Notify this node's structure listeners of an event. */
+  void notifyStructureChanged(StructureChange event) {
+    for (StructureListener listener : structureListeners) {
+      listener.structureChanged(this, event);
+    }
+  }
+  
+  /** Remove all child nodes and unset the polled flag. */
+  void invalidateCache() {
+    children.clear();
+    polledChildren = false;
+  }
+  
+  void removeChildWithID(int nodeID) {
+    ListIterator<Node> iter = children.listIterator();
+    while (iter.hasNext()) {
+      if (iter.next().nodeID == nodeID) {
+        iter.remove();
+        break;
+      }
+    }
+  }
+  
+  /* Internal accessor methods */
+  
   void setTypeName(String typeName) {
     this.typeName = typeName;
   }
@@ -225,12 +278,16 @@ public class Node {
     return nodeType == CDPNodeType.CDP_SYSTEM;
   }
   
-  public ConnectionData getConnectionData() {
+  ConnectionData getConnectionData() {
     return connectionData;
   }
 
-  public void setConnectionData(ConnectionData connectionData) {
+  void setConnectionData(ConnectionData connectionData) {
     this.connectionData = connectionData;
+  }
+  
+  List<Node> getChildList() {
+    return children;
   }
 
   @Override

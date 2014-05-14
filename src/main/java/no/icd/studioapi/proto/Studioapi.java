@@ -3,8 +3,8 @@
 
 package no.icd.studioapi.proto;
 
-public final class Studioapi {
-  private Studioapi() {}
+public final class StudioAPI {
+  private StudioAPI() {}
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistryLite registry) {
   }
@@ -53,6 +53,18 @@ public final class Studioapi {
      * <code>CDP_SETTING = 7;</code>
      */
     CDP_SETTING(8, 7),
+    /**
+     * <code>CDP_ENUM = 8;</code>
+     */
+    CDP_ENUM(9, 8),
+    /**
+     * <code>CDP_OPERATOR = 9;</code>
+     */
+    CDP_OPERATOR(10, 9),
+    /**
+     * <code>CDP_NODE = 10;</code>
+     */
+    CDP_NODE(11, 10),
     ;
 
     /**
@@ -91,6 +103,18 @@ public final class Studioapi {
      * <code>CDP_SETTING = 7;</code>
      */
     public static final int CDP_SETTING_VALUE = 7;
+    /**
+     * <code>CDP_ENUM = 8;</code>
+     */
+    public static final int CDP_ENUM_VALUE = 8;
+    /**
+     * <code>CDP_OPERATOR = 9;</code>
+     */
+    public static final int CDP_OPERATOR_VALUE = 9;
+    /**
+     * <code>CDP_NODE = 10;</code>
+     */
+    public static final int CDP_NODE_VALUE = 10;
 
 
     public final int getNumber() { return value; }
@@ -106,6 +130,9 @@ public final class Studioapi {
         case 5: return CDP_BASE_OBJECT;
         case 6: return CDP_PROPERTY;
         case 7: return CDP_SETTING;
+        case 8: return CDP_ENUM;
+        case 9: return CDP_OPERATOR;
+        case 10: return CDP_NODE;
         default: return null;
       }
     }
@@ -513,7 +540,7 @@ public final class Studioapi {
     /**
      * <code>optional .StudioAPI.Proto.CDPMessageType messageType = 1;</code>
      */
-    no.icd.studioapi.proto.Studioapi.CDPMessageType getMessageType();
+    no.icd.studioapi.proto.StudioAPI.CDPMessageType getMessageType();
 
     // optional .StudioAPI.Proto.PBError error = 2;
     /**
@@ -523,7 +550,7 @@ public final class Studioapi {
     /**
      * <code>optional .StudioAPI.Proto.PBError error = 2;</code>
      */
-    no.icd.studioapi.proto.Studioapi.PBError getError();
+    no.icd.studioapi.proto.StudioAPI.PBError getError();
 
     // optional uint64 destIP = 3;
     /**
@@ -567,18 +594,18 @@ public final class Studioapi {
     /**
      * <code>optional .StudioAPI.Proto.PBValueRequest getterRequest = 6;</code>
      */
-    no.icd.studioapi.proto.Studioapi.PBValueRequest getGetterRequest();
+    no.icd.studioapi.proto.StudioAPI.PBValueRequest getGetterRequest();
 
     // repeated .StudioAPI.Proto.PBVariantValue getterResponse = 7;
     /**
      * <code>repeated .StudioAPI.Proto.PBVariantValue getterResponse = 7;</code>
      */
-    java.util.List<no.icd.studioapi.proto.Studioapi.PBVariantValue> 
+    java.util.List<no.icd.studioapi.proto.StudioAPI.PBVariantValue> 
         getGetterResponseList();
     /**
      * <code>repeated .StudioAPI.Proto.PBVariantValue getterResponse = 7;</code>
      */
-    no.icd.studioapi.proto.Studioapi.PBVariantValue getGetterResponse(int index);
+    no.icd.studioapi.proto.StudioAPI.PBVariantValue getGetterResponse(int index);
     /**
      * <code>repeated .StudioAPI.Proto.PBVariantValue getterResponse = 7;</code>
      */
@@ -588,12 +615,12 @@ public final class Studioapi {
     /**
      * <code>repeated .StudioAPI.Proto.PBVariantValue setterRequest = 8;</code>
      */
-    java.util.List<no.icd.studioapi.proto.Studioapi.PBVariantValue> 
+    java.util.List<no.icd.studioapi.proto.StudioAPI.PBVariantValue> 
         getSetterRequestList();
     /**
      * <code>repeated .StudioAPI.Proto.PBVariantValue setterRequest = 8;</code>
      */
-    no.icd.studioapi.proto.Studioapi.PBVariantValue getSetterRequest(int index);
+    no.icd.studioapi.proto.StudioAPI.PBVariantValue getSetterRequest(int index);
     /**
      * <code>repeated .StudioAPI.Proto.PBVariantValue setterRequest = 8;</code>
      */
@@ -603,12 +630,12 @@ public final class Studioapi {
     /**
      * <code>repeated .StudioAPI.Proto.PBNode structureResponse = 9;</code>
      */
-    java.util.List<no.icd.studioapi.proto.Studioapi.PBNode> 
+    java.util.List<no.icd.studioapi.proto.StudioAPI.PBNode> 
         getStructureResponseList();
     /**
      * <code>repeated .StudioAPI.Proto.PBNode structureResponse = 9;</code>
      */
-    no.icd.studioapi.proto.Studioapi.PBNode getStructureResponse(int index);
+    no.icd.studioapi.proto.StudioAPI.PBNode getStructureResponse(int index);
     /**
      * <code>repeated .StudioAPI.Proto.PBNode structureResponse = 9;</code>
      */
@@ -622,18 +649,18 @@ public final class Studioapi {
     /**
      * <code>optional .StudioAPI.Proto.PBStructureChangeSubscription structureChangeSubscription = 10;</code>
      */
-    no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription getStructureChangeSubscription();
+    no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription getStructureChangeSubscription();
 
     // repeated .StudioAPI.Proto.PBStructureChangeResponse structureChangeResponse = 11;
     /**
      * <code>repeated .StudioAPI.Proto.PBStructureChangeResponse structureChangeResponse = 11;</code>
      */
-    java.util.List<no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse> 
+    java.util.List<no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse> 
         getStructureChangeResponseList();
     /**
      * <code>repeated .StudioAPI.Proto.PBStructureChangeResponse structureChangeResponse = 11;</code>
      */
-    no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse getStructureChangeResponse(int index);
+    no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse getStructureChangeResponse(int index);
     /**
      * <code>repeated .StudioAPI.Proto.PBStructureChangeResponse structureChangeResponse = 11;</code>
      */
@@ -652,7 +679,7 @@ public final class Studioapi {
       com.google.protobuf.GeneratedMessageLite.ExtendableMessage<
         PBContainer> implements PBContainerOrBuilder {
     // Use PBContainer.newBuilder() to construct.
-    private PBContainer(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<no.icd.studioapi.proto.Studioapi.PBContainer, ?> builder) {
+    private PBContainer(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<no.icd.studioapi.proto.StudioAPI.PBContainer, ?> builder) {
       super(builder);
 
     }
@@ -690,7 +717,7 @@ public final class Studioapi {
             }
             case 8: {
               int rawValue = input.readEnum();
-              no.icd.studioapi.proto.Studioapi.CDPMessageType value = no.icd.studioapi.proto.Studioapi.CDPMessageType.valueOf(rawValue);
+              no.icd.studioapi.proto.StudioAPI.CDPMessageType value = no.icd.studioapi.proto.StudioAPI.CDPMessageType.valueOf(rawValue);
               if (value != null) {
                 bitField0_ |= 0x00000001;
                 messageType_ = value;
@@ -698,11 +725,11 @@ public final class Studioapi {
               break;
             }
             case 18: {
-              no.icd.studioapi.proto.Studioapi.PBError.Builder subBuilder = null;
+              no.icd.studioapi.proto.StudioAPI.PBError.Builder subBuilder = null;
               if (((bitField0_ & 0x00000002) == 0x00000002)) {
                 subBuilder = error_.toBuilder();
               }
-              error_ = input.readMessage(no.icd.studioapi.proto.Studioapi.PBError.PARSER, extensionRegistry);
+              error_ = input.readMessage(no.icd.studioapi.proto.StudioAPI.PBError.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(error_);
                 error_ = subBuilder.buildPartial();
@@ -742,11 +769,11 @@ public final class Studioapi {
               break;
             }
             case 50: {
-              no.icd.studioapi.proto.Studioapi.PBValueRequest.Builder subBuilder = null;
+              no.icd.studioapi.proto.StudioAPI.PBValueRequest.Builder subBuilder = null;
               if (((bitField0_ & 0x00000010) == 0x00000010)) {
                 subBuilder = getterRequest_.toBuilder();
               }
-              getterRequest_ = input.readMessage(no.icd.studioapi.proto.Studioapi.PBValueRequest.PARSER, extensionRegistry);
+              getterRequest_ = input.readMessage(no.icd.studioapi.proto.StudioAPI.PBValueRequest.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(getterRequest_);
                 getterRequest_ = subBuilder.buildPartial();
@@ -756,34 +783,34 @@ public final class Studioapi {
             }
             case 58: {
               if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
-                getterResponse_ = new java.util.ArrayList<no.icd.studioapi.proto.Studioapi.PBVariantValue>();
+                getterResponse_ = new java.util.ArrayList<no.icd.studioapi.proto.StudioAPI.PBVariantValue>();
                 mutable_bitField0_ |= 0x00000040;
               }
-              getterResponse_.add(input.readMessage(no.icd.studioapi.proto.Studioapi.PBVariantValue.PARSER, extensionRegistry));
+              getterResponse_.add(input.readMessage(no.icd.studioapi.proto.StudioAPI.PBVariantValue.PARSER, extensionRegistry));
               break;
             }
             case 66: {
               if (!((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
-                setterRequest_ = new java.util.ArrayList<no.icd.studioapi.proto.Studioapi.PBVariantValue>();
+                setterRequest_ = new java.util.ArrayList<no.icd.studioapi.proto.StudioAPI.PBVariantValue>();
                 mutable_bitField0_ |= 0x00000080;
               }
-              setterRequest_.add(input.readMessage(no.icd.studioapi.proto.Studioapi.PBVariantValue.PARSER, extensionRegistry));
+              setterRequest_.add(input.readMessage(no.icd.studioapi.proto.StudioAPI.PBVariantValue.PARSER, extensionRegistry));
               break;
             }
             case 74: {
               if (!((mutable_bitField0_ & 0x00000100) == 0x00000100)) {
-                structureResponse_ = new java.util.ArrayList<no.icd.studioapi.proto.Studioapi.PBNode>();
+                structureResponse_ = new java.util.ArrayList<no.icd.studioapi.proto.StudioAPI.PBNode>();
                 mutable_bitField0_ |= 0x00000100;
               }
-              structureResponse_.add(input.readMessage(no.icd.studioapi.proto.Studioapi.PBNode.PARSER, extensionRegistry));
+              structureResponse_.add(input.readMessage(no.icd.studioapi.proto.StudioAPI.PBNode.PARSER, extensionRegistry));
               break;
             }
             case 82: {
-              no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription.Builder subBuilder = null;
+              no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription.Builder subBuilder = null;
               if (((bitField0_ & 0x00000020) == 0x00000020)) {
                 subBuilder = structureChangeSubscription_.toBuilder();
               }
-              structureChangeSubscription_ = input.readMessage(no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription.PARSER, extensionRegistry);
+              structureChangeSubscription_ = input.readMessage(no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(structureChangeSubscription_);
                 structureChangeSubscription_ = subBuilder.buildPartial();
@@ -793,10 +820,10 @@ public final class Studioapi {
             }
             case 90: {
               if (!((mutable_bitField0_ & 0x00000400) == 0x00000400)) {
-                structureChangeResponse_ = new java.util.ArrayList<no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse>();
+                structureChangeResponse_ = new java.util.ArrayList<no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse>();
                 mutable_bitField0_ |= 0x00000400;
               }
-              structureChangeResponse_.add(input.readMessage(no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse.PARSER, extensionRegistry));
+              structureChangeResponse_.add(input.readMessage(no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse.PARSER, extensionRegistry));
               break;
             }
           }
@@ -843,7 +870,7 @@ public final class Studioapi {
     private int bitField0_;
     // optional .StudioAPI.Proto.CDPMessageType messageType = 1;
     public static final int MESSAGETYPE_FIELD_NUMBER = 1;
-    private no.icd.studioapi.proto.Studioapi.CDPMessageType messageType_;
+    private no.icd.studioapi.proto.StudioAPI.CDPMessageType messageType_;
     /**
      * <code>optional .StudioAPI.Proto.CDPMessageType messageType = 1;</code>
      */
@@ -853,13 +880,13 @@ public final class Studioapi {
     /**
      * <code>optional .StudioAPI.Proto.CDPMessageType messageType = 1;</code>
      */
-    public no.icd.studioapi.proto.Studioapi.CDPMessageType getMessageType() {
+    public no.icd.studioapi.proto.StudioAPI.CDPMessageType getMessageType() {
       return messageType_;
     }
 
     // optional .StudioAPI.Proto.PBError error = 2;
     public static final int ERROR_FIELD_NUMBER = 2;
-    private no.icd.studioapi.proto.Studioapi.PBError error_;
+    private no.icd.studioapi.proto.StudioAPI.PBError error_;
     /**
      * <code>optional .StudioAPI.Proto.PBError error = 2;</code>
      */
@@ -869,7 +896,7 @@ public final class Studioapi {
     /**
      * <code>optional .StudioAPI.Proto.PBError error = 2;</code>
      */
-    public no.icd.studioapi.proto.Studioapi.PBError getError() {
+    public no.icd.studioapi.proto.StudioAPI.PBError getError() {
       return error_;
     }
 
@@ -930,7 +957,7 @@ public final class Studioapi {
 
     // optional .StudioAPI.Proto.PBValueRequest getterRequest = 6;
     public static final int GETTERREQUEST_FIELD_NUMBER = 6;
-    private no.icd.studioapi.proto.Studioapi.PBValueRequest getterRequest_;
+    private no.icd.studioapi.proto.StudioAPI.PBValueRequest getterRequest_;
     /**
      * <code>optional .StudioAPI.Proto.PBValueRequest getterRequest = 6;</code>
      */
@@ -940,23 +967,23 @@ public final class Studioapi {
     /**
      * <code>optional .StudioAPI.Proto.PBValueRequest getterRequest = 6;</code>
      */
-    public no.icd.studioapi.proto.Studioapi.PBValueRequest getGetterRequest() {
+    public no.icd.studioapi.proto.StudioAPI.PBValueRequest getGetterRequest() {
       return getterRequest_;
     }
 
     // repeated .StudioAPI.Proto.PBVariantValue getterResponse = 7;
     public static final int GETTERRESPONSE_FIELD_NUMBER = 7;
-    private java.util.List<no.icd.studioapi.proto.Studioapi.PBVariantValue> getterResponse_;
+    private java.util.List<no.icd.studioapi.proto.StudioAPI.PBVariantValue> getterResponse_;
     /**
      * <code>repeated .StudioAPI.Proto.PBVariantValue getterResponse = 7;</code>
      */
-    public java.util.List<no.icd.studioapi.proto.Studioapi.PBVariantValue> getGetterResponseList() {
+    public java.util.List<no.icd.studioapi.proto.StudioAPI.PBVariantValue> getGetterResponseList() {
       return getterResponse_;
     }
     /**
      * <code>repeated .StudioAPI.Proto.PBVariantValue getterResponse = 7;</code>
      */
-    public java.util.List<? extends no.icd.studioapi.proto.Studioapi.PBVariantValueOrBuilder> 
+    public java.util.List<? extends no.icd.studioapi.proto.StudioAPI.PBVariantValueOrBuilder> 
         getGetterResponseOrBuilderList() {
       return getterResponse_;
     }
@@ -969,30 +996,30 @@ public final class Studioapi {
     /**
      * <code>repeated .StudioAPI.Proto.PBVariantValue getterResponse = 7;</code>
      */
-    public no.icd.studioapi.proto.Studioapi.PBVariantValue getGetterResponse(int index) {
+    public no.icd.studioapi.proto.StudioAPI.PBVariantValue getGetterResponse(int index) {
       return getterResponse_.get(index);
     }
     /**
      * <code>repeated .StudioAPI.Proto.PBVariantValue getterResponse = 7;</code>
      */
-    public no.icd.studioapi.proto.Studioapi.PBVariantValueOrBuilder getGetterResponseOrBuilder(
+    public no.icd.studioapi.proto.StudioAPI.PBVariantValueOrBuilder getGetterResponseOrBuilder(
         int index) {
       return getterResponse_.get(index);
     }
 
     // repeated .StudioAPI.Proto.PBVariantValue setterRequest = 8;
     public static final int SETTERREQUEST_FIELD_NUMBER = 8;
-    private java.util.List<no.icd.studioapi.proto.Studioapi.PBVariantValue> setterRequest_;
+    private java.util.List<no.icd.studioapi.proto.StudioAPI.PBVariantValue> setterRequest_;
     /**
      * <code>repeated .StudioAPI.Proto.PBVariantValue setterRequest = 8;</code>
      */
-    public java.util.List<no.icd.studioapi.proto.Studioapi.PBVariantValue> getSetterRequestList() {
+    public java.util.List<no.icd.studioapi.proto.StudioAPI.PBVariantValue> getSetterRequestList() {
       return setterRequest_;
     }
     /**
      * <code>repeated .StudioAPI.Proto.PBVariantValue setterRequest = 8;</code>
      */
-    public java.util.List<? extends no.icd.studioapi.proto.Studioapi.PBVariantValueOrBuilder> 
+    public java.util.List<? extends no.icd.studioapi.proto.StudioAPI.PBVariantValueOrBuilder> 
         getSetterRequestOrBuilderList() {
       return setterRequest_;
     }
@@ -1005,30 +1032,30 @@ public final class Studioapi {
     /**
      * <code>repeated .StudioAPI.Proto.PBVariantValue setterRequest = 8;</code>
      */
-    public no.icd.studioapi.proto.Studioapi.PBVariantValue getSetterRequest(int index) {
+    public no.icd.studioapi.proto.StudioAPI.PBVariantValue getSetterRequest(int index) {
       return setterRequest_.get(index);
     }
     /**
      * <code>repeated .StudioAPI.Proto.PBVariantValue setterRequest = 8;</code>
      */
-    public no.icd.studioapi.proto.Studioapi.PBVariantValueOrBuilder getSetterRequestOrBuilder(
+    public no.icd.studioapi.proto.StudioAPI.PBVariantValueOrBuilder getSetterRequestOrBuilder(
         int index) {
       return setterRequest_.get(index);
     }
 
     // repeated .StudioAPI.Proto.PBNode structureResponse = 9;
     public static final int STRUCTURERESPONSE_FIELD_NUMBER = 9;
-    private java.util.List<no.icd.studioapi.proto.Studioapi.PBNode> structureResponse_;
+    private java.util.List<no.icd.studioapi.proto.StudioAPI.PBNode> structureResponse_;
     /**
      * <code>repeated .StudioAPI.Proto.PBNode structureResponse = 9;</code>
      */
-    public java.util.List<no.icd.studioapi.proto.Studioapi.PBNode> getStructureResponseList() {
+    public java.util.List<no.icd.studioapi.proto.StudioAPI.PBNode> getStructureResponseList() {
       return structureResponse_;
     }
     /**
      * <code>repeated .StudioAPI.Proto.PBNode structureResponse = 9;</code>
      */
-    public java.util.List<? extends no.icd.studioapi.proto.Studioapi.PBNodeOrBuilder> 
+    public java.util.List<? extends no.icd.studioapi.proto.StudioAPI.PBNodeOrBuilder> 
         getStructureResponseOrBuilderList() {
       return structureResponse_;
     }
@@ -1041,20 +1068,20 @@ public final class Studioapi {
     /**
      * <code>repeated .StudioAPI.Proto.PBNode structureResponse = 9;</code>
      */
-    public no.icd.studioapi.proto.Studioapi.PBNode getStructureResponse(int index) {
+    public no.icd.studioapi.proto.StudioAPI.PBNode getStructureResponse(int index) {
       return structureResponse_.get(index);
     }
     /**
      * <code>repeated .StudioAPI.Proto.PBNode structureResponse = 9;</code>
      */
-    public no.icd.studioapi.proto.Studioapi.PBNodeOrBuilder getStructureResponseOrBuilder(
+    public no.icd.studioapi.proto.StudioAPI.PBNodeOrBuilder getStructureResponseOrBuilder(
         int index) {
       return structureResponse_.get(index);
     }
 
     // optional .StudioAPI.Proto.PBStructureChangeSubscription structureChangeSubscription = 10;
     public static final int STRUCTURECHANGESUBSCRIPTION_FIELD_NUMBER = 10;
-    private no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription structureChangeSubscription_;
+    private no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription structureChangeSubscription_;
     /**
      * <code>optional .StudioAPI.Proto.PBStructureChangeSubscription structureChangeSubscription = 10;</code>
      */
@@ -1064,23 +1091,23 @@ public final class Studioapi {
     /**
      * <code>optional .StudioAPI.Proto.PBStructureChangeSubscription structureChangeSubscription = 10;</code>
      */
-    public no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription getStructureChangeSubscription() {
+    public no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription getStructureChangeSubscription() {
       return structureChangeSubscription_;
     }
 
     // repeated .StudioAPI.Proto.PBStructureChangeResponse structureChangeResponse = 11;
     public static final int STRUCTURECHANGERESPONSE_FIELD_NUMBER = 11;
-    private java.util.List<no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse> structureChangeResponse_;
+    private java.util.List<no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse> structureChangeResponse_;
     /**
      * <code>repeated .StudioAPI.Proto.PBStructureChangeResponse structureChangeResponse = 11;</code>
      */
-    public java.util.List<no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse> getStructureChangeResponseList() {
+    public java.util.List<no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse> getStructureChangeResponseList() {
       return structureChangeResponse_;
     }
     /**
      * <code>repeated .StudioAPI.Proto.PBStructureChangeResponse structureChangeResponse = 11;</code>
      */
-    public java.util.List<? extends no.icd.studioapi.proto.Studioapi.PBStructureChangeResponseOrBuilder> 
+    public java.util.List<? extends no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponseOrBuilder> 
         getStructureChangeResponseOrBuilderList() {
       return structureChangeResponse_;
     }
@@ -1093,28 +1120,28 @@ public final class Studioapi {
     /**
      * <code>repeated .StudioAPI.Proto.PBStructureChangeResponse structureChangeResponse = 11;</code>
      */
-    public no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse getStructureChangeResponse(int index) {
+    public no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse getStructureChangeResponse(int index) {
       return structureChangeResponse_.get(index);
     }
     /**
      * <code>repeated .StudioAPI.Proto.PBStructureChangeResponse structureChangeResponse = 11;</code>
      */
-    public no.icd.studioapi.proto.Studioapi.PBStructureChangeResponseOrBuilder getStructureChangeResponseOrBuilder(
+    public no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponseOrBuilder getStructureChangeResponseOrBuilder(
         int index) {
       return structureChangeResponse_.get(index);
     }
 
     private void initFields() {
-      messageType_ = no.icd.studioapi.proto.Studioapi.CDPMessageType.eMessageTypeStructureRequest;
-      error_ = no.icd.studioapi.proto.Studioapi.PBError.getDefaultInstance();
+      messageType_ = no.icd.studioapi.proto.StudioAPI.CDPMessageType.eMessageTypeStructureRequest;
+      error_ = no.icd.studioapi.proto.StudioAPI.PBError.getDefaultInstance();
       destIP_ = 0L;
       destPort_ = 0;
       structureRequest_ = java.util.Collections.emptyList();
-      getterRequest_ = no.icd.studioapi.proto.Studioapi.PBValueRequest.getDefaultInstance();
+      getterRequest_ = no.icd.studioapi.proto.StudioAPI.PBValueRequest.getDefaultInstance();
       getterResponse_ = java.util.Collections.emptyList();
       setterRequest_ = java.util.Collections.emptyList();
       structureResponse_ = java.util.Collections.emptyList();
-      structureChangeSubscription_ = no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription.getDefaultInstance();
+      structureChangeSubscription_ = no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription.getDefaultInstance();
       structureChangeResponse_ = java.util.Collections.emptyList();
     }
     private byte memoizedIsInitialized = -1;
@@ -1176,7 +1203,7 @@ public final class Studioapi {
                         throws java.io.IOException {
       getSerializedSize();
       com.google.protobuf.GeneratedMessageLite
-        .ExtendableMessage<no.icd.studioapi.proto.Studioapi.PBContainer>.ExtensionWriter extensionWriter =
+        .ExtendableMessage<no.icd.studioapi.proto.StudioAPI.PBContainer>.ExtensionWriter extensionWriter =
           newExtensionWriter();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeEnum(1, messageType_.getNumber());
@@ -1281,53 +1308,53 @@ public final class Studioapi {
       return super.writeReplace();
     }
 
-    public static no.icd.studioapi.proto.Studioapi.PBContainer parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBContainer parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBContainer parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBContainer parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBContainer parseFrom(byte[] data)
+    public static no.icd.studioapi.proto.StudioAPI.PBContainer parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBContainer parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBContainer parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBContainer parseFrom(java.io.InputStream input)
+    public static no.icd.studioapi.proto.StudioAPI.PBContainer parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBContainer parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBContainer parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBContainer parseDelimitedFrom(java.io.InputStream input)
+    public static no.icd.studioapi.proto.StudioAPI.PBContainer parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBContainer parseDelimitedFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBContainer parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBContainer parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBContainer parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBContainer parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBContainer parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -1336,7 +1363,7 @@ public final class Studioapi {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(no.icd.studioapi.proto.Studioapi.PBContainer prototype) {
+    public static Builder newBuilder(no.icd.studioapi.proto.StudioAPI.PBContainer prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -1352,8 +1379,8 @@ public final class Studioapi {
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<
-          no.icd.studioapi.proto.Studioapi.PBContainer, Builder> implements no.icd.studioapi.proto.Studioapi.PBContainerOrBuilder {
-      // Construct using no.icd.studioapi.proto.Studioapi.PBContainer.newBuilder()
+          no.icd.studioapi.proto.StudioAPI.PBContainer, Builder> implements no.icd.studioapi.proto.StudioAPI.PBContainerOrBuilder {
+      // Construct using no.icd.studioapi.proto.StudioAPI.PBContainer.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -1366,9 +1393,9 @@ public final class Studioapi {
 
       public Builder clear() {
         super.clear();
-        messageType_ = no.icd.studioapi.proto.Studioapi.CDPMessageType.eMessageTypeStructureRequest;
+        messageType_ = no.icd.studioapi.proto.StudioAPI.CDPMessageType.eMessageTypeStructureRequest;
         bitField0_ = (bitField0_ & ~0x00000001);
-        error_ = no.icd.studioapi.proto.Studioapi.PBError.getDefaultInstance();
+        error_ = no.icd.studioapi.proto.StudioAPI.PBError.getDefaultInstance();
         bitField0_ = (bitField0_ & ~0x00000002);
         destIP_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000004);
@@ -1376,7 +1403,7 @@ public final class Studioapi {
         bitField0_ = (bitField0_ & ~0x00000008);
         structureRequest_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000010);
-        getterRequest_ = no.icd.studioapi.proto.Studioapi.PBValueRequest.getDefaultInstance();
+        getterRequest_ = no.icd.studioapi.proto.StudioAPI.PBValueRequest.getDefaultInstance();
         bitField0_ = (bitField0_ & ~0x00000020);
         getterResponse_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000040);
@@ -1384,7 +1411,7 @@ public final class Studioapi {
         bitField0_ = (bitField0_ & ~0x00000080);
         structureResponse_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000100);
-        structureChangeSubscription_ = no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription.getDefaultInstance();
+        structureChangeSubscription_ = no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription.getDefaultInstance();
         bitField0_ = (bitField0_ & ~0x00000200);
         structureChangeResponse_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000400);
@@ -1395,20 +1422,20 @@ public final class Studioapi {
         return create().mergeFrom(buildPartial());
       }
 
-      public no.icd.studioapi.proto.Studioapi.PBContainer getDefaultInstanceForType() {
-        return no.icd.studioapi.proto.Studioapi.PBContainer.getDefaultInstance();
+      public no.icd.studioapi.proto.StudioAPI.PBContainer getDefaultInstanceForType() {
+        return no.icd.studioapi.proto.StudioAPI.PBContainer.getDefaultInstance();
       }
 
-      public no.icd.studioapi.proto.Studioapi.PBContainer build() {
-        no.icd.studioapi.proto.Studioapi.PBContainer result = buildPartial();
+      public no.icd.studioapi.proto.StudioAPI.PBContainer build() {
+        no.icd.studioapi.proto.StudioAPI.PBContainer result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public no.icd.studioapi.proto.Studioapi.PBContainer buildPartial() {
-        no.icd.studioapi.proto.Studioapi.PBContainer result = new no.icd.studioapi.proto.Studioapi.PBContainer(this);
+      public no.icd.studioapi.proto.StudioAPI.PBContainer buildPartial() {
+        no.icd.studioapi.proto.StudioAPI.PBContainer result = new no.icd.studioapi.proto.StudioAPI.PBContainer(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -1464,8 +1491,8 @@ public final class Studioapi {
         return result;
       }
 
-      public Builder mergeFrom(no.icd.studioapi.proto.Studioapi.PBContainer other) {
-        if (other == no.icd.studioapi.proto.Studioapi.PBContainer.getDefaultInstance()) return this;
+      public Builder mergeFrom(no.icd.studioapi.proto.StudioAPI.PBContainer other) {
+        if (other == no.icd.studioapi.proto.StudioAPI.PBContainer.getDefaultInstance()) return this;
         if (other.hasMessageType()) {
           setMessageType(other.getMessageType());
         }
@@ -1592,11 +1619,11 @@ public final class Studioapi {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        no.icd.studioapi.proto.Studioapi.PBContainer parsedMessage = null;
+        no.icd.studioapi.proto.StudioAPI.PBContainer parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (no.icd.studioapi.proto.Studioapi.PBContainer) e.getUnfinishedMessage();
+          parsedMessage = (no.icd.studioapi.proto.StudioAPI.PBContainer) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -1608,7 +1635,7 @@ public final class Studioapi {
       private int bitField0_;
 
       // optional .StudioAPI.Proto.CDPMessageType messageType = 1;
-      private no.icd.studioapi.proto.Studioapi.CDPMessageType messageType_ = no.icd.studioapi.proto.Studioapi.CDPMessageType.eMessageTypeStructureRequest;
+      private no.icd.studioapi.proto.StudioAPI.CDPMessageType messageType_ = no.icd.studioapi.proto.StudioAPI.CDPMessageType.eMessageTypeStructureRequest;
       /**
        * <code>optional .StudioAPI.Proto.CDPMessageType messageType = 1;</code>
        */
@@ -1618,13 +1645,13 @@ public final class Studioapi {
       /**
        * <code>optional .StudioAPI.Proto.CDPMessageType messageType = 1;</code>
        */
-      public no.icd.studioapi.proto.Studioapi.CDPMessageType getMessageType() {
+      public no.icd.studioapi.proto.StudioAPI.CDPMessageType getMessageType() {
         return messageType_;
       }
       /**
        * <code>optional .StudioAPI.Proto.CDPMessageType messageType = 1;</code>
        */
-      public Builder setMessageType(no.icd.studioapi.proto.Studioapi.CDPMessageType value) {
+      public Builder setMessageType(no.icd.studioapi.proto.StudioAPI.CDPMessageType value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -1638,13 +1665,13 @@ public final class Studioapi {
        */
       public Builder clearMessageType() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        messageType_ = no.icd.studioapi.proto.Studioapi.CDPMessageType.eMessageTypeStructureRequest;
+        messageType_ = no.icd.studioapi.proto.StudioAPI.CDPMessageType.eMessageTypeStructureRequest;
         
         return this;
       }
 
       // optional .StudioAPI.Proto.PBError error = 2;
-      private no.icd.studioapi.proto.Studioapi.PBError error_ = no.icd.studioapi.proto.Studioapi.PBError.getDefaultInstance();
+      private no.icd.studioapi.proto.StudioAPI.PBError error_ = no.icd.studioapi.proto.StudioAPI.PBError.getDefaultInstance();
       /**
        * <code>optional .StudioAPI.Proto.PBError error = 2;</code>
        */
@@ -1654,13 +1681,13 @@ public final class Studioapi {
       /**
        * <code>optional .StudioAPI.Proto.PBError error = 2;</code>
        */
-      public no.icd.studioapi.proto.Studioapi.PBError getError() {
+      public no.icd.studioapi.proto.StudioAPI.PBError getError() {
         return error_;
       }
       /**
        * <code>optional .StudioAPI.Proto.PBError error = 2;</code>
        */
-      public Builder setError(no.icd.studioapi.proto.Studioapi.PBError value) {
+      public Builder setError(no.icd.studioapi.proto.StudioAPI.PBError value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -1673,7 +1700,7 @@ public final class Studioapi {
        * <code>optional .StudioAPI.Proto.PBError error = 2;</code>
        */
       public Builder setError(
-          no.icd.studioapi.proto.Studioapi.PBError.Builder builderForValue) {
+          no.icd.studioapi.proto.StudioAPI.PBError.Builder builderForValue) {
         error_ = builderForValue.build();
 
         bitField0_ |= 0x00000002;
@@ -1682,11 +1709,11 @@ public final class Studioapi {
       /**
        * <code>optional .StudioAPI.Proto.PBError error = 2;</code>
        */
-      public Builder mergeError(no.icd.studioapi.proto.Studioapi.PBError value) {
+      public Builder mergeError(no.icd.studioapi.proto.StudioAPI.PBError value) {
         if (((bitField0_ & 0x00000002) == 0x00000002) &&
-            error_ != no.icd.studioapi.proto.Studioapi.PBError.getDefaultInstance()) {
+            error_ != no.icd.studioapi.proto.StudioAPI.PBError.getDefaultInstance()) {
           error_ =
-            no.icd.studioapi.proto.Studioapi.PBError.newBuilder(error_).mergeFrom(value).buildPartial();
+            no.icd.studioapi.proto.StudioAPI.PBError.newBuilder(error_).mergeFrom(value).buildPartial();
         } else {
           error_ = value;
         }
@@ -1698,7 +1725,7 @@ public final class Studioapi {
        * <code>optional .StudioAPI.Proto.PBError error = 2;</code>
        */
       public Builder clearError() {
-        error_ = no.icd.studioapi.proto.Studioapi.PBError.getDefaultInstance();
+        error_ = no.icd.studioapi.proto.StudioAPI.PBError.getDefaultInstance();
 
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
@@ -1837,7 +1864,7 @@ public final class Studioapi {
       }
 
       // optional .StudioAPI.Proto.PBValueRequest getterRequest = 6;
-      private no.icd.studioapi.proto.Studioapi.PBValueRequest getterRequest_ = no.icd.studioapi.proto.Studioapi.PBValueRequest.getDefaultInstance();
+      private no.icd.studioapi.proto.StudioAPI.PBValueRequest getterRequest_ = no.icd.studioapi.proto.StudioAPI.PBValueRequest.getDefaultInstance();
       /**
        * <code>optional .StudioAPI.Proto.PBValueRequest getterRequest = 6;</code>
        */
@@ -1847,13 +1874,13 @@ public final class Studioapi {
       /**
        * <code>optional .StudioAPI.Proto.PBValueRequest getterRequest = 6;</code>
        */
-      public no.icd.studioapi.proto.Studioapi.PBValueRequest getGetterRequest() {
+      public no.icd.studioapi.proto.StudioAPI.PBValueRequest getGetterRequest() {
         return getterRequest_;
       }
       /**
        * <code>optional .StudioAPI.Proto.PBValueRequest getterRequest = 6;</code>
        */
-      public Builder setGetterRequest(no.icd.studioapi.proto.Studioapi.PBValueRequest value) {
+      public Builder setGetterRequest(no.icd.studioapi.proto.StudioAPI.PBValueRequest value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -1866,7 +1893,7 @@ public final class Studioapi {
        * <code>optional .StudioAPI.Proto.PBValueRequest getterRequest = 6;</code>
        */
       public Builder setGetterRequest(
-          no.icd.studioapi.proto.Studioapi.PBValueRequest.Builder builderForValue) {
+          no.icd.studioapi.proto.StudioAPI.PBValueRequest.Builder builderForValue) {
         getterRequest_ = builderForValue.build();
 
         bitField0_ |= 0x00000020;
@@ -1875,11 +1902,11 @@ public final class Studioapi {
       /**
        * <code>optional .StudioAPI.Proto.PBValueRequest getterRequest = 6;</code>
        */
-      public Builder mergeGetterRequest(no.icd.studioapi.proto.Studioapi.PBValueRequest value) {
+      public Builder mergeGetterRequest(no.icd.studioapi.proto.StudioAPI.PBValueRequest value) {
         if (((bitField0_ & 0x00000020) == 0x00000020) &&
-            getterRequest_ != no.icd.studioapi.proto.Studioapi.PBValueRequest.getDefaultInstance()) {
+            getterRequest_ != no.icd.studioapi.proto.StudioAPI.PBValueRequest.getDefaultInstance()) {
           getterRequest_ =
-            no.icd.studioapi.proto.Studioapi.PBValueRequest.newBuilder(getterRequest_).mergeFrom(value).buildPartial();
+            no.icd.studioapi.proto.StudioAPI.PBValueRequest.newBuilder(getterRequest_).mergeFrom(value).buildPartial();
         } else {
           getterRequest_ = value;
         }
@@ -1891,18 +1918,18 @@ public final class Studioapi {
        * <code>optional .StudioAPI.Proto.PBValueRequest getterRequest = 6;</code>
        */
       public Builder clearGetterRequest() {
-        getterRequest_ = no.icd.studioapi.proto.Studioapi.PBValueRequest.getDefaultInstance();
+        getterRequest_ = no.icd.studioapi.proto.StudioAPI.PBValueRequest.getDefaultInstance();
 
         bitField0_ = (bitField0_ & ~0x00000020);
         return this;
       }
 
       // repeated .StudioAPI.Proto.PBVariantValue getterResponse = 7;
-      private java.util.List<no.icd.studioapi.proto.Studioapi.PBVariantValue> getterResponse_ =
+      private java.util.List<no.icd.studioapi.proto.StudioAPI.PBVariantValue> getterResponse_ =
         java.util.Collections.emptyList();
       private void ensureGetterResponseIsMutable() {
         if (!((bitField0_ & 0x00000040) == 0x00000040)) {
-          getterResponse_ = new java.util.ArrayList<no.icd.studioapi.proto.Studioapi.PBVariantValue>(getterResponse_);
+          getterResponse_ = new java.util.ArrayList<no.icd.studioapi.proto.StudioAPI.PBVariantValue>(getterResponse_);
           bitField0_ |= 0x00000040;
          }
       }
@@ -1910,7 +1937,7 @@ public final class Studioapi {
       /**
        * <code>repeated .StudioAPI.Proto.PBVariantValue getterResponse = 7;</code>
        */
-      public java.util.List<no.icd.studioapi.proto.Studioapi.PBVariantValue> getGetterResponseList() {
+      public java.util.List<no.icd.studioapi.proto.StudioAPI.PBVariantValue> getGetterResponseList() {
         return java.util.Collections.unmodifiableList(getterResponse_);
       }
       /**
@@ -1922,14 +1949,14 @@ public final class Studioapi {
       /**
        * <code>repeated .StudioAPI.Proto.PBVariantValue getterResponse = 7;</code>
        */
-      public no.icd.studioapi.proto.Studioapi.PBVariantValue getGetterResponse(int index) {
+      public no.icd.studioapi.proto.StudioAPI.PBVariantValue getGetterResponse(int index) {
         return getterResponse_.get(index);
       }
       /**
        * <code>repeated .StudioAPI.Proto.PBVariantValue getterResponse = 7;</code>
        */
       public Builder setGetterResponse(
-          int index, no.icd.studioapi.proto.Studioapi.PBVariantValue value) {
+          int index, no.icd.studioapi.proto.StudioAPI.PBVariantValue value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -1942,7 +1969,7 @@ public final class Studioapi {
        * <code>repeated .StudioAPI.Proto.PBVariantValue getterResponse = 7;</code>
        */
       public Builder setGetterResponse(
-          int index, no.icd.studioapi.proto.Studioapi.PBVariantValue.Builder builderForValue) {
+          int index, no.icd.studioapi.proto.StudioAPI.PBVariantValue.Builder builderForValue) {
         ensureGetterResponseIsMutable();
         getterResponse_.set(index, builderForValue.build());
 
@@ -1951,7 +1978,7 @@ public final class Studioapi {
       /**
        * <code>repeated .StudioAPI.Proto.PBVariantValue getterResponse = 7;</code>
        */
-      public Builder addGetterResponse(no.icd.studioapi.proto.Studioapi.PBVariantValue value) {
+      public Builder addGetterResponse(no.icd.studioapi.proto.StudioAPI.PBVariantValue value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -1964,7 +1991,7 @@ public final class Studioapi {
        * <code>repeated .StudioAPI.Proto.PBVariantValue getterResponse = 7;</code>
        */
       public Builder addGetterResponse(
-          int index, no.icd.studioapi.proto.Studioapi.PBVariantValue value) {
+          int index, no.icd.studioapi.proto.StudioAPI.PBVariantValue value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -1977,7 +2004,7 @@ public final class Studioapi {
        * <code>repeated .StudioAPI.Proto.PBVariantValue getterResponse = 7;</code>
        */
       public Builder addGetterResponse(
-          no.icd.studioapi.proto.Studioapi.PBVariantValue.Builder builderForValue) {
+          no.icd.studioapi.proto.StudioAPI.PBVariantValue.Builder builderForValue) {
         ensureGetterResponseIsMutable();
         getterResponse_.add(builderForValue.build());
 
@@ -1987,7 +2014,7 @@ public final class Studioapi {
        * <code>repeated .StudioAPI.Proto.PBVariantValue getterResponse = 7;</code>
        */
       public Builder addGetterResponse(
-          int index, no.icd.studioapi.proto.Studioapi.PBVariantValue.Builder builderForValue) {
+          int index, no.icd.studioapi.proto.StudioAPI.PBVariantValue.Builder builderForValue) {
         ensureGetterResponseIsMutable();
         getterResponse_.add(index, builderForValue.build());
 
@@ -1997,7 +2024,7 @@ public final class Studioapi {
        * <code>repeated .StudioAPI.Proto.PBVariantValue getterResponse = 7;</code>
        */
       public Builder addAllGetterResponse(
-          java.lang.Iterable<? extends no.icd.studioapi.proto.Studioapi.PBVariantValue> values) {
+          java.lang.Iterable<? extends no.icd.studioapi.proto.StudioAPI.PBVariantValue> values) {
         ensureGetterResponseIsMutable();
         super.addAll(values, getterResponse_);
 
@@ -2023,11 +2050,11 @@ public final class Studioapi {
       }
 
       // repeated .StudioAPI.Proto.PBVariantValue setterRequest = 8;
-      private java.util.List<no.icd.studioapi.proto.Studioapi.PBVariantValue> setterRequest_ =
+      private java.util.List<no.icd.studioapi.proto.StudioAPI.PBVariantValue> setterRequest_ =
         java.util.Collections.emptyList();
       private void ensureSetterRequestIsMutable() {
         if (!((bitField0_ & 0x00000080) == 0x00000080)) {
-          setterRequest_ = new java.util.ArrayList<no.icd.studioapi.proto.Studioapi.PBVariantValue>(setterRequest_);
+          setterRequest_ = new java.util.ArrayList<no.icd.studioapi.proto.StudioAPI.PBVariantValue>(setterRequest_);
           bitField0_ |= 0x00000080;
          }
       }
@@ -2035,7 +2062,7 @@ public final class Studioapi {
       /**
        * <code>repeated .StudioAPI.Proto.PBVariantValue setterRequest = 8;</code>
        */
-      public java.util.List<no.icd.studioapi.proto.Studioapi.PBVariantValue> getSetterRequestList() {
+      public java.util.List<no.icd.studioapi.proto.StudioAPI.PBVariantValue> getSetterRequestList() {
         return java.util.Collections.unmodifiableList(setterRequest_);
       }
       /**
@@ -2047,14 +2074,14 @@ public final class Studioapi {
       /**
        * <code>repeated .StudioAPI.Proto.PBVariantValue setterRequest = 8;</code>
        */
-      public no.icd.studioapi.proto.Studioapi.PBVariantValue getSetterRequest(int index) {
+      public no.icd.studioapi.proto.StudioAPI.PBVariantValue getSetterRequest(int index) {
         return setterRequest_.get(index);
       }
       /**
        * <code>repeated .StudioAPI.Proto.PBVariantValue setterRequest = 8;</code>
        */
       public Builder setSetterRequest(
-          int index, no.icd.studioapi.proto.Studioapi.PBVariantValue value) {
+          int index, no.icd.studioapi.proto.StudioAPI.PBVariantValue value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -2067,7 +2094,7 @@ public final class Studioapi {
        * <code>repeated .StudioAPI.Proto.PBVariantValue setterRequest = 8;</code>
        */
       public Builder setSetterRequest(
-          int index, no.icd.studioapi.proto.Studioapi.PBVariantValue.Builder builderForValue) {
+          int index, no.icd.studioapi.proto.StudioAPI.PBVariantValue.Builder builderForValue) {
         ensureSetterRequestIsMutable();
         setterRequest_.set(index, builderForValue.build());
 
@@ -2076,7 +2103,7 @@ public final class Studioapi {
       /**
        * <code>repeated .StudioAPI.Proto.PBVariantValue setterRequest = 8;</code>
        */
-      public Builder addSetterRequest(no.icd.studioapi.proto.Studioapi.PBVariantValue value) {
+      public Builder addSetterRequest(no.icd.studioapi.proto.StudioAPI.PBVariantValue value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -2089,7 +2116,7 @@ public final class Studioapi {
        * <code>repeated .StudioAPI.Proto.PBVariantValue setterRequest = 8;</code>
        */
       public Builder addSetterRequest(
-          int index, no.icd.studioapi.proto.Studioapi.PBVariantValue value) {
+          int index, no.icd.studioapi.proto.StudioAPI.PBVariantValue value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -2102,7 +2129,7 @@ public final class Studioapi {
        * <code>repeated .StudioAPI.Proto.PBVariantValue setterRequest = 8;</code>
        */
       public Builder addSetterRequest(
-          no.icd.studioapi.proto.Studioapi.PBVariantValue.Builder builderForValue) {
+          no.icd.studioapi.proto.StudioAPI.PBVariantValue.Builder builderForValue) {
         ensureSetterRequestIsMutable();
         setterRequest_.add(builderForValue.build());
 
@@ -2112,7 +2139,7 @@ public final class Studioapi {
        * <code>repeated .StudioAPI.Proto.PBVariantValue setterRequest = 8;</code>
        */
       public Builder addSetterRequest(
-          int index, no.icd.studioapi.proto.Studioapi.PBVariantValue.Builder builderForValue) {
+          int index, no.icd.studioapi.proto.StudioAPI.PBVariantValue.Builder builderForValue) {
         ensureSetterRequestIsMutable();
         setterRequest_.add(index, builderForValue.build());
 
@@ -2122,7 +2149,7 @@ public final class Studioapi {
        * <code>repeated .StudioAPI.Proto.PBVariantValue setterRequest = 8;</code>
        */
       public Builder addAllSetterRequest(
-          java.lang.Iterable<? extends no.icd.studioapi.proto.Studioapi.PBVariantValue> values) {
+          java.lang.Iterable<? extends no.icd.studioapi.proto.StudioAPI.PBVariantValue> values) {
         ensureSetterRequestIsMutable();
         super.addAll(values, setterRequest_);
 
@@ -2148,11 +2175,11 @@ public final class Studioapi {
       }
 
       // repeated .StudioAPI.Proto.PBNode structureResponse = 9;
-      private java.util.List<no.icd.studioapi.proto.Studioapi.PBNode> structureResponse_ =
+      private java.util.List<no.icd.studioapi.proto.StudioAPI.PBNode> structureResponse_ =
         java.util.Collections.emptyList();
       private void ensureStructureResponseIsMutable() {
         if (!((bitField0_ & 0x00000100) == 0x00000100)) {
-          structureResponse_ = new java.util.ArrayList<no.icd.studioapi.proto.Studioapi.PBNode>(structureResponse_);
+          structureResponse_ = new java.util.ArrayList<no.icd.studioapi.proto.StudioAPI.PBNode>(structureResponse_);
           bitField0_ |= 0x00000100;
          }
       }
@@ -2160,7 +2187,7 @@ public final class Studioapi {
       /**
        * <code>repeated .StudioAPI.Proto.PBNode structureResponse = 9;</code>
        */
-      public java.util.List<no.icd.studioapi.proto.Studioapi.PBNode> getStructureResponseList() {
+      public java.util.List<no.icd.studioapi.proto.StudioAPI.PBNode> getStructureResponseList() {
         return java.util.Collections.unmodifiableList(structureResponse_);
       }
       /**
@@ -2172,14 +2199,14 @@ public final class Studioapi {
       /**
        * <code>repeated .StudioAPI.Proto.PBNode structureResponse = 9;</code>
        */
-      public no.icd.studioapi.proto.Studioapi.PBNode getStructureResponse(int index) {
+      public no.icd.studioapi.proto.StudioAPI.PBNode getStructureResponse(int index) {
         return structureResponse_.get(index);
       }
       /**
        * <code>repeated .StudioAPI.Proto.PBNode structureResponse = 9;</code>
        */
       public Builder setStructureResponse(
-          int index, no.icd.studioapi.proto.Studioapi.PBNode value) {
+          int index, no.icd.studioapi.proto.StudioAPI.PBNode value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -2192,7 +2219,7 @@ public final class Studioapi {
        * <code>repeated .StudioAPI.Proto.PBNode structureResponse = 9;</code>
        */
       public Builder setStructureResponse(
-          int index, no.icd.studioapi.proto.Studioapi.PBNode.Builder builderForValue) {
+          int index, no.icd.studioapi.proto.StudioAPI.PBNode.Builder builderForValue) {
         ensureStructureResponseIsMutable();
         structureResponse_.set(index, builderForValue.build());
 
@@ -2201,7 +2228,7 @@ public final class Studioapi {
       /**
        * <code>repeated .StudioAPI.Proto.PBNode structureResponse = 9;</code>
        */
-      public Builder addStructureResponse(no.icd.studioapi.proto.Studioapi.PBNode value) {
+      public Builder addStructureResponse(no.icd.studioapi.proto.StudioAPI.PBNode value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -2214,7 +2241,7 @@ public final class Studioapi {
        * <code>repeated .StudioAPI.Proto.PBNode structureResponse = 9;</code>
        */
       public Builder addStructureResponse(
-          int index, no.icd.studioapi.proto.Studioapi.PBNode value) {
+          int index, no.icd.studioapi.proto.StudioAPI.PBNode value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -2227,7 +2254,7 @@ public final class Studioapi {
        * <code>repeated .StudioAPI.Proto.PBNode structureResponse = 9;</code>
        */
       public Builder addStructureResponse(
-          no.icd.studioapi.proto.Studioapi.PBNode.Builder builderForValue) {
+          no.icd.studioapi.proto.StudioAPI.PBNode.Builder builderForValue) {
         ensureStructureResponseIsMutable();
         structureResponse_.add(builderForValue.build());
 
@@ -2237,7 +2264,7 @@ public final class Studioapi {
        * <code>repeated .StudioAPI.Proto.PBNode structureResponse = 9;</code>
        */
       public Builder addStructureResponse(
-          int index, no.icd.studioapi.proto.Studioapi.PBNode.Builder builderForValue) {
+          int index, no.icd.studioapi.proto.StudioAPI.PBNode.Builder builderForValue) {
         ensureStructureResponseIsMutable();
         structureResponse_.add(index, builderForValue.build());
 
@@ -2247,7 +2274,7 @@ public final class Studioapi {
        * <code>repeated .StudioAPI.Proto.PBNode structureResponse = 9;</code>
        */
       public Builder addAllStructureResponse(
-          java.lang.Iterable<? extends no.icd.studioapi.proto.Studioapi.PBNode> values) {
+          java.lang.Iterable<? extends no.icd.studioapi.proto.StudioAPI.PBNode> values) {
         ensureStructureResponseIsMutable();
         super.addAll(values, structureResponse_);
 
@@ -2273,7 +2300,7 @@ public final class Studioapi {
       }
 
       // optional .StudioAPI.Proto.PBStructureChangeSubscription structureChangeSubscription = 10;
-      private no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription structureChangeSubscription_ = no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription.getDefaultInstance();
+      private no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription structureChangeSubscription_ = no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription.getDefaultInstance();
       /**
        * <code>optional .StudioAPI.Proto.PBStructureChangeSubscription structureChangeSubscription = 10;</code>
        */
@@ -2283,13 +2310,13 @@ public final class Studioapi {
       /**
        * <code>optional .StudioAPI.Proto.PBStructureChangeSubscription structureChangeSubscription = 10;</code>
        */
-      public no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription getStructureChangeSubscription() {
+      public no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription getStructureChangeSubscription() {
         return structureChangeSubscription_;
       }
       /**
        * <code>optional .StudioAPI.Proto.PBStructureChangeSubscription structureChangeSubscription = 10;</code>
        */
-      public Builder setStructureChangeSubscription(no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription value) {
+      public Builder setStructureChangeSubscription(no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -2302,7 +2329,7 @@ public final class Studioapi {
        * <code>optional .StudioAPI.Proto.PBStructureChangeSubscription structureChangeSubscription = 10;</code>
        */
       public Builder setStructureChangeSubscription(
-          no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription.Builder builderForValue) {
+          no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription.Builder builderForValue) {
         structureChangeSubscription_ = builderForValue.build();
 
         bitField0_ |= 0x00000200;
@@ -2311,11 +2338,11 @@ public final class Studioapi {
       /**
        * <code>optional .StudioAPI.Proto.PBStructureChangeSubscription structureChangeSubscription = 10;</code>
        */
-      public Builder mergeStructureChangeSubscription(no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription value) {
+      public Builder mergeStructureChangeSubscription(no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription value) {
         if (((bitField0_ & 0x00000200) == 0x00000200) &&
-            structureChangeSubscription_ != no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription.getDefaultInstance()) {
+            structureChangeSubscription_ != no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription.getDefaultInstance()) {
           structureChangeSubscription_ =
-            no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription.newBuilder(structureChangeSubscription_).mergeFrom(value).buildPartial();
+            no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription.newBuilder(structureChangeSubscription_).mergeFrom(value).buildPartial();
         } else {
           structureChangeSubscription_ = value;
         }
@@ -2327,18 +2354,18 @@ public final class Studioapi {
        * <code>optional .StudioAPI.Proto.PBStructureChangeSubscription structureChangeSubscription = 10;</code>
        */
       public Builder clearStructureChangeSubscription() {
-        structureChangeSubscription_ = no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription.getDefaultInstance();
+        structureChangeSubscription_ = no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription.getDefaultInstance();
 
         bitField0_ = (bitField0_ & ~0x00000200);
         return this;
       }
 
       // repeated .StudioAPI.Proto.PBStructureChangeResponse structureChangeResponse = 11;
-      private java.util.List<no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse> structureChangeResponse_ =
+      private java.util.List<no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse> structureChangeResponse_ =
         java.util.Collections.emptyList();
       private void ensureStructureChangeResponseIsMutable() {
         if (!((bitField0_ & 0x00000400) == 0x00000400)) {
-          structureChangeResponse_ = new java.util.ArrayList<no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse>(structureChangeResponse_);
+          structureChangeResponse_ = new java.util.ArrayList<no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse>(structureChangeResponse_);
           bitField0_ |= 0x00000400;
          }
       }
@@ -2346,7 +2373,7 @@ public final class Studioapi {
       /**
        * <code>repeated .StudioAPI.Proto.PBStructureChangeResponse structureChangeResponse = 11;</code>
        */
-      public java.util.List<no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse> getStructureChangeResponseList() {
+      public java.util.List<no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse> getStructureChangeResponseList() {
         return java.util.Collections.unmodifiableList(structureChangeResponse_);
       }
       /**
@@ -2358,14 +2385,14 @@ public final class Studioapi {
       /**
        * <code>repeated .StudioAPI.Proto.PBStructureChangeResponse structureChangeResponse = 11;</code>
        */
-      public no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse getStructureChangeResponse(int index) {
+      public no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse getStructureChangeResponse(int index) {
         return structureChangeResponse_.get(index);
       }
       /**
        * <code>repeated .StudioAPI.Proto.PBStructureChangeResponse structureChangeResponse = 11;</code>
        */
       public Builder setStructureChangeResponse(
-          int index, no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse value) {
+          int index, no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -2378,7 +2405,7 @@ public final class Studioapi {
        * <code>repeated .StudioAPI.Proto.PBStructureChangeResponse structureChangeResponse = 11;</code>
        */
       public Builder setStructureChangeResponse(
-          int index, no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse.Builder builderForValue) {
+          int index, no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse.Builder builderForValue) {
         ensureStructureChangeResponseIsMutable();
         structureChangeResponse_.set(index, builderForValue.build());
 
@@ -2387,7 +2414,7 @@ public final class Studioapi {
       /**
        * <code>repeated .StudioAPI.Proto.PBStructureChangeResponse structureChangeResponse = 11;</code>
        */
-      public Builder addStructureChangeResponse(no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse value) {
+      public Builder addStructureChangeResponse(no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -2400,7 +2427,7 @@ public final class Studioapi {
        * <code>repeated .StudioAPI.Proto.PBStructureChangeResponse structureChangeResponse = 11;</code>
        */
       public Builder addStructureChangeResponse(
-          int index, no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse value) {
+          int index, no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -2413,7 +2440,7 @@ public final class Studioapi {
        * <code>repeated .StudioAPI.Proto.PBStructureChangeResponse structureChangeResponse = 11;</code>
        */
       public Builder addStructureChangeResponse(
-          no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse.Builder builderForValue) {
+          no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse.Builder builderForValue) {
         ensureStructureChangeResponseIsMutable();
         structureChangeResponse_.add(builderForValue.build());
 
@@ -2423,7 +2450,7 @@ public final class Studioapi {
        * <code>repeated .StudioAPI.Proto.PBStructureChangeResponse structureChangeResponse = 11;</code>
        */
       public Builder addStructureChangeResponse(
-          int index, no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse.Builder builderForValue) {
+          int index, no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse.Builder builderForValue) {
         ensureStructureChangeResponseIsMutable();
         structureChangeResponse_.add(index, builderForValue.build());
 
@@ -2433,7 +2460,7 @@ public final class Studioapi {
        * <code>repeated .StudioAPI.Proto.PBStructureChangeResponse structureChangeResponse = 11;</code>
        */
       public Builder addAllStructureChangeResponse(
-          java.lang.Iterable<? extends no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse> values) {
+          java.lang.Iterable<? extends no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse> values) {
         ensureStructureChangeResponseIsMutable();
         super.addAll(values, structureChangeResponse_);
 
@@ -2509,7 +2536,7 @@ public final class Studioapi {
       com.google.protobuf.GeneratedMessageLite.ExtendableMessage<
         PBError> implements PBErrorOrBuilder {
     // Use PBError.newBuilder() to construct.
-    private PBError(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<no.icd.studioapi.proto.Studioapi.PBError, ?> builder) {
+    private PBError(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<no.icd.studioapi.proto.StudioAPI.PBError, ?> builder) {
       super(builder);
 
     }
@@ -2666,7 +2693,7 @@ public final class Studioapi {
                         throws java.io.IOException {
       getSerializedSize();
       com.google.protobuf.GeneratedMessageLite
-        .ExtendableMessage<no.icd.studioapi.proto.Studioapi.PBError>.ExtensionWriter extensionWriter =
+        .ExtendableMessage<no.icd.studioapi.proto.StudioAPI.PBError>.ExtensionWriter extensionWriter =
           newExtensionWriter();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeUInt32(1, errorCode_);
@@ -2703,53 +2730,53 @@ public final class Studioapi {
       return super.writeReplace();
     }
 
-    public static no.icd.studioapi.proto.Studioapi.PBError parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBError parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBError parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBError parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBError parseFrom(byte[] data)
+    public static no.icd.studioapi.proto.StudioAPI.PBError parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBError parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBError parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBError parseFrom(java.io.InputStream input)
+    public static no.icd.studioapi.proto.StudioAPI.PBError parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBError parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBError parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBError parseDelimitedFrom(java.io.InputStream input)
+    public static no.icd.studioapi.proto.StudioAPI.PBError parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBError parseDelimitedFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBError parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBError parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBError parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBError parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBError parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -2758,7 +2785,7 @@ public final class Studioapi {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(no.icd.studioapi.proto.Studioapi.PBError prototype) {
+    public static Builder newBuilder(no.icd.studioapi.proto.StudioAPI.PBError prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -2772,8 +2799,8 @@ public final class Studioapi {
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<
-          no.icd.studioapi.proto.Studioapi.PBError, Builder> implements no.icd.studioapi.proto.Studioapi.PBErrorOrBuilder {
-      // Construct using no.icd.studioapi.proto.Studioapi.PBError.newBuilder()
+          no.icd.studioapi.proto.StudioAPI.PBError, Builder> implements no.icd.studioapi.proto.StudioAPI.PBErrorOrBuilder {
+      // Construct using no.icd.studioapi.proto.StudioAPI.PBError.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -2797,20 +2824,20 @@ public final class Studioapi {
         return create().mergeFrom(buildPartial());
       }
 
-      public no.icd.studioapi.proto.Studioapi.PBError getDefaultInstanceForType() {
-        return no.icd.studioapi.proto.Studioapi.PBError.getDefaultInstance();
+      public no.icd.studioapi.proto.StudioAPI.PBError getDefaultInstanceForType() {
+        return no.icd.studioapi.proto.StudioAPI.PBError.getDefaultInstance();
       }
 
-      public no.icd.studioapi.proto.Studioapi.PBError build() {
-        no.icd.studioapi.proto.Studioapi.PBError result = buildPartial();
+      public no.icd.studioapi.proto.StudioAPI.PBError build() {
+        no.icd.studioapi.proto.StudioAPI.PBError result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public no.icd.studioapi.proto.Studioapi.PBError buildPartial() {
-        no.icd.studioapi.proto.Studioapi.PBError result = new no.icd.studioapi.proto.Studioapi.PBError(this);
+      public no.icd.studioapi.proto.StudioAPI.PBError buildPartial() {
+        no.icd.studioapi.proto.StudioAPI.PBError result = new no.icd.studioapi.proto.StudioAPI.PBError(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -2825,8 +2852,8 @@ public final class Studioapi {
         return result;
       }
 
-      public Builder mergeFrom(no.icd.studioapi.proto.Studioapi.PBError other) {
-        if (other == no.icd.studioapi.proto.Studioapi.PBError.getDefaultInstance()) return this;
+      public Builder mergeFrom(no.icd.studioapi.proto.StudioAPI.PBError other) {
+        if (other == no.icd.studioapi.proto.StudioAPI.PBError.getDefaultInstance()) return this;
         if (other.hasErrorCode()) {
           setErrorCode(other.getErrorCode());
         }
@@ -2855,11 +2882,11 @@ public final class Studioapi {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        no.icd.studioapi.proto.Studioapi.PBError parsedMessage = null;
+        no.icd.studioapi.proto.StudioAPI.PBError parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (no.icd.studioapi.proto.Studioapi.PBError) e.getUnfinishedMessage();
+          parsedMessage = (no.icd.studioapi.proto.StudioAPI.PBError) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -3053,7 +3080,7 @@ public final class Studioapi {
      * Direct base type, type of the class
      * </pre>
      */
-    no.icd.studioapi.proto.Studioapi.CDPNodeType getNodeType();
+    no.icd.studioapi.proto.StudioAPI.CDPNodeType getNodeType();
 
     // optional .StudioAPI.Proto.CDPValueType valueType = 4;
     /**
@@ -3071,7 +3098,7 @@ public final class Studioapi {
      * Value primitive type the node holds if node may hold a value
      * </pre>
      */
-    no.icd.studioapi.proto.Studioapi.CDPValueType getValueType();
+    no.icd.studioapi.proto.StudioAPI.CDPValueType getValueType();
 
     // optional string typeName = 5;
     /**
@@ -3180,6 +3207,24 @@ public final class Studioapi {
      * </pre>
      */
     boolean getValueIsPersistent();
+
+    // optional bool valueIsReadOnly = 10;
+    /**
+     * <code>optional bool valueIsReadOnly = 10;</code>
+     *
+     * <pre>
+     * if this flag is true, the node value can not be written to
+     * </pre>
+     */
+    boolean hasValueIsReadOnly();
+    /**
+     * <code>optional bool valueIsReadOnly = 10;</code>
+     *
+     * <pre>
+     * if this flag is true, the node value can not be written to
+     * </pre>
+     */
+    boolean getValueIsReadOnly();
   }
   /**
    * Protobuf type {@code StudioAPI.Proto.PBInfo}
@@ -3194,7 +3239,7 @@ public final class Studioapi {
       com.google.protobuf.GeneratedMessageLite.ExtendableMessage<
         PBInfo> implements PBInfoOrBuilder {
     // Use PBInfo.newBuilder() to construct.
-    private PBInfo(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<no.icd.studioapi.proto.Studioapi.PBInfo, ?> builder) {
+    private PBInfo(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<no.icd.studioapi.proto.StudioAPI.PBInfo, ?> builder) {
       super(builder);
 
     }
@@ -3242,7 +3287,7 @@ public final class Studioapi {
             }
             case 24: {
               int rawValue = input.readEnum();
-              no.icd.studioapi.proto.Studioapi.CDPNodeType value = no.icd.studioapi.proto.Studioapi.CDPNodeType.valueOf(rawValue);
+              no.icd.studioapi.proto.StudioAPI.CDPNodeType value = no.icd.studioapi.proto.StudioAPI.CDPNodeType.valueOf(rawValue);
               if (value != null) {
                 bitField0_ |= 0x00000004;
                 nodeType_ = value;
@@ -3251,7 +3296,7 @@ public final class Studioapi {
             }
             case 32: {
               int rawValue = input.readEnum();
-              no.icd.studioapi.proto.Studioapi.CDPValueType value = no.icd.studioapi.proto.Studioapi.CDPValueType.valueOf(rawValue);
+              no.icd.studioapi.proto.StudioAPI.CDPValueType value = no.icd.studioapi.proto.StudioAPI.CDPValueType.valueOf(rawValue);
               if (value != null) {
                 bitField0_ |= 0x00000008;
                 valueType_ = value;
@@ -3281,6 +3326,11 @@ public final class Studioapi {
             case 72: {
               bitField0_ |= 0x00000100;
               valueIsPersistent_ = input.readBool();
+              break;
+            }
+            case 80: {
+              bitField0_ |= 0x00000200;
+              valueIsReadOnly_ = input.readBool();
               break;
             }
           }
@@ -3391,7 +3441,7 @@ public final class Studioapi {
 
     // required .StudioAPI.Proto.CDPNodeType nodeType = 3;
     public static final int NODETYPE_FIELD_NUMBER = 3;
-    private no.icd.studioapi.proto.Studioapi.CDPNodeType nodeType_;
+    private no.icd.studioapi.proto.StudioAPI.CDPNodeType nodeType_;
     /**
      * <code>required .StudioAPI.Proto.CDPNodeType nodeType = 3;</code>
      *
@@ -3409,13 +3459,13 @@ public final class Studioapi {
      * Direct base type, type of the class
      * </pre>
      */
-    public no.icd.studioapi.proto.Studioapi.CDPNodeType getNodeType() {
+    public no.icd.studioapi.proto.StudioAPI.CDPNodeType getNodeType() {
       return nodeType_;
     }
 
     // optional .StudioAPI.Proto.CDPValueType valueType = 4;
     public static final int VALUETYPE_FIELD_NUMBER = 4;
-    private no.icd.studioapi.proto.Studioapi.CDPValueType valueType_;
+    private no.icd.studioapi.proto.StudioAPI.CDPValueType valueType_;
     /**
      * <code>optional .StudioAPI.Proto.CDPValueType valueType = 4;</code>
      *
@@ -3433,7 +3483,7 @@ public final class Studioapi {
      * Value primitive type the node holds if node may hold a value
      * </pre>
      */
-    public no.icd.studioapi.proto.Studioapi.CDPValueType getValueType() {
+    public no.icd.studioapi.proto.StudioAPI.CDPValueType getValueType() {
       return valueType_;
     }
 
@@ -3619,16 +3669,41 @@ public final class Studioapi {
       return valueIsPersistent_;
     }
 
+    // optional bool valueIsReadOnly = 10;
+    public static final int VALUEISREADONLY_FIELD_NUMBER = 10;
+    private boolean valueIsReadOnly_;
+    /**
+     * <code>optional bool valueIsReadOnly = 10;</code>
+     *
+     * <pre>
+     * if this flag is true, the node value can not be written to
+     * </pre>
+     */
+    public boolean hasValueIsReadOnly() {
+      return ((bitField0_ & 0x00000200) == 0x00000200);
+    }
+    /**
+     * <code>optional bool valueIsReadOnly = 10;</code>
+     *
+     * <pre>
+     * if this flag is true, the node value can not be written to
+     * </pre>
+     */
+    public boolean getValueIsReadOnly() {
+      return valueIsReadOnly_;
+    }
+
     private void initFields() {
       nodeID_ = 0;
       name_ = "";
-      nodeType_ = no.icd.studioapi.proto.Studioapi.CDPNodeType.CDP_UNDEFINED;
-      valueType_ = no.icd.studioapi.proto.Studioapi.CDPValueType.eUNDEFINED;
+      nodeType_ = no.icd.studioapi.proto.StudioAPI.CDPNodeType.CDP_UNDEFINED;
+      valueType_ = no.icd.studioapi.proto.StudioAPI.CDPValueType.eUNDEFINED;
       typeName_ = "";
       serverAddr_ = "";
       serverPort_ = 0;
       isResponder_ = false;
       valueIsPersistent_ = false;
+      valueIsReadOnly_ = false;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -3659,7 +3734,7 @@ public final class Studioapi {
                         throws java.io.IOException {
       getSerializedSize();
       com.google.protobuf.GeneratedMessageLite
-        .ExtendableMessage<no.icd.studioapi.proto.Studioapi.PBInfo>.ExtensionWriter extensionWriter =
+        .ExtendableMessage<no.icd.studioapi.proto.StudioAPI.PBInfo>.ExtensionWriter extensionWriter =
           newExtensionWriter();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeUInt32(1, nodeID_);
@@ -3687,6 +3762,9 @@ public final class Studioapi {
       }
       if (((bitField0_ & 0x00000100) == 0x00000100)) {
         output.writeBool(9, valueIsPersistent_);
+      }
+      if (((bitField0_ & 0x00000200) == 0x00000200)) {
+        output.writeBool(10, valueIsReadOnly_);
       }
       extensionWriter.writeUntil(536870912, output);
     }
@@ -3733,6 +3811,10 @@ public final class Studioapi {
         size += com.google.protobuf.CodedOutputStream
           .computeBoolSize(9, valueIsPersistent_);
       }
+      if (((bitField0_ & 0x00000200) == 0x00000200)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBoolSize(10, valueIsReadOnly_);
+      }
       size += extensionsSerializedSize();
       memoizedSerializedSize = size;
       return size;
@@ -3745,53 +3827,53 @@ public final class Studioapi {
       return super.writeReplace();
     }
 
-    public static no.icd.studioapi.proto.Studioapi.PBInfo parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBInfo parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBInfo parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBInfo parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBInfo parseFrom(byte[] data)
+    public static no.icd.studioapi.proto.StudioAPI.PBInfo parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBInfo parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBInfo parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBInfo parseFrom(java.io.InputStream input)
+    public static no.icd.studioapi.proto.StudioAPI.PBInfo parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBInfo parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBInfo parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBInfo parseDelimitedFrom(java.io.InputStream input)
+    public static no.icd.studioapi.proto.StudioAPI.PBInfo parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBInfo parseDelimitedFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBInfo parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBInfo parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBInfo parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBInfo parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBInfo parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -3800,7 +3882,7 @@ public final class Studioapi {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(no.icd.studioapi.proto.Studioapi.PBInfo prototype) {
+    public static Builder newBuilder(no.icd.studioapi.proto.StudioAPI.PBInfo prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -3816,8 +3898,8 @@ public final class Studioapi {
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<
-          no.icd.studioapi.proto.Studioapi.PBInfo, Builder> implements no.icd.studioapi.proto.Studioapi.PBInfoOrBuilder {
-      // Construct using no.icd.studioapi.proto.Studioapi.PBInfo.newBuilder()
+          no.icd.studioapi.proto.StudioAPI.PBInfo, Builder> implements no.icd.studioapi.proto.StudioAPI.PBInfoOrBuilder {
+      // Construct using no.icd.studioapi.proto.StudioAPI.PBInfo.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -3834,9 +3916,9 @@ public final class Studioapi {
         bitField0_ = (bitField0_ & ~0x00000001);
         name_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
-        nodeType_ = no.icd.studioapi.proto.Studioapi.CDPNodeType.CDP_UNDEFINED;
+        nodeType_ = no.icd.studioapi.proto.StudioAPI.CDPNodeType.CDP_UNDEFINED;
         bitField0_ = (bitField0_ & ~0x00000004);
-        valueType_ = no.icd.studioapi.proto.Studioapi.CDPValueType.eUNDEFINED;
+        valueType_ = no.icd.studioapi.proto.StudioAPI.CDPValueType.eUNDEFINED;
         bitField0_ = (bitField0_ & ~0x00000008);
         typeName_ = "";
         bitField0_ = (bitField0_ & ~0x00000010);
@@ -3848,6 +3930,8 @@ public final class Studioapi {
         bitField0_ = (bitField0_ & ~0x00000080);
         valueIsPersistent_ = false;
         bitField0_ = (bitField0_ & ~0x00000100);
+        valueIsReadOnly_ = false;
+        bitField0_ = (bitField0_ & ~0x00000200);
         return this;
       }
 
@@ -3855,20 +3939,20 @@ public final class Studioapi {
         return create().mergeFrom(buildPartial());
       }
 
-      public no.icd.studioapi.proto.Studioapi.PBInfo getDefaultInstanceForType() {
-        return no.icd.studioapi.proto.Studioapi.PBInfo.getDefaultInstance();
+      public no.icd.studioapi.proto.StudioAPI.PBInfo getDefaultInstanceForType() {
+        return no.icd.studioapi.proto.StudioAPI.PBInfo.getDefaultInstance();
       }
 
-      public no.icd.studioapi.proto.Studioapi.PBInfo build() {
-        no.icd.studioapi.proto.Studioapi.PBInfo result = buildPartial();
+      public no.icd.studioapi.proto.StudioAPI.PBInfo build() {
+        no.icd.studioapi.proto.StudioAPI.PBInfo result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public no.icd.studioapi.proto.Studioapi.PBInfo buildPartial() {
-        no.icd.studioapi.proto.Studioapi.PBInfo result = new no.icd.studioapi.proto.Studioapi.PBInfo(this);
+      public no.icd.studioapi.proto.StudioAPI.PBInfo buildPartial() {
+        no.icd.studioapi.proto.StudioAPI.PBInfo result = new no.icd.studioapi.proto.StudioAPI.PBInfo(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -3907,12 +3991,16 @@ public final class Studioapi {
           to_bitField0_ |= 0x00000100;
         }
         result.valueIsPersistent_ = valueIsPersistent_;
+        if (((from_bitField0_ & 0x00000200) == 0x00000200)) {
+          to_bitField0_ |= 0x00000200;
+        }
+        result.valueIsReadOnly_ = valueIsReadOnly_;
         result.bitField0_ = to_bitField0_;
         return result;
       }
 
-      public Builder mergeFrom(no.icd.studioapi.proto.Studioapi.PBInfo other) {
-        if (other == no.icd.studioapi.proto.Studioapi.PBInfo.getDefaultInstance()) return this;
+      public Builder mergeFrom(no.icd.studioapi.proto.StudioAPI.PBInfo other) {
+        if (other == no.icd.studioapi.proto.StudioAPI.PBInfo.getDefaultInstance()) return this;
         if (other.hasNodeID()) {
           setNodeID(other.getNodeID());
         }
@@ -3946,6 +4034,9 @@ public final class Studioapi {
         if (other.hasValueIsPersistent()) {
           setValueIsPersistent(other.getValueIsPersistent());
         }
+        if (other.hasValueIsReadOnly()) {
+          setValueIsReadOnly(other.getValueIsReadOnly());
+        }
         this.mergeExtensionFields(other);
         return this;
       }
@@ -3974,11 +4065,11 @@ public final class Studioapi {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        no.icd.studioapi.proto.Studioapi.PBInfo parsedMessage = null;
+        no.icd.studioapi.proto.StudioAPI.PBInfo parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (no.icd.studioapi.proto.Studioapi.PBInfo) e.getUnfinishedMessage();
+          parsedMessage = (no.icd.studioapi.proto.StudioAPI.PBInfo) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -4137,7 +4228,7 @@ public final class Studioapi {
       }
 
       // required .StudioAPI.Proto.CDPNodeType nodeType = 3;
-      private no.icd.studioapi.proto.Studioapi.CDPNodeType nodeType_ = no.icd.studioapi.proto.Studioapi.CDPNodeType.CDP_UNDEFINED;
+      private no.icd.studioapi.proto.StudioAPI.CDPNodeType nodeType_ = no.icd.studioapi.proto.StudioAPI.CDPNodeType.CDP_UNDEFINED;
       /**
        * <code>required .StudioAPI.Proto.CDPNodeType nodeType = 3;</code>
        *
@@ -4155,7 +4246,7 @@ public final class Studioapi {
        * Direct base type, type of the class
        * </pre>
        */
-      public no.icd.studioapi.proto.Studioapi.CDPNodeType getNodeType() {
+      public no.icd.studioapi.proto.StudioAPI.CDPNodeType getNodeType() {
         return nodeType_;
       }
       /**
@@ -4165,7 +4256,7 @@ public final class Studioapi {
        * Direct base type, type of the class
        * </pre>
        */
-      public Builder setNodeType(no.icd.studioapi.proto.Studioapi.CDPNodeType value) {
+      public Builder setNodeType(no.icd.studioapi.proto.StudioAPI.CDPNodeType value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -4183,13 +4274,13 @@ public final class Studioapi {
        */
       public Builder clearNodeType() {
         bitField0_ = (bitField0_ & ~0x00000004);
-        nodeType_ = no.icd.studioapi.proto.Studioapi.CDPNodeType.CDP_UNDEFINED;
+        nodeType_ = no.icd.studioapi.proto.StudioAPI.CDPNodeType.CDP_UNDEFINED;
         
         return this;
       }
 
       // optional .StudioAPI.Proto.CDPValueType valueType = 4;
-      private no.icd.studioapi.proto.Studioapi.CDPValueType valueType_ = no.icd.studioapi.proto.Studioapi.CDPValueType.eUNDEFINED;
+      private no.icd.studioapi.proto.StudioAPI.CDPValueType valueType_ = no.icd.studioapi.proto.StudioAPI.CDPValueType.eUNDEFINED;
       /**
        * <code>optional .StudioAPI.Proto.CDPValueType valueType = 4;</code>
        *
@@ -4207,7 +4298,7 @@ public final class Studioapi {
        * Value primitive type the node holds if node may hold a value
        * </pre>
        */
-      public no.icd.studioapi.proto.Studioapi.CDPValueType getValueType() {
+      public no.icd.studioapi.proto.StudioAPI.CDPValueType getValueType() {
         return valueType_;
       }
       /**
@@ -4217,7 +4308,7 @@ public final class Studioapi {
        * Value primitive type the node holds if node may hold a value
        * </pre>
        */
-      public Builder setValueType(no.icd.studioapi.proto.Studioapi.CDPValueType value) {
+      public Builder setValueType(no.icd.studioapi.proto.StudioAPI.CDPValueType value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -4235,7 +4326,7 @@ public final class Studioapi {
        */
       public Builder clearValueType() {
         bitField0_ = (bitField0_ & ~0x00000008);
-        valueType_ = no.icd.studioapi.proto.Studioapi.CDPValueType.eUNDEFINED;
+        valueType_ = no.icd.studioapi.proto.StudioAPI.CDPValueType.eUNDEFINED;
         
         return this;
       }
@@ -4583,6 +4674,55 @@ public final class Studioapi {
         return this;
       }
 
+      // optional bool valueIsReadOnly = 10;
+      private boolean valueIsReadOnly_ ;
+      /**
+       * <code>optional bool valueIsReadOnly = 10;</code>
+       *
+       * <pre>
+       * if this flag is true, the node value can not be written to
+       * </pre>
+       */
+      public boolean hasValueIsReadOnly() {
+        return ((bitField0_ & 0x00000200) == 0x00000200);
+      }
+      /**
+       * <code>optional bool valueIsReadOnly = 10;</code>
+       *
+       * <pre>
+       * if this flag is true, the node value can not be written to
+       * </pre>
+       */
+      public boolean getValueIsReadOnly() {
+        return valueIsReadOnly_;
+      }
+      /**
+       * <code>optional bool valueIsReadOnly = 10;</code>
+       *
+       * <pre>
+       * if this flag is true, the node value can not be written to
+       * </pre>
+       */
+      public Builder setValueIsReadOnly(boolean value) {
+        bitField0_ |= 0x00000200;
+        valueIsReadOnly_ = value;
+        
+        return this;
+      }
+      /**
+       * <code>optional bool valueIsReadOnly = 10;</code>
+       *
+       * <pre>
+       * if this flag is true, the node value can not be written to
+       * </pre>
+       */
+      public Builder clearValueIsReadOnly() {
+        bitField0_ = (bitField0_ & ~0x00000200);
+        valueIsReadOnly_ = false;
+        
+        return this;
+      }
+
       // @@protoc_insertion_point(builder_scope:StudioAPI.Proto.PBInfo)
     }
 
@@ -4866,7 +5006,7 @@ public final class Studioapi {
       com.google.protobuf.GeneratedMessageLite.ExtendableMessage<
         PBVariantValue> implements PBVariantValueOrBuilder {
     // Use PBVariantValue.newBuilder() to construct.
-    private PBVariantValue(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<no.icd.studioapi.proto.Studioapi.PBVariantValue, ?> builder) {
+    private PBVariantValue(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<no.icd.studioapi.proto.StudioAPI.PBVariantValue, ?> builder) {
       super(builder);
 
     }
@@ -5403,7 +5543,7 @@ public final class Studioapi {
                         throws java.io.IOException {
       getSerializedSize();
       com.google.protobuf.GeneratedMessageLite
-        .ExtendableMessage<no.icd.studioapi.proto.Studioapi.PBVariantValue>.ExtensionWriter extensionWriter =
+        .ExtendableMessage<no.icd.studioapi.proto.StudioAPI.PBVariantValue>.ExtensionWriter extensionWriter =
           newExtensionWriter();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeUInt32(1, nodeID_);
@@ -5524,53 +5664,53 @@ public final class Studioapi {
       return super.writeReplace();
     }
 
-    public static no.icd.studioapi.proto.Studioapi.PBVariantValue parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBVariantValue parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBVariantValue parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBVariantValue parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBVariantValue parseFrom(byte[] data)
+    public static no.icd.studioapi.proto.StudioAPI.PBVariantValue parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBVariantValue parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBVariantValue parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBVariantValue parseFrom(java.io.InputStream input)
+    public static no.icd.studioapi.proto.StudioAPI.PBVariantValue parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBVariantValue parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBVariantValue parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBVariantValue parseDelimitedFrom(java.io.InputStream input)
+    public static no.icd.studioapi.proto.StudioAPI.PBVariantValue parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBVariantValue parseDelimitedFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBVariantValue parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBVariantValue parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBVariantValue parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBVariantValue parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBVariantValue parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -5579,7 +5719,7 @@ public final class Studioapi {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(no.icd.studioapi.proto.Studioapi.PBVariantValue prototype) {
+    public static Builder newBuilder(no.icd.studioapi.proto.StudioAPI.PBVariantValue prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -5589,8 +5729,8 @@ public final class Studioapi {
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<
-          no.icd.studioapi.proto.Studioapi.PBVariantValue, Builder> implements no.icd.studioapi.proto.Studioapi.PBVariantValueOrBuilder {
-      // Construct using no.icd.studioapi.proto.Studioapi.PBVariantValue.newBuilder()
+          no.icd.studioapi.proto.StudioAPI.PBVariantValue, Builder> implements no.icd.studioapi.proto.StudioAPI.PBVariantValueOrBuilder {
+      // Construct using no.icd.studioapi.proto.StudioAPI.PBVariantValue.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -5638,20 +5778,20 @@ public final class Studioapi {
         return create().mergeFrom(buildPartial());
       }
 
-      public no.icd.studioapi.proto.Studioapi.PBVariantValue getDefaultInstanceForType() {
-        return no.icd.studioapi.proto.Studioapi.PBVariantValue.getDefaultInstance();
+      public no.icd.studioapi.proto.StudioAPI.PBVariantValue getDefaultInstanceForType() {
+        return no.icd.studioapi.proto.StudioAPI.PBVariantValue.getDefaultInstance();
       }
 
-      public no.icd.studioapi.proto.Studioapi.PBVariantValue build() {
-        no.icd.studioapi.proto.Studioapi.PBVariantValue result = buildPartial();
+      public no.icd.studioapi.proto.StudioAPI.PBVariantValue build() {
+        no.icd.studioapi.proto.StudioAPI.PBVariantValue result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public no.icd.studioapi.proto.Studioapi.PBVariantValue buildPartial() {
-        no.icd.studioapi.proto.Studioapi.PBVariantValue result = new no.icd.studioapi.proto.Studioapi.PBVariantValue(this);
+      public no.icd.studioapi.proto.StudioAPI.PBVariantValue buildPartial() {
+        no.icd.studioapi.proto.StudioAPI.PBVariantValue result = new no.icd.studioapi.proto.StudioAPI.PBVariantValue(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -5714,8 +5854,8 @@ public final class Studioapi {
         return result;
       }
 
-      public Builder mergeFrom(no.icd.studioapi.proto.Studioapi.PBVariantValue other) {
-        if (other == no.icd.studioapi.proto.Studioapi.PBVariantValue.getDefaultInstance()) return this;
+      public Builder mergeFrom(no.icd.studioapi.proto.StudioAPI.PBVariantValue other) {
+        if (other == no.icd.studioapi.proto.StudioAPI.PBVariantValue.getDefaultInstance()) return this;
         if (other.hasNodeID()) {
           setNodeID(other.getNodeID());
         }
@@ -5780,11 +5920,11 @@ public final class Studioapi {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        no.icd.studioapi.proto.Studioapi.PBVariantValue parsedMessage = null;
+        no.icd.studioapi.proto.StudioAPI.PBVariantValue parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (no.icd.studioapi.proto.Studioapi.PBVariantValue) e.getUnfinishedMessage();
+          parsedMessage = (no.icd.studioapi.proto.StudioAPI.PBVariantValue) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -6553,18 +6693,18 @@ public final class Studioapi {
     /**
      * <code>required .StudioAPI.Proto.PBInfo info = 1;</code>
      */
-    no.icd.studioapi.proto.Studioapi.PBInfo getInfo();
+    no.icd.studioapi.proto.StudioAPI.PBInfo getInfo();
 
     // repeated .StudioAPI.Proto.PBNode node = 2;
     /**
      * <code>repeated .StudioAPI.Proto.PBNode node = 2;</code>
      */
-    java.util.List<no.icd.studioapi.proto.Studioapi.PBNode> 
+    java.util.List<no.icd.studioapi.proto.StudioAPI.PBNode> 
         getNodeList();
     /**
      * <code>repeated .StudioAPI.Proto.PBNode node = 2;</code>
      */
-    no.icd.studioapi.proto.Studioapi.PBNode getNode(int index);
+    no.icd.studioapi.proto.StudioAPI.PBNode getNode(int index);
     /**
      * <code>repeated .StudioAPI.Proto.PBNode node = 2;</code>
      */
@@ -6586,7 +6726,7 @@ public final class Studioapi {
       com.google.protobuf.GeneratedMessageLite.ExtendableMessage<
         PBNode> implements PBNodeOrBuilder {
     // Use PBNode.newBuilder() to construct.
-    private PBNode(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<no.icd.studioapi.proto.Studioapi.PBNode, ?> builder) {
+    private PBNode(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<no.icd.studioapi.proto.StudioAPI.PBNode, ?> builder) {
       super(builder);
 
     }
@@ -6623,11 +6763,11 @@ public final class Studioapi {
               break;
             }
             case 10: {
-              no.icd.studioapi.proto.Studioapi.PBInfo.Builder subBuilder = null;
+              no.icd.studioapi.proto.StudioAPI.PBInfo.Builder subBuilder = null;
               if (((bitField0_ & 0x00000001) == 0x00000001)) {
                 subBuilder = info_.toBuilder();
               }
-              info_ = input.readMessage(no.icd.studioapi.proto.Studioapi.PBInfo.PARSER, extensionRegistry);
+              info_ = input.readMessage(no.icd.studioapi.proto.StudioAPI.PBInfo.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(info_);
                 info_ = subBuilder.buildPartial();
@@ -6637,10 +6777,10 @@ public final class Studioapi {
             }
             case 18: {
               if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-                node_ = new java.util.ArrayList<no.icd.studioapi.proto.Studioapi.PBNode>();
+                node_ = new java.util.ArrayList<no.icd.studioapi.proto.StudioAPI.PBNode>();
                 mutable_bitField0_ |= 0x00000002;
               }
-              node_.add(input.readMessage(no.icd.studioapi.proto.Studioapi.PBNode.PARSER, extensionRegistry));
+              node_.add(input.readMessage(no.icd.studioapi.proto.StudioAPI.PBNode.PARSER, extensionRegistry));
               break;
             }
           }
@@ -6675,7 +6815,7 @@ public final class Studioapi {
     private int bitField0_;
     // required .StudioAPI.Proto.PBInfo info = 1;
     public static final int INFO_FIELD_NUMBER = 1;
-    private no.icd.studioapi.proto.Studioapi.PBInfo info_;
+    private no.icd.studioapi.proto.StudioAPI.PBInfo info_;
     /**
      * <code>required .StudioAPI.Proto.PBInfo info = 1;</code>
      */
@@ -6685,23 +6825,23 @@ public final class Studioapi {
     /**
      * <code>required .StudioAPI.Proto.PBInfo info = 1;</code>
      */
-    public no.icd.studioapi.proto.Studioapi.PBInfo getInfo() {
+    public no.icd.studioapi.proto.StudioAPI.PBInfo getInfo() {
       return info_;
     }
 
     // repeated .StudioAPI.Proto.PBNode node = 2;
     public static final int NODE_FIELD_NUMBER = 2;
-    private java.util.List<no.icd.studioapi.proto.Studioapi.PBNode> node_;
+    private java.util.List<no.icd.studioapi.proto.StudioAPI.PBNode> node_;
     /**
      * <code>repeated .StudioAPI.Proto.PBNode node = 2;</code>
      */
-    public java.util.List<no.icd.studioapi.proto.Studioapi.PBNode> getNodeList() {
+    public java.util.List<no.icd.studioapi.proto.StudioAPI.PBNode> getNodeList() {
       return node_;
     }
     /**
      * <code>repeated .StudioAPI.Proto.PBNode node = 2;</code>
      */
-    public java.util.List<? extends no.icd.studioapi.proto.Studioapi.PBNodeOrBuilder> 
+    public java.util.List<? extends no.icd.studioapi.proto.StudioAPI.PBNodeOrBuilder> 
         getNodeOrBuilderList() {
       return node_;
     }
@@ -6714,19 +6854,19 @@ public final class Studioapi {
     /**
      * <code>repeated .StudioAPI.Proto.PBNode node = 2;</code>
      */
-    public no.icd.studioapi.proto.Studioapi.PBNode getNode(int index) {
+    public no.icd.studioapi.proto.StudioAPI.PBNode getNode(int index) {
       return node_.get(index);
     }
     /**
      * <code>repeated .StudioAPI.Proto.PBNode node = 2;</code>
      */
-    public no.icd.studioapi.proto.Studioapi.PBNodeOrBuilder getNodeOrBuilder(
+    public no.icd.studioapi.proto.StudioAPI.PBNodeOrBuilder getNodeOrBuilder(
         int index) {
       return node_.get(index);
     }
 
     private void initFields() {
-      info_ = no.icd.studioapi.proto.Studioapi.PBInfo.getDefaultInstance();
+      info_ = no.icd.studioapi.proto.StudioAPI.PBInfo.getDefaultInstance();
       node_ = java.util.Collections.emptyList();
     }
     private byte memoizedIsInitialized = -1;
@@ -6760,7 +6900,7 @@ public final class Studioapi {
                         throws java.io.IOException {
       getSerializedSize();
       com.google.protobuf.GeneratedMessageLite
-        .ExtendableMessage<no.icd.studioapi.proto.Studioapi.PBNode>.ExtensionWriter extensionWriter =
+        .ExtendableMessage<no.icd.studioapi.proto.StudioAPI.PBNode>.ExtensionWriter extensionWriter =
           newExtensionWriter();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeMessage(1, info_);
@@ -6797,53 +6937,53 @@ public final class Studioapi {
       return super.writeReplace();
     }
 
-    public static no.icd.studioapi.proto.Studioapi.PBNode parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBNode parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBNode parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBNode parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBNode parseFrom(byte[] data)
+    public static no.icd.studioapi.proto.StudioAPI.PBNode parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBNode parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBNode parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBNode parseFrom(java.io.InputStream input)
+    public static no.icd.studioapi.proto.StudioAPI.PBNode parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBNode parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBNode parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBNode parseDelimitedFrom(java.io.InputStream input)
+    public static no.icd.studioapi.proto.StudioAPI.PBNode parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBNode parseDelimitedFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBNode parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBNode parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBNode parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBNode parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBNode parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -6852,7 +6992,7 @@ public final class Studioapi {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(no.icd.studioapi.proto.Studioapi.PBNode prototype) {
+    public static Builder newBuilder(no.icd.studioapi.proto.StudioAPI.PBNode prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -6871,8 +7011,8 @@ public final class Studioapi {
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<
-          no.icd.studioapi.proto.Studioapi.PBNode, Builder> implements no.icd.studioapi.proto.Studioapi.PBNodeOrBuilder {
-      // Construct using no.icd.studioapi.proto.Studioapi.PBNode.newBuilder()
+          no.icd.studioapi.proto.StudioAPI.PBNode, Builder> implements no.icd.studioapi.proto.StudioAPI.PBNodeOrBuilder {
+      // Construct using no.icd.studioapi.proto.StudioAPI.PBNode.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -6885,7 +7025,7 @@ public final class Studioapi {
 
       public Builder clear() {
         super.clear();
-        info_ = no.icd.studioapi.proto.Studioapi.PBInfo.getDefaultInstance();
+        info_ = no.icd.studioapi.proto.StudioAPI.PBInfo.getDefaultInstance();
         bitField0_ = (bitField0_ & ~0x00000001);
         node_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -6896,20 +7036,20 @@ public final class Studioapi {
         return create().mergeFrom(buildPartial());
       }
 
-      public no.icd.studioapi.proto.Studioapi.PBNode getDefaultInstanceForType() {
-        return no.icd.studioapi.proto.Studioapi.PBNode.getDefaultInstance();
+      public no.icd.studioapi.proto.StudioAPI.PBNode getDefaultInstanceForType() {
+        return no.icd.studioapi.proto.StudioAPI.PBNode.getDefaultInstance();
       }
 
-      public no.icd.studioapi.proto.Studioapi.PBNode build() {
-        no.icd.studioapi.proto.Studioapi.PBNode result = buildPartial();
+      public no.icd.studioapi.proto.StudioAPI.PBNode build() {
+        no.icd.studioapi.proto.StudioAPI.PBNode result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public no.icd.studioapi.proto.Studioapi.PBNode buildPartial() {
-        no.icd.studioapi.proto.Studioapi.PBNode result = new no.icd.studioapi.proto.Studioapi.PBNode(this);
+      public no.icd.studioapi.proto.StudioAPI.PBNode buildPartial() {
+        no.icd.studioapi.proto.StudioAPI.PBNode result = new no.icd.studioapi.proto.StudioAPI.PBNode(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -6925,8 +7065,8 @@ public final class Studioapi {
         return result;
       }
 
-      public Builder mergeFrom(no.icd.studioapi.proto.Studioapi.PBNode other) {
-        if (other == no.icd.studioapi.proto.Studioapi.PBNode.getDefaultInstance()) return this;
+      public Builder mergeFrom(no.icd.studioapi.proto.StudioAPI.PBNode other) {
+        if (other == no.icd.studioapi.proto.StudioAPI.PBNode.getDefaultInstance()) return this;
         if (other.hasInfo()) {
           mergeInfo(other.getInfo());
         }
@@ -6970,11 +7110,11 @@ public final class Studioapi {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        no.icd.studioapi.proto.Studioapi.PBNode parsedMessage = null;
+        no.icd.studioapi.proto.StudioAPI.PBNode parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (no.icd.studioapi.proto.Studioapi.PBNode) e.getUnfinishedMessage();
+          parsedMessage = (no.icd.studioapi.proto.StudioAPI.PBNode) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -6986,7 +7126,7 @@ public final class Studioapi {
       private int bitField0_;
 
       // required .StudioAPI.Proto.PBInfo info = 1;
-      private no.icd.studioapi.proto.Studioapi.PBInfo info_ = no.icd.studioapi.proto.Studioapi.PBInfo.getDefaultInstance();
+      private no.icd.studioapi.proto.StudioAPI.PBInfo info_ = no.icd.studioapi.proto.StudioAPI.PBInfo.getDefaultInstance();
       /**
        * <code>required .StudioAPI.Proto.PBInfo info = 1;</code>
        */
@@ -6996,13 +7136,13 @@ public final class Studioapi {
       /**
        * <code>required .StudioAPI.Proto.PBInfo info = 1;</code>
        */
-      public no.icd.studioapi.proto.Studioapi.PBInfo getInfo() {
+      public no.icd.studioapi.proto.StudioAPI.PBInfo getInfo() {
         return info_;
       }
       /**
        * <code>required .StudioAPI.Proto.PBInfo info = 1;</code>
        */
-      public Builder setInfo(no.icd.studioapi.proto.Studioapi.PBInfo value) {
+      public Builder setInfo(no.icd.studioapi.proto.StudioAPI.PBInfo value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -7015,7 +7155,7 @@ public final class Studioapi {
        * <code>required .StudioAPI.Proto.PBInfo info = 1;</code>
        */
       public Builder setInfo(
-          no.icd.studioapi.proto.Studioapi.PBInfo.Builder builderForValue) {
+          no.icd.studioapi.proto.StudioAPI.PBInfo.Builder builderForValue) {
         info_ = builderForValue.build();
 
         bitField0_ |= 0x00000001;
@@ -7024,11 +7164,11 @@ public final class Studioapi {
       /**
        * <code>required .StudioAPI.Proto.PBInfo info = 1;</code>
        */
-      public Builder mergeInfo(no.icd.studioapi.proto.Studioapi.PBInfo value) {
+      public Builder mergeInfo(no.icd.studioapi.proto.StudioAPI.PBInfo value) {
         if (((bitField0_ & 0x00000001) == 0x00000001) &&
-            info_ != no.icd.studioapi.proto.Studioapi.PBInfo.getDefaultInstance()) {
+            info_ != no.icd.studioapi.proto.StudioAPI.PBInfo.getDefaultInstance()) {
           info_ =
-            no.icd.studioapi.proto.Studioapi.PBInfo.newBuilder(info_).mergeFrom(value).buildPartial();
+            no.icd.studioapi.proto.StudioAPI.PBInfo.newBuilder(info_).mergeFrom(value).buildPartial();
         } else {
           info_ = value;
         }
@@ -7040,18 +7180,18 @@ public final class Studioapi {
        * <code>required .StudioAPI.Proto.PBInfo info = 1;</code>
        */
       public Builder clearInfo() {
-        info_ = no.icd.studioapi.proto.Studioapi.PBInfo.getDefaultInstance();
+        info_ = no.icd.studioapi.proto.StudioAPI.PBInfo.getDefaultInstance();
 
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
 
       // repeated .StudioAPI.Proto.PBNode node = 2;
-      private java.util.List<no.icd.studioapi.proto.Studioapi.PBNode> node_ =
+      private java.util.List<no.icd.studioapi.proto.StudioAPI.PBNode> node_ =
         java.util.Collections.emptyList();
       private void ensureNodeIsMutable() {
         if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-          node_ = new java.util.ArrayList<no.icd.studioapi.proto.Studioapi.PBNode>(node_);
+          node_ = new java.util.ArrayList<no.icd.studioapi.proto.StudioAPI.PBNode>(node_);
           bitField0_ |= 0x00000002;
          }
       }
@@ -7059,7 +7199,7 @@ public final class Studioapi {
       /**
        * <code>repeated .StudioAPI.Proto.PBNode node = 2;</code>
        */
-      public java.util.List<no.icd.studioapi.proto.Studioapi.PBNode> getNodeList() {
+      public java.util.List<no.icd.studioapi.proto.StudioAPI.PBNode> getNodeList() {
         return java.util.Collections.unmodifiableList(node_);
       }
       /**
@@ -7071,14 +7211,14 @@ public final class Studioapi {
       /**
        * <code>repeated .StudioAPI.Proto.PBNode node = 2;</code>
        */
-      public no.icd.studioapi.proto.Studioapi.PBNode getNode(int index) {
+      public no.icd.studioapi.proto.StudioAPI.PBNode getNode(int index) {
         return node_.get(index);
       }
       /**
        * <code>repeated .StudioAPI.Proto.PBNode node = 2;</code>
        */
       public Builder setNode(
-          int index, no.icd.studioapi.proto.Studioapi.PBNode value) {
+          int index, no.icd.studioapi.proto.StudioAPI.PBNode value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -7091,7 +7231,7 @@ public final class Studioapi {
        * <code>repeated .StudioAPI.Proto.PBNode node = 2;</code>
        */
       public Builder setNode(
-          int index, no.icd.studioapi.proto.Studioapi.PBNode.Builder builderForValue) {
+          int index, no.icd.studioapi.proto.StudioAPI.PBNode.Builder builderForValue) {
         ensureNodeIsMutable();
         node_.set(index, builderForValue.build());
 
@@ -7100,7 +7240,7 @@ public final class Studioapi {
       /**
        * <code>repeated .StudioAPI.Proto.PBNode node = 2;</code>
        */
-      public Builder addNode(no.icd.studioapi.proto.Studioapi.PBNode value) {
+      public Builder addNode(no.icd.studioapi.proto.StudioAPI.PBNode value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -7113,7 +7253,7 @@ public final class Studioapi {
        * <code>repeated .StudioAPI.Proto.PBNode node = 2;</code>
        */
       public Builder addNode(
-          int index, no.icd.studioapi.proto.Studioapi.PBNode value) {
+          int index, no.icd.studioapi.proto.StudioAPI.PBNode value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -7126,7 +7266,7 @@ public final class Studioapi {
        * <code>repeated .StudioAPI.Proto.PBNode node = 2;</code>
        */
       public Builder addNode(
-          no.icd.studioapi.proto.Studioapi.PBNode.Builder builderForValue) {
+          no.icd.studioapi.proto.StudioAPI.PBNode.Builder builderForValue) {
         ensureNodeIsMutable();
         node_.add(builderForValue.build());
 
@@ -7136,7 +7276,7 @@ public final class Studioapi {
        * <code>repeated .StudioAPI.Proto.PBNode node = 2;</code>
        */
       public Builder addNode(
-          int index, no.icd.studioapi.proto.Studioapi.PBNode.Builder builderForValue) {
+          int index, no.icd.studioapi.proto.StudioAPI.PBNode.Builder builderForValue) {
         ensureNodeIsMutable();
         node_.add(index, builderForValue.build());
 
@@ -7146,7 +7286,7 @@ public final class Studioapi {
        * <code>repeated .StudioAPI.Proto.PBNode node = 2;</code>
        */
       public Builder addAllNode(
-          java.lang.Iterable<? extends no.icd.studioapi.proto.Studioapi.PBNode> values) {
+          java.lang.Iterable<? extends no.icd.studioapi.proto.StudioAPI.PBNode> values) {
         ensureNodeIsMutable();
         super.addAll(values, node_);
 
@@ -7259,7 +7399,7 @@ public final class Studioapi {
       com.google.protobuf.GeneratedMessageLite.ExtendableMessage<
         PBValueRequest> implements PBValueRequestOrBuilder {
     // Use PBValueRequest.newBuilder() to construct.
-    private PBValueRequest(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<no.icd.studioapi.proto.Studioapi.PBValueRequest, ?> builder) {
+    private PBValueRequest(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<no.icd.studioapi.proto.StudioAPI.PBValueRequest, ?> builder) {
       super(builder);
 
     }
@@ -7461,7 +7601,7 @@ public final class Studioapi {
                         throws java.io.IOException {
       getSerializedSize();
       com.google.protobuf.GeneratedMessageLite
-        .ExtendableMessage<no.icd.studioapi.proto.Studioapi.PBValueRequest>.ExtensionWriter extensionWriter =
+        .ExtendableMessage<no.icd.studioapi.proto.StudioAPI.PBValueRequest>.ExtensionWriter extensionWriter =
           newExtensionWriter();
       for (int i = 0; i < nodeID_.size(); i++) {
         output.writeUInt32(1, nodeID_.get(i));
@@ -7510,53 +7650,53 @@ public final class Studioapi {
       return super.writeReplace();
     }
 
-    public static no.icd.studioapi.proto.Studioapi.PBValueRequest parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBValueRequest parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBValueRequest parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBValueRequest parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBValueRequest parseFrom(byte[] data)
+    public static no.icd.studioapi.proto.StudioAPI.PBValueRequest parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBValueRequest parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBValueRequest parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBValueRequest parseFrom(java.io.InputStream input)
+    public static no.icd.studioapi.proto.StudioAPI.PBValueRequest parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBValueRequest parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBValueRequest parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBValueRequest parseDelimitedFrom(java.io.InputStream input)
+    public static no.icd.studioapi.proto.StudioAPI.PBValueRequest parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBValueRequest parseDelimitedFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBValueRequest parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBValueRequest parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBValueRequest parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBValueRequest parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBValueRequest parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -7565,7 +7705,7 @@ public final class Studioapi {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(no.icd.studioapi.proto.Studioapi.PBValueRequest prototype) {
+    public static Builder newBuilder(no.icd.studioapi.proto.StudioAPI.PBValueRequest prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -7579,8 +7719,8 @@ public final class Studioapi {
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<
-          no.icd.studioapi.proto.Studioapi.PBValueRequest, Builder> implements no.icd.studioapi.proto.Studioapi.PBValueRequestOrBuilder {
-      // Construct using no.icd.studioapi.proto.Studioapi.PBValueRequest.newBuilder()
+          no.icd.studioapi.proto.StudioAPI.PBValueRequest, Builder> implements no.icd.studioapi.proto.StudioAPI.PBValueRequestOrBuilder {
+      // Construct using no.icd.studioapi.proto.StudioAPI.PBValueRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -7606,20 +7746,20 @@ public final class Studioapi {
         return create().mergeFrom(buildPartial());
       }
 
-      public no.icd.studioapi.proto.Studioapi.PBValueRequest getDefaultInstanceForType() {
-        return no.icd.studioapi.proto.Studioapi.PBValueRequest.getDefaultInstance();
+      public no.icd.studioapi.proto.StudioAPI.PBValueRequest getDefaultInstanceForType() {
+        return no.icd.studioapi.proto.StudioAPI.PBValueRequest.getDefaultInstance();
       }
 
-      public no.icd.studioapi.proto.Studioapi.PBValueRequest build() {
-        no.icd.studioapi.proto.Studioapi.PBValueRequest result = buildPartial();
+      public no.icd.studioapi.proto.StudioAPI.PBValueRequest build() {
+        no.icd.studioapi.proto.StudioAPI.PBValueRequest result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public no.icd.studioapi.proto.Studioapi.PBValueRequest buildPartial() {
-        no.icd.studioapi.proto.Studioapi.PBValueRequest result = new no.icd.studioapi.proto.Studioapi.PBValueRequest(this);
+      public no.icd.studioapi.proto.StudioAPI.PBValueRequest buildPartial() {
+        no.icd.studioapi.proto.StudioAPI.PBValueRequest result = new no.icd.studioapi.proto.StudioAPI.PBValueRequest(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -7639,8 +7779,8 @@ public final class Studioapi {
         return result;
       }
 
-      public Builder mergeFrom(no.icd.studioapi.proto.Studioapi.PBValueRequest other) {
-        if (other == no.icd.studioapi.proto.Studioapi.PBValueRequest.getDefaultInstance()) return this;
+      public Builder mergeFrom(no.icd.studioapi.proto.StudioAPI.PBValueRequest other) {
+        if (other == no.icd.studioapi.proto.StudioAPI.PBValueRequest.getDefaultInstance()) return this;
         if (!other.nodeID_.isEmpty()) {
           if (nodeID_.isEmpty()) {
             nodeID_ = other.nodeID_;
@@ -7673,11 +7813,11 @@ public final class Studioapi {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        no.icd.studioapi.proto.Studioapi.PBValueRequest parsedMessage = null;
+        no.icd.studioapi.proto.StudioAPI.PBValueRequest parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (no.icd.studioapi.proto.Studioapi.PBValueRequest) e.getUnfinishedMessage();
+          parsedMessage = (no.icd.studioapi.proto.StudioAPI.PBValueRequest) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -7915,7 +8055,7 @@ public final class Studioapi {
      *
      * <pre>
      * if 0, all child (and their children) node changes are reported; if 1,
-     *only current nodeâ€™s deletion is reported 
+     *only current node’s deletion is reported 
      * </pre>
      */
     boolean hasDepth();
@@ -7924,7 +8064,7 @@ public final class Studioapi {
      *
      * <pre>
      * if 0, all child (and their children) node changes are reported; if 1,
-     *only current nodeâ€™s deletion is reported 
+     *only current node’s deletion is reported 
      * </pre>
      */
     int getDepth();
@@ -7954,7 +8094,7 @@ public final class Studioapi {
       com.google.protobuf.GeneratedMessageLite.ExtendableMessage<
         PBStructureChangeSubscription> implements PBStructureChangeSubscriptionOrBuilder {
     // Use PBStructureChangeSubscription.newBuilder() to construct.
-    private PBStructureChangeSubscription(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription, ?> builder) {
+    private PBStructureChangeSubscription(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription, ?> builder) {
       super(builder);
 
     }
@@ -8082,7 +8222,7 @@ public final class Studioapi {
      *
      * <pre>
      * if 0, all child (and their children) node changes are reported; if 1,
-     *only current nodeâ€™s deletion is reported 
+     *only current node’s deletion is reported 
      * </pre>
      */
     public boolean hasDepth() {
@@ -8093,7 +8233,7 @@ public final class Studioapi {
      *
      * <pre>
      * if 0, all child (and their children) node changes are reported; if 1,
-     *only current nodeâ€™s deletion is reported 
+     *only current node’s deletion is reported 
      * </pre>
      */
     public int getDepth() {
@@ -8146,7 +8286,7 @@ public final class Studioapi {
                         throws java.io.IOException {
       getSerializedSize();
       com.google.protobuf.GeneratedMessageLite
-        .ExtendableMessage<no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription>.ExtensionWriter extensionWriter =
+        .ExtendableMessage<no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription>.ExtensionWriter extensionWriter =
           newExtensionWriter();
       for (int i = 0; i < nodeID_.size(); i++) {
         output.writeUInt32(1, nodeID_.get(i));
@@ -8195,53 +8335,53 @@ public final class Studioapi {
       return super.writeReplace();
     }
 
-    public static no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription parseFrom(byte[] data)
+    public static no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription parseFrom(java.io.InputStream input)
+    public static no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription parseDelimitedFrom(java.io.InputStream input)
+    public static no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription parseDelimitedFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -8250,7 +8390,7 @@ public final class Studioapi {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription prototype) {
+    public static Builder newBuilder(no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -8260,8 +8400,8 @@ public final class Studioapi {
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<
-          no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription, Builder> implements no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscriptionOrBuilder {
-      // Construct using no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription.newBuilder()
+          no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription, Builder> implements no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscriptionOrBuilder {
+      // Construct using no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -8287,20 +8427,20 @@ public final class Studioapi {
         return create().mergeFrom(buildPartial());
       }
 
-      public no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription getDefaultInstanceForType() {
-        return no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription.getDefaultInstance();
+      public no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription getDefaultInstanceForType() {
+        return no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription.getDefaultInstance();
       }
 
-      public no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription build() {
-        no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription result = buildPartial();
+      public no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription build() {
+        no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription buildPartial() {
-        no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription result = new no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription(this);
+      public no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription buildPartial() {
+        no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription result = new no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((bitField0_ & 0x00000001) == 0x00000001)) {
@@ -8320,8 +8460,8 @@ public final class Studioapi {
         return result;
       }
 
-      public Builder mergeFrom(no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription other) {
-        if (other == no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription.getDefaultInstance()) return this;
+      public Builder mergeFrom(no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription other) {
+        if (other == no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription.getDefaultInstance()) return this;
         if (!other.nodeID_.isEmpty()) {
           if (nodeID_.isEmpty()) {
             nodeID_ = other.nodeID_;
@@ -8354,11 +8494,11 @@ public final class Studioapi {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription parsedMessage = null;
+        no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (no.icd.studioapi.proto.Studioapi.PBStructureChangeSubscription) e.getUnfinishedMessage();
+          parsedMessage = (no.icd.studioapi.proto.StudioAPI.PBStructureChangeSubscription) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -8442,7 +8582,7 @@ public final class Studioapi {
        *
        * <pre>
        * if 0, all child (and their children) node changes are reported; if 1,
-       *only current nodeâ€™s deletion is reported 
+       *only current node’s deletion is reported 
        * </pre>
        */
       public boolean hasDepth() {
@@ -8453,7 +8593,7 @@ public final class Studioapi {
        *
        * <pre>
        * if 0, all child (and their children) node changes are reported; if 1,
-       *only current nodeâ€™s deletion is reported 
+       *only current node’s deletion is reported 
        * </pre>
        */
       public int getDepth() {
@@ -8464,7 +8604,7 @@ public final class Studioapi {
        *
        * <pre>
        * if 0, all child (and their children) node changes are reported; if 1,
-       *only current nodeâ€™s deletion is reported 
+       *only current node’s deletion is reported 
        * </pre>
        */
       public Builder setDepth(int value) {
@@ -8478,7 +8618,7 @@ public final class Studioapi {
        *
        * <pre>
        * if 0, all child (and their children) node changes are reported; if 1,
-       *only current nodeâ€™s deletion is reported 
+       *only current node’s deletion is reported 
        * </pre>
        */
       public Builder clearDepth() {
@@ -8568,7 +8708,7 @@ public final class Studioapi {
      * type of structure change
      * </pre>
      */
-    no.icd.studioapi.proto.Studioapi.StructureChangeType getChangeType();
+    no.icd.studioapi.proto.StudioAPI.StructureChangeType getChangeType();
 
     // optional uint32 nodeID = 2;
     /**
@@ -8622,7 +8762,7 @@ public final class Studioapi {
      * if (grand)child is added/removed,
      * </pre>
      */
-    no.icd.studioapi.proto.Studioapi.PBNode getChangedNode();
+    no.icd.studioapi.proto.StudioAPI.PBNode getChangedNode();
 
     // optional uint32 changedChildID = 5;
     /**
@@ -8676,7 +8816,7 @@ public final class Studioapi {
       com.google.protobuf.GeneratedMessageLite.ExtendableMessage<
         PBStructureChangeResponse> implements PBStructureChangeResponseOrBuilder {
     // Use PBStructureChangeResponse.newBuilder() to construct.
-    private PBStructureChangeResponse(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse, ?> builder) {
+    private PBStructureChangeResponse(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse, ?> builder) {
       super(builder);
 
     }
@@ -8714,7 +8854,7 @@ public final class Studioapi {
             }
             case 8: {
               int rawValue = input.readEnum();
-              no.icd.studioapi.proto.Studioapi.StructureChangeType value = no.icd.studioapi.proto.Studioapi.StructureChangeType.valueOf(rawValue);
+              no.icd.studioapi.proto.StudioAPI.StructureChangeType value = no.icd.studioapi.proto.StudioAPI.StructureChangeType.valueOf(rawValue);
               if (value != null) {
                 bitField0_ |= 0x00000001;
                 changeType_ = value;
@@ -8732,11 +8872,11 @@ public final class Studioapi {
               break;
             }
             case 34: {
-              no.icd.studioapi.proto.Studioapi.PBNode.Builder subBuilder = null;
+              no.icd.studioapi.proto.StudioAPI.PBNode.Builder subBuilder = null;
               if (((bitField0_ & 0x00000008) == 0x00000008)) {
                 subBuilder = changedNode_.toBuilder();
               }
-              changedNode_ = input.readMessage(no.icd.studioapi.proto.Studioapi.PBNode.PARSER, extensionRegistry);
+              changedNode_ = input.readMessage(no.icd.studioapi.proto.StudioAPI.PBNode.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(changedNode_);
                 changedNode_ = subBuilder.buildPartial();
@@ -8783,7 +8923,7 @@ public final class Studioapi {
     private int bitField0_;
     // required .StudioAPI.Proto.StructureChangeType changeType = 1;
     public static final int CHANGETYPE_FIELD_NUMBER = 1;
-    private no.icd.studioapi.proto.Studioapi.StructureChangeType changeType_;
+    private no.icd.studioapi.proto.StudioAPI.StructureChangeType changeType_;
     /**
      * <code>required .StudioAPI.Proto.StructureChangeType changeType = 1;</code>
      *
@@ -8801,7 +8941,7 @@ public final class Studioapi {
      * type of structure change
      * </pre>
      */
-    public no.icd.studioapi.proto.Studioapi.StructureChangeType getChangeType() {
+    public no.icd.studioapi.proto.StudioAPI.StructureChangeType getChangeType() {
       return changeType_;
     }
 
@@ -8855,7 +8995,7 @@ public final class Studioapi {
 
     // optional .StudioAPI.Proto.PBNode changedNode = 4;
     public static final int CHANGEDNODE_FIELD_NUMBER = 4;
-    private no.icd.studioapi.proto.Studioapi.PBNode changedNode_;
+    private no.icd.studioapi.proto.StudioAPI.PBNode changedNode_;
     /**
      * <code>optional .StudioAPI.Proto.PBNode changedNode = 4;</code>
      *
@@ -8873,7 +9013,7 @@ public final class Studioapi {
      * if (grand)child is added/removed,
      * </pre>
      */
-    public no.icd.studioapi.proto.Studioapi.PBNode getChangedNode() {
+    public no.icd.studioapi.proto.StudioAPI.PBNode getChangedNode() {
       return changedNode_;
     }
 
@@ -8957,10 +9097,10 @@ public final class Studioapi {
     }
 
     private void initFields() {
-      changeType_ = no.icd.studioapi.proto.Studioapi.StructureChangeType.eChildAdded;
+      changeType_ = no.icd.studioapi.proto.StudioAPI.StructureChangeType.eChildAdded;
       nodeID_ = 0;
       timestamp_ = 0D;
-      changedNode_ = no.icd.studioapi.proto.Studioapi.PBNode.getDefaultInstance();
+      changedNode_ = no.icd.studioapi.proto.StudioAPI.PBNode.getDefaultInstance();
       changedChildID_ = 0;
       changer_ = "";
     }
@@ -8991,7 +9131,7 @@ public final class Studioapi {
                         throws java.io.IOException {
       getSerializedSize();
       com.google.protobuf.GeneratedMessageLite
-        .ExtendableMessage<no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse>.ExtensionWriter extensionWriter =
+        .ExtendableMessage<no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse>.ExtensionWriter extensionWriter =
           newExtensionWriter();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeEnum(1, changeType_.getNumber());
@@ -9056,53 +9196,53 @@ public final class Studioapi {
       return super.writeReplace();
     }
 
-    public static no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse parseFrom(byte[] data)
+    public static no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse parseFrom(java.io.InputStream input)
+    public static no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse parseDelimitedFrom(java.io.InputStream input)
+    public static no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse parseDelimitedFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse parseFrom(
+    public static no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -9111,7 +9251,7 @@ public final class Studioapi {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse prototype) {
+    public static Builder newBuilder(no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -9121,8 +9261,8 @@ public final class Studioapi {
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<
-          no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse, Builder> implements no.icd.studioapi.proto.Studioapi.PBStructureChangeResponseOrBuilder {
-      // Construct using no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse.newBuilder()
+          no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse, Builder> implements no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponseOrBuilder {
+      // Construct using no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -9135,13 +9275,13 @@ public final class Studioapi {
 
       public Builder clear() {
         super.clear();
-        changeType_ = no.icd.studioapi.proto.Studioapi.StructureChangeType.eChildAdded;
+        changeType_ = no.icd.studioapi.proto.StudioAPI.StructureChangeType.eChildAdded;
         bitField0_ = (bitField0_ & ~0x00000001);
         nodeID_ = 0;
         bitField0_ = (bitField0_ & ~0x00000002);
         timestamp_ = 0D;
         bitField0_ = (bitField0_ & ~0x00000004);
-        changedNode_ = no.icd.studioapi.proto.Studioapi.PBNode.getDefaultInstance();
+        changedNode_ = no.icd.studioapi.proto.StudioAPI.PBNode.getDefaultInstance();
         bitField0_ = (bitField0_ & ~0x00000008);
         changedChildID_ = 0;
         bitField0_ = (bitField0_ & ~0x00000010);
@@ -9154,20 +9294,20 @@ public final class Studioapi {
         return create().mergeFrom(buildPartial());
       }
 
-      public no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse getDefaultInstanceForType() {
-        return no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse.getDefaultInstance();
+      public no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse getDefaultInstanceForType() {
+        return no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse.getDefaultInstance();
       }
 
-      public no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse build() {
-        no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse result = buildPartial();
+      public no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse build() {
+        no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse buildPartial() {
-        no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse result = new no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse(this);
+      public no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse buildPartial() {
+        no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse result = new no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -9198,8 +9338,8 @@ public final class Studioapi {
         return result;
       }
 
-      public Builder mergeFrom(no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse other) {
-        if (other == no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse.getDefaultInstance()) return this;
+      public Builder mergeFrom(no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse other) {
+        if (other == no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse.getDefaultInstance()) return this;
         if (other.hasChangeType()) {
           setChangeType(other.getChangeType());
         }
@@ -9246,11 +9386,11 @@ public final class Studioapi {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse parsedMessage = null;
+        no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (no.icd.studioapi.proto.Studioapi.PBStructureChangeResponse) e.getUnfinishedMessage();
+          parsedMessage = (no.icd.studioapi.proto.StudioAPI.PBStructureChangeResponse) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -9262,7 +9402,7 @@ public final class Studioapi {
       private int bitField0_;
 
       // required .StudioAPI.Proto.StructureChangeType changeType = 1;
-      private no.icd.studioapi.proto.Studioapi.StructureChangeType changeType_ = no.icd.studioapi.proto.Studioapi.StructureChangeType.eChildAdded;
+      private no.icd.studioapi.proto.StudioAPI.StructureChangeType changeType_ = no.icd.studioapi.proto.StudioAPI.StructureChangeType.eChildAdded;
       /**
        * <code>required .StudioAPI.Proto.StructureChangeType changeType = 1;</code>
        *
@@ -9280,7 +9420,7 @@ public final class Studioapi {
        * type of structure change
        * </pre>
        */
-      public no.icd.studioapi.proto.Studioapi.StructureChangeType getChangeType() {
+      public no.icd.studioapi.proto.StudioAPI.StructureChangeType getChangeType() {
         return changeType_;
       }
       /**
@@ -9290,7 +9430,7 @@ public final class Studioapi {
        * type of structure change
        * </pre>
        */
-      public Builder setChangeType(no.icd.studioapi.proto.Studioapi.StructureChangeType value) {
+      public Builder setChangeType(no.icd.studioapi.proto.StudioAPI.StructureChangeType value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -9308,7 +9448,7 @@ public final class Studioapi {
        */
       public Builder clearChangeType() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        changeType_ = no.icd.studioapi.proto.Studioapi.StructureChangeType.eChildAdded;
+        changeType_ = no.icd.studioapi.proto.StudioAPI.StructureChangeType.eChildAdded;
         
         return this;
       }
@@ -9412,7 +9552,7 @@ public final class Studioapi {
       }
 
       // optional .StudioAPI.Proto.PBNode changedNode = 4;
-      private no.icd.studioapi.proto.Studioapi.PBNode changedNode_ = no.icd.studioapi.proto.Studioapi.PBNode.getDefaultInstance();
+      private no.icd.studioapi.proto.StudioAPI.PBNode changedNode_ = no.icd.studioapi.proto.StudioAPI.PBNode.getDefaultInstance();
       /**
        * <code>optional .StudioAPI.Proto.PBNode changedNode = 4;</code>
        *
@@ -9430,7 +9570,7 @@ public final class Studioapi {
        * if (grand)child is added/removed,
        * </pre>
        */
-      public no.icd.studioapi.proto.Studioapi.PBNode getChangedNode() {
+      public no.icd.studioapi.proto.StudioAPI.PBNode getChangedNode() {
         return changedNode_;
       }
       /**
@@ -9440,7 +9580,7 @@ public final class Studioapi {
        * if (grand)child is added/removed,
        * </pre>
        */
-      public Builder setChangedNode(no.icd.studioapi.proto.Studioapi.PBNode value) {
+      public Builder setChangedNode(no.icd.studioapi.proto.StudioAPI.PBNode value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -9457,7 +9597,7 @@ public final class Studioapi {
        * </pre>
        */
       public Builder setChangedNode(
-          no.icd.studioapi.proto.Studioapi.PBNode.Builder builderForValue) {
+          no.icd.studioapi.proto.StudioAPI.PBNode.Builder builderForValue) {
         changedNode_ = builderForValue.build();
 
         bitField0_ |= 0x00000008;
@@ -9470,11 +9610,11 @@ public final class Studioapi {
        * if (grand)child is added/removed,
        * </pre>
        */
-      public Builder mergeChangedNode(no.icd.studioapi.proto.Studioapi.PBNode value) {
+      public Builder mergeChangedNode(no.icd.studioapi.proto.StudioAPI.PBNode value) {
         if (((bitField0_ & 0x00000008) == 0x00000008) &&
-            changedNode_ != no.icd.studioapi.proto.Studioapi.PBNode.getDefaultInstance()) {
+            changedNode_ != no.icd.studioapi.proto.StudioAPI.PBNode.getDefaultInstance()) {
           changedNode_ =
-            no.icd.studioapi.proto.Studioapi.PBNode.newBuilder(changedNode_).mergeFrom(value).buildPartial();
+            no.icd.studioapi.proto.StudioAPI.PBNode.newBuilder(changedNode_).mergeFrom(value).buildPartial();
         } else {
           changedNode_ = value;
         }
@@ -9490,7 +9630,7 @@ public final class Studioapi {
        * </pre>
        */
       public Builder clearChangedNode() {
-        changedNode_ = no.icd.studioapi.proto.Studioapi.PBNode.getDefaultInstance();
+        changedNode_ = no.icd.studioapi.proto.StudioAPI.PBNode.getDefaultInstance();
 
         bitField0_ = (bitField0_ & ~0x00000008);
         return this;

@@ -4,9 +4,13 @@
 
 package no.icd.studioapi;
 
-import no.icd.studioapi.proto.Studioapi.CDPValueType;
+import no.icd.studioapi.proto.StudioAPI.CDPValueType;
 
-/** Simple variant class for holding different type Node values. */
+/** 
+ * Simple variant class for holding different type Node values.
+ * External creation of instances is through Variant.Builder only.
+ * @author kpu@icd.no
+ */
 public class Variant {
   
   private final CDPValueType valueType;
@@ -78,42 +82,42 @@ public class Variant {
         value = "";
         break;
       case eDOUBLE:
-        value = new Double(strValue);
+        value = Double.valueOf(strValue);
         break;
       case eUINT64:
-        value = new Long(strValue); // sign bit represents top bit
+        value = Long.valueOf(strValue); // sign bit represents top bit
         break;
       case eINT64:
-        value = new Long(strValue);
+        value = Long.valueOf(strValue);
         break;
       case eFLOAT:
-        value = new Float(strValue);
+        value = Float.valueOf(strValue);
         break;
       case eUINT:
-        value = new Integer(strValue); // sign bit represents top bit
+        value = Integer.valueOf(strValue); // sign bit represents top bit
         break;
       case eINT:
-        value = new Integer(strValue);
+        value = Integer.valueOf(strValue);
         break;
       case eUSHORT:
-        Integer v = new Integer(strValue);
+        Integer v = Integer.valueOf(strValue);
         if (v.intValue() < 0 || v.intValue() > 65535)
           throw new IllegalArgumentException("unsigned short out of bounds");
         value = v;
         break;
       case eSHORT:
-        value = new Short(strValue);
+        value = Short.valueOf(strValue);
         break;
       case eUCHAR:
-        value = new Integer(strValue.charAt(0));
+        value = Integer.valueOf(strValue.charAt(0));
         if (strValue.charAt(0) > 255 || strValue.charAt(0) < 0)
           throw new IllegalArgumentException("unsigned char out of bounds");
         break;
       case eCHAR:
-        value = new Byte(strValue);
+        value = Byte.valueOf(strValue);
         break;
       case eBOOL:
-        value = new Boolean(strValue);
+        value = Boolean.valueOf(strValue);
         break;
       case eSTRING:
         value = strValue;

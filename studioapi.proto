@@ -8,6 +8,7 @@ package StudioAPI.Proto;
 
 option optimize_for = LITE_RUNTIME;
 option java_package = "no.icd.studioapi.proto";
+option java_outer_classname = "StudioAPI";
 
 // Used in structure response message to indicate each node's type
 enum CDPNodeType {
@@ -20,6 +21,9 @@ CDP_MESSAGE = 4;
 CDP_BASE_OBJECT = 5;
 CDP_PROPERTY = 6;
 CDP_SETTING = 7;
+CDP_ENUM = 8;
+CDP_OPERATOR = 9;
+CDP_NODE = 10;
 }
 
 enum CDPMessageType {
@@ -97,7 +101,7 @@ optional uint32 serverPort = 7; // .. and this is the port of the application's 
 optional bool isResponder = 8; // if multiple applications are sent back from the server,
                                // this flag is set to true for the app that the data was requested from
 optional bool valueIsPersistent = 9; // if this flag is true, the node's value is stored in XML
-
+optional bool valueIsReadOnly = 10; // if this flag is true, the node value can not be written to
 extensions 100 to max; // Allow external extensions to Info message
 }
 
@@ -141,7 +145,7 @@ extensions 100 to max; // Allow external extensions to PBValueRequest message
 message PBStructureChangeSubscription {
 repeated uint32 nodeID = 1;
 optional uint32 depth = 2; /* if 0, all child (and their children) node changes are reported; if 1,
-                              only current nodeâ€™s deletion is reported */
+                              only current node’s deletion is reported */
 optional bool stop = 3; // stop subscription to node
 extensions 100 to max;
 }

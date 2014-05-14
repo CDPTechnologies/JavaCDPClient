@@ -4,9 +4,8 @@
 
 package no.icd.studioapi;
 
-import no.icd.studioapi.Node.ConnectionData;
 import no.icd.studioapi.Transport.State;
-import no.icd.studioapi.proto.Studioapi.*;
+import no.icd.studioapi.proto.StudioAPI.*;
 
 import java.net.URI;
 import java.util.concurrent.BlockingQueue;
@@ -18,6 +17,7 @@ import com.google.protobuf.InvalidProtocolBufferException;
  * IOHandler polls the WebSocket thread for new data and deserializes and 
  * creates events based on it. It also takes requests, serializes them and
  * forwards them to WebSocket thread.
+ * @author kpu@icd.no
  */
 class IOHandler {
 
@@ -81,11 +81,11 @@ class IOHandler {
     if (fs != 0.0)
       pbv.setFs(fs);
     
-    PBContainer.Builder pb = PBContainer.newBuilder()
+    transport.send(PBContainer.newBuilder()
         .setMessageType(CDPMessageType.eMessageTypeValueGetterRequest)
-        .setGetterRequest(pbv);
-    
-    transport.send(pb.build().toByteArray());
+        .setGetterRequest(pbv)
+        .build()
+        .toByteArray());
   }
   
   /** Cancel a value subscrition to a Node. */
@@ -94,11 +94,11 @@ class IOHandler {
         .addNodeID(node.getNodeID())
         .setStop(true);
     
-    PBContainer.Builder pb = PBContainer.newBuilder()
+    transport.send(PBContainer.newBuilder()
         .setMessageType(CDPMessageType.eMessageTypeValueGetterRequest)
-        .setGetterRequest(pbv);
-    
-    transport.send(pb.build().toByteArray());
+        .setGetterRequest(pbv)
+        .build()
+        .toByteArray());
   }
   
   /** Create a value change request for @a node, setting it to @a value. */
@@ -148,10 +148,37 @@ class IOHandler {
       break;
     }
     
-    transport.send(PBContainer
-        .newBuilder()
+    transport.send(PBContainer.newBuilder()
         .setMessageType(CDPMessageType.eMessageTypeValueSetterRequest)
         .addSetterRequest(pbv)
+        .build()
+        .toByteArray());
+  }
+  
+  /** Start a structure subscription. */
+  void startStructureSubscription(Node node, int lvl) {
+    PBStructureChangeSubscription.Builder pbs = PBStructureChangeSubscription
+        .newBuilder()
+        .addNodeID(node.getNodeID())
+        .setDepth(lvl);
+    
+    transport.send(PBContainer.newBuilder()
+        .setMessageType(CDPMessageType.eMessageTypeStructureChangeSubscription)
+        .setStructureChangeSubscription(pbs)
+        .build()
+        .toByteArray());
+  }
+  
+  /** Cancel a structure subcription. */
+  void cancelStructureSubscription(Node node) {
+    PBStructureChangeSubscription.Builder pbs = PBStructureChangeSubscription
+        .newBuilder()
+        .addNodeID(node.getNodeID())
+        .setStop(true);
+    
+    transport.send(PBContainer.newBuilder()
+        .setMessageType(CDPMessageType.eMessageTypeStructureChangeSubscription)
+        .setStructureChangeSubscription(pbs)
         .build()
         .toByteArray());
   }
@@ -180,7 +207,19 @@ class IOHandler {
         
         break;
       case eMessageTypeStructureChangeResponse:
-        // TODO
+        for (PBStructureChangeResponse pbs : pb.getStructureChangeResponseList()) {
+          StructureChange evt = new StructureChange(
+              pbs.getChangeType(),
+              pbs.getChanger(),
+              pbs.getTimestamp());
+          
+          if (pbs.getChangeType() != StructureChangeType.eSubscribedNodeLost) {
+            evt.setChangedNodeID(pbs.getChangedChildID());
+            evt.setChangedNode(parseNodeData(pbs.getChangedNode()));
+          }
+          listener.structureChangeReceived(pbs.getNodeID(), evt);
+
+        }
         break;
       case eMessageTypeOther:
         // TODO Not yet implemented in protocol.
@@ -204,15 +243,19 @@ class IOHandler {
         info.getNodeType(),
         info.getValueType(),
         info.getName());
+    if (info.hasTypeName())
+      node.setTypeName(info.getTypeName());
     
-    if (info.getNodeType() == CDPNodeType.CDP_APPLICATION) {
-      if (info.getIsResponder()) {
-        node.setConnectionData(new Node.ConnectionData());
-      } else {
-        node.setConnectionData(new Node.ConnectionData(
-            info.getServerAddr(),
-            info.getServerPort()));
-      }
+    if (info.hasIsResponder()) {
+    if (info.getIsResponder()) {
+      node.setConnectionData(new Node.ConnectionData());
+    } else {
+      node.setConnectionData(new Node.ConnectionData(
+          info.getServerAddr(),
+          info.getServerPort()));
+    }
+    } else {
+      node.setConnectionData(new Node.ConnectionData());
     }
 
     for (PBNode child : pb.getNodeList()) {
