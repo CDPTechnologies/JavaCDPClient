@@ -123,6 +123,14 @@ class RequestDispatch implements IOListener {
     if (lvl < 0)
       throw new IllegalArgumentException("Can't subscribe with negative depth");
     node.hasStructureSubscription = true;
+    if (node.isRoot() && node.getDispatch() == this) {
+      if (lvl == 1) {
+        System.out.println("Subcription at level 1 only notifies of subscribed node loss");
+        return;
+      } else {
+        client.broadcastStructureSubscription(lvl);
+      }
+    }
     handler.startStructureSubscription(node, lvl);
   }
   
@@ -213,8 +221,8 @@ class RequestDispatch implements IOListener {
     node.setDispatch(this);
     node.setPolledChildren(true);
     
-    client.setGlobalCache(node);
     state = State.ESTABLISHED;
+    client.setGlobalCache(node);
     client.dispatchReady(this);
   }
   

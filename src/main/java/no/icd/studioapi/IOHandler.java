@@ -61,6 +61,9 @@ class IOHandler {
         listener.initReady(false);
       }
     }
+    // drop is always forwarded
+    if (transport.getState() == State.DROPPED)
+      listener.initReady(false);
   }
 
   /** Create and send a structure request of a Node. */
@@ -114,7 +117,7 @@ class IOHandler {
       pbv.setDValue((Double) value.getValue());
       break;
     case eUINT64:
-      pbv.setUi64Value((Long) value.getValue()); // TODO
+      pbv.setUi64Value((Long) value.getValue());
       break;
     case eINT64:
       pbv.setI64Value((Long) value.getValue());
@@ -123,19 +126,19 @@ class IOHandler {
       pbv.setFValue((Float) value.getValue());
       break;
     case eUINT:
-      pbv.setUiValue((Integer) value.getValue()); // TODO
+      pbv.setUiValue((Integer) value.getValue());
       break;
     case eINT:
       pbv.setIValue((Integer) value.getValue());
       break;
     case eUSHORT:
-      pbv.setUsValue((Short) value.getValue()); // TODO
+      pbv.setUsValue((Short) value.getValue());
       break;
     case eSHORT:
       pbv.setSValue((Short) value.getValue());
       break;
     case eUCHAR:
-      pbv.setUcValue((Short) value.getValue()); // TODO
+      pbv.setUcValue((Short) value.getValue());
       break;
     case eCHAR:
       pbv.setCValue((Byte) value.getValue());

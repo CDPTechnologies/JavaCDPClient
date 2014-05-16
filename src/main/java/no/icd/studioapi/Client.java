@@ -74,8 +74,8 @@ public class Client implements Runnable {
 
 	/** Called internally to set the root node of the system. */
 	void setGlobalCache(Node node) {
-	  openOtherConnections();
 	  globalCache = node;
+	  openOtherConnections();
 	}
 	
 	/** Called by a dispatch to notify it's ready. */
@@ -106,10 +106,6 @@ public class Client implements Runnable {
 	  }
 	  
 	  cleanupConnections = true;
-	  connections.remove(dispatch);
-	  if (connections.isEmpty()) {
-	    listener.clientClosed(this);
-	  }
 	}
 	
 	/** Open connections to unconnected top-level nodes. */
@@ -153,6 +149,18 @@ public class Client implements Runnable {
 	    }
 	  }
 	  cleanupConnections = false;
+	  if (connections.isEmpty())
+	    listener.clientClosed(this);
+	  if (!connections.contains(globalCache.getDispatch()))
+	    globalCache.setDispatch(connections.get(0));
 	}
+
+	/** Broadcast a root structure subscription to everyone but its handler. */
+  void broadcastStructureSubscription(int lvl) {
+    for (RequestDispatch d : connections) {
+      if (globalCache.getDispatch() != d)
+        d.subscribeToNodeStructure(globalCache, lvl);
+    }
+  }
 
 }
