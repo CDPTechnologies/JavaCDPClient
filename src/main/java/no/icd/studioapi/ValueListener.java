@@ -1,5 +1,5 @@
-/**
- * (c)2014 ICD Software AS
+/*
+ * (c)2019 CDP Technologies AS
  */
 
 package no.icd.studioapi;
@@ -11,6 +11,6 @@ package no.icd.studioapi;
 public interface ValueListener {
   
   /** Called when the remote value of @a node has changed. */
-  public void valueChanged(Node node);
+  public void valueChanged(Variant value);
 
 }

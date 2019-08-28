@@ -1,12 +1,11 @@
-/**
- * (c)2014 ICD Software AS
+/*
+ * (c)2019 CDP Technologies AS
  */
 
 package no.icd.studioapi;
 
 /** 
  * Request object used for tracking structure requests.
- * @author kpu@icd.no
  */
 public class Request {
   
@@ -31,7 +30,7 @@ public class Request {
    * Set the optional callback listener. If the request was already resolved,
    * the callback is called immediately.
    */
-  public void setListener(RequestListener listener) {
+  public void then(RequestListener listener) {
     this.listener = listener;
     if (status != Status.PENDING) {
       listener.requestComplete(node, status);
@@ -51,6 +50,13 @@ public class Request {
     this.status = status;
     if (listener != null) {
       listener.requestComplete(node, status);
+    }
+  }
+
+  void offer(Node node) {
+    if (node.getNodeID() == getExpectedNodeID()) {
+      this.node = node;
+      setStatus(Status.RESOLVED);
     }
   }
 

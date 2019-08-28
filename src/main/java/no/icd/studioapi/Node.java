@@ -1,21 +1,17 @@
-/**
- * (c)2014 ICD Software AS
+/*
+ * (c)2019 CDP Technologies AS
  */
 
 package no.icd.studioapi;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Set;
+import java.util.*;
 
+import no.icd.studioapi.proto.StudioAPI;
 import no.icd.studioapi.proto.StudioAPI.CDPNodeType;
 import no.icd.studioapi.proto.StudioAPI.CDPValueType;
 
 /**
  * The Node class represents a single element of the CDP System hierarchy.
- * @author kpu@icd.no
  */
 public class Node {
   
@@ -43,16 +39,19 @@ public class Node {
   private String name;
   private String typeName;
   private boolean isReadOnly;
-  private boolean isSaveOnChange;
+  private boolean isPersistent;
+  private boolean isLeaf;
+  private boolean isImportant;
+  private boolean isInternal;
   private List<Node> children;
   private Node parent;
   private boolean polledChildren;
   private Variant value;
   private RequestDispatch dispatch;
   private ConnectionData connectionData = null;
-  private Set<ValueListener> valueListeners;
+  private Map<ValueListener, Double> valueListenerFsMap;
   private Set<ValueListener> singleListeners;
-  private Set<StructureListener> structureListeners;
+  private Set<SubtreeListener> subtreeListeners;
   boolean hasValueSubscription = false;
   boolean hasStructureSubscription = false;
   
@@ -60,20 +59,30 @@ public class Node {
   public Request requestChildNodes() {
     return dispatch.requestChildrenForNode(this);
   }
-  
+
   /** (asynchronous) Subscribe to this node's value changes with @a listener. */
-  public void subscribeToValueChanges(double fs, ValueListener listener) {
+  public void subscribeToValueChanges(ValueListener listener) {
+    subscribeToValueChanges(listener, 10);
+  }
+
+  /**
+   * (asynchronous) Subscribe to this node's value changes with @a listener.
+   * @param listener Callback which starts receiving value changes.
+   * @param fs Frequency. Sets how often packets containing value changes are received. Note that
+   *           still all value changes are received, larger packets simply improve performance.
+   */
+  public void subscribeToValueChanges(ValueListener listener, double fs) {
     if (valueType != CDPValueType.eUNDEFINED)
-      valueListeners.add(listener);
+      valueListenerFsMap.put(listener, fs);
     if (!hasValueSubscription)
       dispatch.subscribeToNodeValues(this, fs);
   }
   
   /** Remove a previously registered value @a listener. */
   public void removeValueListener(ValueListener listener) {
-    boolean success = valueListeners.remove(listener);
-    if (success && valueListeners.size() == 0)
-      dispatch.unsubcribeFromNodeValues(this);
+    Double removed = valueListenerFsMap.remove(listener);
+    if (removed != null && valueListenerFsMap.size() == 0)
+      dispatch.unsubscribeFromNodeValues(this);
   }
   
   /** Request a single value for this node. */
@@ -82,41 +91,63 @@ public class Node {
     dispatch.requestValueForNode(this);
   }
   
-  /** (asynchronous) Set the remote value of this node to @a value. */
+  /**
+   * (asynchronous) Set the remote value of this node to @a value.
+   *
+   * Example: '{@code node.postValue(new Variant.Builder(StudioAPI.CDPValueType.eDOUBLE).parse("4").build());}'
+   */
   public void postValue(Variant value) {
     dispatch.postValueForNode(this, value);
   }
   
   /** 
    * (asynchronous) Subscribe to the remote structure changes of this node.
-   * @param lvl How many sublevels are included in the subscription. 0 means
-   *        the subscription spans the entire cached node tree.
    * @param listener Callback listener informed of structure changes. 
    */
-  public void subscribeToStructureChanges(int lvl, StructureListener listener) {
-    structureListeners.add(listener);
+  public void addSubtreeListener(SubtreeListener listener) {
+    subtreeListeners.add(listener);
     if (!hasStructureSubscription)
-      dispatch.subscribeToNodeStructure(this, lvl);
+      dispatch.subscribeToNodeStructure(this);
   }
   
   /** (asynchronous) Remove a previously registered structure listener. */
-  public void removeStructureListener(StructureListener listener) {
-    boolean success = structureListeners.remove(listener);
-    if (success && structureListeners.isEmpty())
+  public void removeSubtreeListener(SubtreeListener listener) {
+    boolean success = subtreeListeners.remove(listener);
+    if (success && subtreeListeners.isEmpty())
       dispatch.cancelNodeStructureSubscription(this);
   }
+
+  /**
+   * (asynchronous) Request node with provided path.
+   * @param nodePath Should contain dot separated path to target node.
+   */
+  public Request find(String nodePath) {
+    return dispatch.find(this, nodePath);
+  }
+
+  /**
+   * (asynchronous) Request child node with provided name.
+   * @param name Name of the child node.
+   */
+  public Request getChild(String name) {
+    return find(name);
+  }
   
-  /** Get the number of cached children this Node has. */
+  /** Get the number of cached children this Node has. 0 unless {@link #requestChildNodes()} has been called. */
   public int getChildCount() {
     return children.size();
   }
   
-  /** Get a cached child at index @a n. */
+  /** Get a cached child at index @a n. Note that {@link #requestChildNodes()} must be called first. */
   public Node getCachedChild(int n) {
     return children.get(n);
   }
   
-  /** Returns the most recent value that this node has received. */
+  /**
+   * Returns the most recent value that this node has received. Remember to first subscribe to value changes.
+   *
+   * @see #subscribeToValueChanges(ValueListener), {@link #requestValue(ValueListener)}
+   */
   public Variant getCachedValue() {
     return value;
   }
@@ -136,12 +167,12 @@ public class Node {
     return name;
   }
   
-  /** Get the class name that this node represents. */
+  /** Get the model name that this node represents. */
   public String getTypeName() {
     return typeName;
   }
   
-  /** Get the long name of this node. */
+  /** Get the long name of this node (e.g "MyApp.MyComponent.MySignal"). */
   public String getLongName() {
     if (parent == null || parent.isRoot())
       return name;
@@ -149,34 +180,62 @@ public class Node {
   }
   
   /** Check if this node's value can not be changed. */
-  public boolean valueIsReadOnly() {
+  public boolean isValueReadOnly() {
     return isReadOnly;
   }
   
-  /** Check if thos node's value is saved to XML when it changes. */
-  public boolean valueIsSavedOnChange() {
-    return isSaveOnChange;
+  /** Check if this node's value is saved to XML when it changes. */
+  public boolean isValuePersistent() {
+    return isPersistent;
   }
 
   /** Check if the node has it's sub-structure polled. */
   public boolean hasPolledChildren() {
     return polledChildren;
   }
-  
+
+  /** Check if this node has any children. */
+  public boolean isLeaf() {
+    return isLeaf;
+  }
+
+  /** Check if this node has display hint "Important". Nodes marked important should be more prominent in the UI. */
+  public boolean isImportant() {
+    return isImportant;
+  }
+
+  /**
+   * Check if this node has display hint "Internal". Nodes marked internal are implementation details
+   * which are generally hidden from the UI.
+   */
+  public boolean isInternal() {
+    return isInternal;
+  }
+
   /** Nodes are constructed by StudioAPI only. */
-  Node(int id, CDPNodeType ntype, CDPValueType vtype, String name) {
+  Node(int id, CDPNodeType ntype, CDPValueType vtype, String name, int flags) {
     this.nodeID = id;
     this.nodeType = ntype;
     this.valueType = vtype;
     this.name = name;
     this.children = new ArrayList<Node>();
     this.polledChildren = false;
-    this.value = new Variant(CDPValueType.eUNDEFINED, "", 0.0);
-    this.valueListeners = new HashSet<ValueListener>();
+    this.value = new Variant(CDPValueType.eUNDEFINED, "", 0);
+    this.valueListenerFsMap = new HashMap<>();
     this.singleListeners = new HashSet<ValueListener>();
-    this.structureListeners = new HashSet<StructureListener>();
-    this.isReadOnly = false;
-    this.isSaveOnChange = false;
+    this.subtreeListeners = new HashSet<SubtreeListener>();
+    this.isReadOnly = (flags & StudioAPI.Info.Flags.eValueIsReadOnly.getNumber()) != 0;
+    this.isPersistent = (flags & StudioAPI.Info.Flags.eValueIsPersistent.getNumber()) != 0;
+    this.isLeaf = (flags & StudioAPI.Info.Flags.eNodeIsLeaf.getNumber()) != 0;
+    this.isImportant = (flags & StudioAPI.Info.Flags.eNodeIsImportant.getNumber()) != 0;
+    this.isInternal = (flags & StudioAPI.Info.Flags.eNodeIsInternal.getNumber()) != 0;
+  }
+
+  Node getCachedChild(String name) {
+    for (int i = 0; i < getChildCount(); i++)
+      if (getCachedChild(i).getName().equals(name))
+        return getCachedChild(i);
+    return null;
   }
   
   /** Add a child with an unique ID to this node. Returns true on success. */
@@ -188,6 +247,7 @@ public class Node {
     }
     children.add(child);
     child.setParent(this);
+    propagateSubtreeChange(new SubtreeChange(SubtreeChangeType.eChildAdded, child));
     return true;
   }
   
@@ -214,11 +274,25 @@ public class Node {
     return null;
   }
   
-  /** Notify this node's structure listeners of an event. */
-  void notifyStructureChanged(StructureChange event) {
-    for (StructureListener listener : structureListeners) {
-      listener.structureChanged(this, event);
+  /** Notify this node's subtree listeners of an event. */
+  private void notifySubtreeChanged(SubtreeChange event) {
+    for (SubtreeListener listener : subtreeListeners) {
+      listener.subtreeChanged(this, event);
     }
+  }
+
+  void notifyNodeIsLost() {
+    notifySubtreeChanged(new SubtreeChange(SubtreeChangeType.eSubscribedNodeLost, this));
+    dispatch = null;
+    for (Node child : children)
+      child.notifyNodeIsLost();
+  }
+
+  private void propagateSubtreeChange(SubtreeChange event)
+  {
+    notifySubtreeChanged(event);
+    if (getParent() != null)
+      getParent().propagateSubtreeChange(event);
   }
   
   /** Remove all child nodes and unset the polled flag. */
@@ -230,11 +304,20 @@ public class Node {
   void removeChildWithID(int nodeID) {
     ListIterator<Node> iter = children.listIterator();
     while (iter.hasNext()) {
-      if (iter.next().nodeID == nodeID) {
+      Node next = iter.next();
+      if (next.nodeID == nodeID) {
+        propagateSubtreeChange(new SubtreeChange(SubtreeChangeType.eChildRemoved, next));
+        next.notifyPendingDeletion();
         iter.remove();
         break;
       }
     }
+  }
+
+  private void notifyPendingDeletion() {
+    notifySubtreeChanged(new SubtreeChange(SubtreeChangeType.eChildRemoved, this));
+    for (Node child : getChildList())
+      child.notifyPendingDeletion();
   }
   
   /* Internal accessor methods */
@@ -259,8 +342,36 @@ public class Node {
     this.dispatch = dispatch;
   }
 
+  void updateDispatch(RequestDispatch dispatch) {
+    this.dispatch = dispatch;
+    if (dispatch != null) {
+      if (hasPolledChildren()) {
+        polledChildren = false;  // Must refresh children after dispatch change
+        requestChildNodes().then((node, status) -> {
+          if (status == Request.Status.RESOLVED)
+            for (Node child : children)
+              child.updateDispatch(dispatch);
+        });
+      }
+      if (hasStructureSubscription) {
+        dispatch.subscribeToNodeStructure(this);
+      }
+      if (!valueListenerFsMap.isEmpty()) {
+        dispatch.subscribeToNodeValues(this, Collections.max(valueListenerFsMap.values()));
+      }
+      notifySubtreeChanged(new SubtreeChange(SubtreeChangeType.eSubscribedNodeReconnected, this));
+    } else {
+      for (Node child : children)
+        child.updateDispatch(null);
+    }
+  }
+
   public Node getParent() {
     return parent;
+  }
+
+  void setNodeID(int nodeID) {
+    this.nodeID = nodeID;
   }
 
   void setParent(Node parent) {
@@ -269,8 +380,8 @@ public class Node {
   
   void setValue(Variant variant) {
     this.value = variant;
-    for (ValueListener listener : valueListeners) {
-      listener.valueChanged(this);
+    for (ValueListener listener : valueListenerFsMap.keySet()) {
+      listener.valueChanged(variant);
     }
   }
   
@@ -295,4 +406,18 @@ public class Node {
     return "Node(" + nodeID + ", " + name + ")\n" + children;
   }
 
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+
+    Node node = (Node) o;
+
+    return nodeID == node.nodeID;
+  }
+
+  @Override
+  public int hashCode() {
+    return nodeID;
+  }
 }

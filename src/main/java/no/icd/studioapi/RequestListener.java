@@ -1,12 +1,11 @@
-/**
- * (c)2014 ICD Software AS
+/*
+ * (c)2019 CDP Technologies AS
  */
 
 package no.icd.studioapi;
 
 /**
  * Callback interface that can be optionally set for Request objects.
- * @author kpu@icd.no
  */
 public interface RequestListener {
   

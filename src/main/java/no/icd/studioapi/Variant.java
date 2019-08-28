@@ -1,27 +1,34 @@
-/**
- * (c)2014 ICD Software AS
+/*
+ * (c)2019 CDP Technologies AS
  */
 
 package no.icd.studioapi;
 
 import no.icd.studioapi.proto.StudioAPI.CDPValueType;
 
+import java.time.Instant;
+
 /** 
  * Simple variant class for holding different type Node values.
  * External creation of instances is through Variant.Builder only.
- * @author kpu@icd.no
  */
 public class Variant {
   
   private final CDPValueType valueType;
   private final Object value;
-  private final double timestamp;
+  private final Instant timestamp;
   
   /** Constructor is internal, use Variant.Builder to construct Variants. */
-  Variant(CDPValueType valueType, Object value, double timestamp) {
+  Variant(CDPValueType valueType, Object value, Instant timestamp) {
     this.valueType = valueType;
     this.value = value;
     this.timestamp = timestamp;
+  }
+
+  Variant(CDPValueType valueType, Object value, long nanoTime) {
+    this.valueType = valueType;
+    this.value = value;
+    this.timestamp = Instant.ofEpochSecond(0, nanoTime);
   }
   
   /**
@@ -45,7 +52,7 @@ public class Variant {
   }
   
   /** Get the value timestamp. @returns 0.0 if no timestamp was specified. */
-  public double getTimestamp() {
+  public Instant getTimestamp() {
     return timestamp;
   }
 
@@ -65,7 +72,7 @@ public class Variant {
   public static class Builder {
     private final CDPValueType valueType;
     private Object value;
-    private double timestamp;
+    private Instant timestamp;
     
     /** Construct a variant builder with the given value type. */
     public Builder(CDPValueType valueType) {
@@ -126,7 +133,7 @@ public class Variant {
       return this;
     }
     
-    public Builder setTimestamp(double timestamp) {
+    public Builder setTimestamp(Instant timestamp) {
       this.timestamp = timestamp;
       return this;
     }

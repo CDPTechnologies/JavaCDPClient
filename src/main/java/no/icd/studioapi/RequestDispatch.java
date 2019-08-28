@@ -1,26 +1,20 @@
-/**
- * (c)2014 ICD Software AS
+/*
+ * (c)2019 CDP Technologies AS
  */
 
 package no.icd.studioapi;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import no.icd.studioapi.Request.Status;
-import no.icd.studioapi.proto.StudioAPI.CDPNodeType;
 import no.icd.studioapi.proto.StudioAPI.CDPValueType;
-import no.icd.studioapi.proto.StudioAPI.StructureChangeType;
 
 /**
  * RequestDispatch is responsible for storing and updating a single connection's 
  * section of the node cache.
- * @author kpu@icd.no
  */
 class RequestDispatch implements IOListener {
-  
+
   enum State {
     PENDING,
     ESTABLISHED,
@@ -53,7 +47,6 @@ class RequestDispatch implements IOListener {
   
   /** Initialise with a preset Application node. */
   void init(Node presetRoot) {
-    connectionCache.add(presetRoot);
     presetRoot.setDispatch(this);
     handler.init(this);
   }
@@ -65,7 +58,11 @@ class RequestDispatch implements IOListener {
   void service() {
     handler.pollEvents();
   }
-  
+
+  void close() {
+    handler.close();
+  }
+
   /**
    * Send a request for the children of a given node.
    * @param  node The node to poll for.
@@ -83,6 +80,34 @@ class RequestDispatch implements IOListener {
     }
     return req;
   }
+
+  public Request find(Node parent, String nodePath) {
+    List<String> tokens = Arrays.asList(nodePath.split("\\."));
+    Iterator<String> it = tokens.iterator();
+
+    Node node = parent;
+    while (node != null && node.hasPolledChildren() && it.hasNext()) {
+      node = node.getCachedChild(it.next());
+    }
+    if (node == null) {
+      Request r = new Request();
+      r.setStatus(Status.ERROR);
+      return r;
+    } else if (!it.hasNext()) {
+      Request r = new Request();
+      r.setNode(node);
+      r.setStatus(Status.RESOLVED);
+      return r;
+    }
+
+    Queue<String> remainingTokens = new LinkedList<>();
+    it.forEachRemaining(remainingTokens::add);
+    URIRequest r = new URIRequest(remainingTokens);
+    r.setExpectedNodeID(node.getNodeID());
+    pendingRequests.add(r);
+    node.requestChildNodes();
+    return r;
+  }
   
   /** 
    * Send a periodic value request for a node.
@@ -97,7 +122,7 @@ class RequestDispatch implements IOListener {
   }
   
   /** Cancel a previous value subscription. */
-  void unsubcribeFromNodeValues(Node node) {
+  void unsubscribeFromNodeValues(Node node) {
     node.hasValueSubscription = false;
     handler.cancelValueSubscription(node);
   }
@@ -119,19 +144,11 @@ class RequestDispatch implements IOListener {
   }
   
   /** Subscribe to the remote structure changes for a node. */
-  void subscribeToNodeStructure(Node node, int lvl) {
-    if (lvl < 0)
-      throw new IllegalArgumentException("Can't subscribe with negative depth");
+  void subscribeToNodeStructure(Node node) {
     node.hasStructureSubscription = true;
-    if (node.isRoot() && node.getDispatch() == this) {
-      if (lvl == 1) {
-        System.out.println("Subcription at level 1 only notifies of subscribed node loss");
-        return;
-      } else {
-        client.broadcastStructureSubscription(lvl);
-      }
-    }
-    handler.startStructureSubscription(node, lvl);
+    if (node.isRoot() && node.getDispatch() == this)
+      client.broadcastStructureSubscription();
+    handler.startStructureSubscription(node.getNodeID());
   }
   
   /** Cancel a previous structure subscription. */
@@ -139,8 +156,7 @@ class RequestDispatch implements IOListener {
     node.hasStructureSubscription = false;
     handler.cancelStructureSubscription(node);
   }
-  
-  @Override
+
   public void initReady(boolean success) {
     if (success)
       handler.nodeRequest(null);
@@ -150,33 +166,70 @@ class RequestDispatch implements IOListener {
     }
   }
 
-  @Override
   public void nodeReceived(Node node) {
     // if no cache has been created or supplied, RequestDispatch is responsible
     // for boostrapping the entire Client
     if (state == State.PENDING) {
-      if (connectionCache.isEmpty())
+      if (connectionCache.isEmpty() && client.getRootNode() == null)
         handleInitialResponse(node);
       else
         addTopLevelStructure(node);
       
     } else {
       Node found = findNodeByID(node.getNodeID());
-      
       if (found == null) {
         System.err.println("Could not place received node in tree!");
         return;
       }
-      
-      if (!found.hasPolledChildren()) {
-        found.takeChildrenFrom(node);
+
+      if (!found.hasPolledChildren() && found.getChildCount() == 0) {
         found.setPolledChildren(true);
-        interceptNode(found);
+        found.takeChildrenFrom(node);
+      } else {
+        found.setPolledChildren(true);
+        if (found.equals(client.getRootNode()))
+          updateAppIDOnHandleChange(found, node);
+        handleRemovedNodes(found, node);
+        handleNewNodes(found, node);
+      }
+      interceptNode(found);
+    }
+  }
+
+  private void updateAppIDOnHandleChange(Node cachedNode, Node receivedNode) {
+    for (Node cachedChild : cachedNode.getChildList())
+      for (Node receivedChild : receivedNode.getChildList())
+        if (cachedChild.getName().equals(receivedChild.getName()))
+          cachedChild.setNodeID(receivedChild.getNodeID());
+  }
+
+  private void handleRemovedNodes(Node cachedNode, Node receivedNode) {
+    HashSet<Node> received = new HashSet<>(receivedNode.getChildList());
+    List<Integer> idsToRemove = new ArrayList<>();
+    for (Node child : cachedNode.getChildList()) {
+      if (!received.contains(child)) {
+        idsToRemove.add(child.getNodeID());
+      }
+    }
+    for (Integer id : idsToRemove)
+      cachedNode.removeChildWithID(id);
+  }
+
+  private void handleNewNodes(Node cachedNode, Node receivedNode) {
+    HashSet<Node> cached = new HashSet<>(cachedNode.getChildList());
+    for (Node child : receivedNode.getChildList()) {
+      if (!cached.contains(child)) {
+        if (cachedNode.equals(client.getRootNode())) {
+          client.openConnection(child);
+          // TODO: copy listeners
+        } else if (receivedNode.getConnectionData().isLocal) {
+          child.setDispatch(this);
+          cachedNode.addChild(child);
+        }
       }
     }
   }
-  
-  @Override
+
   public void valueReceived(int nodeID, Variant value) {
     Node node = findNodeByID(nodeID);
     
@@ -185,84 +238,90 @@ class RequestDispatch implements IOListener {
     } else {
       System.err.println("Received value for unknown Node.");
     }
-    
-  }
-  
-  @Override
-  public void structureChangeReceived(int nodeID, StructureChange event) {
-    Node subscribed = findNodeByID(nodeID);
-    if (subscribed == null) {
-      System.err.println("Could not place received node in tree!");
-      return;
-    }
-    if (event.getChangeType() == StructureChangeType.eSubscribedNodeLost) {
-      nodeInvalidated(subscribed, event);
-    } else {
-      Node parent = subscribed.findChildByID(event
-          .getChangedNode()
-          .getNodeID());
-      if (parent == null)
-        System.err.println("Received structure change for uncached node.");
-      else
-        nodeAddedOrRemoved(subscribed, parent, event);
-    }
   }
 
   /** Handle the first CDP_SYSTEM node that this Client receives. */
   private void handleInitialResponse(Node node) {
-    
-    for (int i = 0; i < node.getChildCount(); i++) {
+    List<Node> remoteApps = new ArrayList<>();
+    for (int i = node.getChildCount() - 1; i >= 0 ; i--) {
       if (node.getCachedChild(i).getConnectionData().isLocal) {
         connectionCache.add(node.getCachedChild(i));
         node.getCachedChild(i).setDispatch(this);
-      }   
+      } else {
+        remoteApps.add(node.getCachedChild(i));
+        node.getChildList().remove(i);
+      }
     }
     // Since we are the first connection, we'll handle the system node for now
     node.setDispatch(this);
     node.setPolledChildren(true);
     
     state = State.ESTABLISHED;
-    client.setGlobalCache(node);
+    client.setRootNode(node);
     client.dispatchReady(this);
+
+    for (Node app : remoteApps)
+      client.openConnection(app);
   }
   
   
   /** Add missing top-level components and set the connection dispatch. */
   private void addTopLevelStructure(Node node) {
-    Node root = client.getGlobalCache();
     for (int i = 0; i < node.getChildCount(); i++) {
-      if (root.addChild(node.getCachedChild(i))) {
-        connectionCache.add(node.getCachedChild(i));
-        node.getCachedChild(i).setDispatch(this);
+      Node receivedAppNode = node.getCachedChild(i);
+      if (receivedAppNode.getConnectionData().isLocal) {
+        if (!addExistingAppNode(receivedAppNode)) {
+          addNewAppNode(receivedAppNode);
+        }
       }
     }
     node.setPolledChildren(true);
     state = State.ESTABLISHED;
   }
-  
-  
-  /** Match incoming node against pending structure requests. */
-  private void interceptNode(Node node) {
-    List<Request> resolved = new ArrayList<Request>();
-    Iterator<Request> iter = pendingRequests.iterator();
-    
-    while (iter.hasNext()) {
-      Request req = iter.next();
-      if (req.getExpectedNodeID() == node.getNodeID()) {
-        iter.remove();
-        resolved.add(req);
+
+  private void addNewAppNode(Node receivedAppNode) {
+    Node root = client.getRootNode();
+      receivedAppNode.setDispatch(this);
+    if (root.addChild(receivedAppNode)) {
+      connectionCache.add(receivedAppNode);
+    }
+  }
+
+  private boolean addExistingAppNode(Node receivedAppNode) {
+    Node root = client.getRootNode();
+    for (Node lostApp : client.getLostApps()) {
+      if (lostApp.getName().equals(receivedAppNode.getName())) {
+        lostApp.setNodeID(receivedAppNode.getNodeID());
+        if (!root.getChildList().contains(lostApp)) {
+          lostApp.setParent(root);
+          root.getChildList().add(lostApp);
+          lostApp.updateDispatch(this);
+          connectionCache.add(lostApp);
+          client.getLostApps().remove(lostApp);
+          return true;
+        }
       }
     }
-    
-    // callbacks are safe only when called from separate lists
-    for (Request req : resolved) {
-      req.setNode(node);
-      req.setStatus(Status.RESOLVED);
-    }
+    return false;
+  }
+
+
+  /** Match incoming node against pending structure requests. */
+  private void interceptNode(Node node) {
+    for (Request req : new ArrayList<Request>(pendingRequests))
+      req.offer(node);
+    pendingRequests.removeIf(req -> req.getStatus() == Status.RESOLVED);
   }
   
   /** Find a node from this connection's cache. */
   private Node findNodeByID(int nodeID) {
+    if (nodeID == client.getRootNode().getNodeID())
+      return client.getRootNode();
+    for (Node app : client.getRootNode().getChildList()) {
+      if (app.getNodeID() == nodeID) {
+        return app;
+      }
+    }
     Node found = null;
     for (Node node : connectionCache) {
       if ((found = node.findChildByID(nodeID)) != null)
@@ -270,31 +329,7 @@ class RequestDispatch implements IOListener {
     }
     return found;
   }
-  
-  /** Handle an invalidated node. */
-  private void nodeInvalidated(Node subscribed, StructureChange event) {
-    subscribed.notifyStructureChanged(event);
-    subscribed.getParent().invalidateCache();
-  }
-  
-  /** Handle a subnode added or removed. */
-  private void nodeAddedOrRemoved(Node subscribed, Node parent,
-      StructureChange event) {
-    if (!parent.hasPolledChildren() || 
-        event.getChangeType() == StructureChangeType.eChildAdded) {
-      // add all child nodes that didn't exist before or just the newest one
-      for (int i = 0; i < event.getChangedNode().getChildCount(); i++)
-        parent.addChild(event.getChangedNode().getCachedChild(i));
-      parent.setPolledChildren(true);
-    }
-    // mark changed node in the structure.
-    event.setChangedNode(parent.findChildByID(event.getChangedNodeID()));
-    subscribed.notifyStructureChanged(event);
-    if (event.getChangeType() == StructureChangeType.eChildRemoved)
-      parent.removeChildWithID(event.getChangedNodeID());
-    
-  }
-  
+
   State getState() {
     return state;
   }

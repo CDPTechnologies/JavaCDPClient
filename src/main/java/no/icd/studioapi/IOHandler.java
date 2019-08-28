@@ -1,29 +1,31 @@
-/**
- * (c)2014 ICD Software AS
+/*
+ * (c)2019 CDP Technologies AS
  */
 
 package no.icd.studioapi;
 
 import no.icd.studioapi.Transport.State;
-import no.icd.studioapi.proto.StudioAPI.*;
 
 import java.net.URI;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import com.google.protobuf.InvalidProtocolBufferException;
+import no.icd.studioapi.proto.StudioAPI;
+import no.icd.studioapi.proto.StudioAPI.CDPValueType;
+import no.icd.studioapi.proto.StudioAPI.Container;
 
 /**
  * IOHandler polls the WebSocket thread for new data and deserializes and 
  * creates events based on it. It also takes requests, serializes them and
  * forwards them to WebSocket thread.
- * @author kpu@icd.no
  */
 class IOHandler {
 
   private BlockingQueue<byte[]> queue;
   private Transport transport;
   private IOListener listener;
+  private TimeSync timeSync;
   private boolean initInProgress;
 
   /** Initialize an IOHandler with the given server URI. */
@@ -31,6 +33,7 @@ class IOHandler {
     queue = new LinkedBlockingQueue<byte[]>();
     transport = new Transport(serverUri, queue);
     listener = null;
+    timeSync = new TimeSync(this::timeRequest);
     initInProgress = false;
   }
 
@@ -40,6 +43,14 @@ class IOHandler {
     transport.connect();
     initInProgress = true;
   }
+
+  public void close() {
+    transport.close();
+  }
+
+  void setTimeSyncEnabled(boolean enabled) {
+    timeSync.setEnabled(enabled);
+  }
   
   /** Check the incoming queue and parse any messages in it. */
   void pollEvents() {
@@ -47,6 +58,7 @@ class IOHandler {
     while (!queue.isEmpty()) {  // TODO do we want to service the whole queue?
       byte[] buffer = queue.poll();
       parse(buffer);
+      timeSync.refreshDeltaIfNeeded();
     }
   }
   
@@ -55,6 +67,7 @@ class IOHandler {
     if (initInProgress) {
       if (transport.getState() == State.CONNECTED) {
         initInProgress = false;
+        timeSync.refreshDeltaIfNeeded();
         listener.initReady(true);
       } else if (transport.getState() == State.DROPPED) {
         initInProgress = false;
@@ -66,10 +79,17 @@ class IOHandler {
       listener.initReady(false);
   }
 
+  /** Create and send a time request. */
+  void timeRequest() {
+    Container.Builder pb = Container.newBuilder()
+            .setMessageType(Container.Type.eCurrentTimeRequest);
+    transport.send(pb.build().toByteArray());
+  }
+
   /** Create and send a structure request of a Node. */
   void nodeRequest(Node node) {
-    PBContainer.Builder pb = PBContainer.newBuilder()
-        .setMessageType(CDPMessageType.eMessageTypeStructureRequest);
+    Container.Builder pb = Container.newBuilder()
+        .setMessageType(Container.Type.eStructureRequest);
 
     if (node != null)
       pb.addStructureRequest(node.getNodeID());
@@ -79,27 +99,27 @@ class IOHandler {
   
   /** Create a value request for a Node. Nonzero fs indicates subscription. */
   void valueRequest(Node node, double fs) {
-    PBValueRequest.Builder pbv = PBValueRequest.newBuilder()
-        .addNodeID(node.getNodeID());
+    StudioAPI.ValueRequest.Builder pbv = StudioAPI.ValueRequest.newBuilder()
+        .setNodeId(node.getNodeID());
     if (fs != 0.0)
       pbv.setFs(fs);
     
-    transport.send(PBContainer.newBuilder()
-        .setMessageType(CDPMessageType.eMessageTypeValueGetterRequest)
-        .setGetterRequest(pbv)
+    transport.send(Container.newBuilder()
+        .setMessageType(Container.Type.eGetterRequest)
+        .addGetterRequest(pbv)
         .build()
         .toByteArray());
   }
   
   /** Cancel a value subscrition to a Node. */
   void cancelValueSubscription(Node node) {
-    PBValueRequest.Builder pbv = PBValueRequest.newBuilder()
-        .addNodeID(node.getNodeID())
+    StudioAPI.ValueRequest.Builder pbv = StudioAPI.ValueRequest.newBuilder()
+        .setNodeId(node.getNodeID())
         .setStop(true);
     
-    transport.send(PBContainer.newBuilder()
-        .setMessageType(CDPMessageType.eMessageTypeValueGetterRequest)
-        .setGetterRequest(pbv)
+    transport.send(Container.newBuilder()
+        .setMessageType(Container.Type.eGetterRequest)
+        .addGetterRequest(pbv)
         .build()
         .toByteArray());
   }
@@ -107,8 +127,8 @@ class IOHandler {
   /** Create a value change request for @a node, setting it to @a value. */
   void setRemoteValue(Node node, Variant value) {
     
-    PBVariantValue.Builder pbv = PBVariantValue.newBuilder();
-    pbv.setNodeID(node.getNodeID());
+    StudioAPI.VariantValue.Builder pbv = StudioAPI.VariantValue.newBuilder();
+    pbv.setNodeId(node.getNodeID());
     
     switch (node.getValueType()) {
     case eUNDEFINED:
@@ -151,84 +171,65 @@ class IOHandler {
       break;
     }
     
-    transport.send(PBContainer.newBuilder()
-        .setMessageType(CDPMessageType.eMessageTypeValueSetterRequest)
+    transport.send(Container.newBuilder()
+        .setMessageType(Container.Type.eSetterRequest)
         .addSetterRequest(pbv)
         .build()
         .toByteArray());
   }
   
   /** Start a structure subscription. */
-  void startStructureSubscription(Node node, int lvl) {
-    PBStructureChangeSubscription.Builder pbs = PBStructureChangeSubscription
-        .newBuilder()
-        .addNodeID(node.getNodeID())
-        .setDepth(lvl);
-    
-    transport.send(PBContainer.newBuilder()
-        .setMessageType(CDPMessageType.eMessageTypeStructureChangeSubscription)
-        .setStructureChangeSubscription(pbs)
+  void startStructureSubscription(int nodeId) {
+    transport.send(Container.newBuilder()
+        .setMessageType(Container.Type.eStructureRequest)
+        .addStructureRequest(nodeId)
         .build()
         .toByteArray());
   }
   
-  /** Cancel a structure subcription. */
+  /** Cancel a structure subscription. */
   void cancelStructureSubscription(Node node) {
-    PBStructureChangeSubscription.Builder pbs = PBStructureChangeSubscription
-        .newBuilder()
-        .addNodeID(node.getNodeID())
-        .setStop(true);
-    
-    transport.send(PBContainer.newBuilder()
-        .setMessageType(CDPMessageType.eMessageTypeStructureChangeSubscription)
-        .setStructureChangeSubscription(pbs)
-        .build()
-        .toByteArray());
+    // TODO (kar): Not allowed by protocol anymore?
   }
 
   /** Parse a message from a buffer read from the RX queue and call events. */
   private void parse(byte[] buf) {
     try {
-      PBContainer pb = PBContainer.parseFrom(buf);
+      Container pb = Container.parseFrom(buf);
 
       switch (pb.getMessageType()) {
-      case eMessageTypeStructureResponse:
-
+        case eStructureResponse:
         /* Create a Node and forward it to listener. */
-        for (PBNode pbNode : pb.getStructureResponseList()) {
+        for (StudioAPI.Node pbNode : pb.getStructureResponseList()) {
           Node node = parseNodeData(pbNode);
           listener.nodeReceived(node);
         }
         break;
-      case eMessageTypeValueGetterResponse:
-        
-        //for (PBVariantValue pbv : pb.getGetterResponseList()) {
-        PBVariantValue pbv = pb.getGetterResponse(0);
-          Variant value = createVariant(pbv);
-          listener.valueReceived(pbv.getNodeID(), value);  
-        //}
-        
-        break;
-      case eMessageTypeStructureChangeResponse:
-        for (PBStructureChangeResponse pbs : pb.getStructureChangeResponseList()) {
-          StructureChange evt = new StructureChange(
-              pbs.getChangeType(),
-              pbs.getChanger(),
-              pbs.getTimestamp());
-          
-          if (pbs.getChangeType() != StructureChangeType.eSubscribedNodeLost) {
-            evt.setChangedNodeID(pbs.getChangedChildID());
-            evt.setChangedNode(parseNodeData(pbs.getChangedNode()));
-          }
-          listener.structureChangeReceived(pbs.getNodeID(), evt);
 
+        case eGetterResponse:
+        for (StudioAPI.VariantValue pbv : pb.getGetterResponseList()) {
+          Variant value = createVariant(pbv, timeSync.getDeltaNs());
+          listener.valueReceived(pbv.getNodeId(), value);
         }
         break;
-      case eMessageTypeOther:
-        // TODO Not yet implemented in protocol.
+
+        case eStructureChangeResponse:
+        for (Integer nodeId : pb.getStructureChangeResponseList()) {
+          startStructureSubscription(nodeId);
+        }
         break;
+
+        case eCurrentTimeResponse:
+          timeSync.responseReceived(pb.getCurrentTimeResponse());
+          break;
+
+        case eRemoteError:
+          if (pb.getError().hasCode() || pb.getError().hasText())
+            System.err.println("CDP Client received following error (code " + pb.getError().getCode() + "): "
+                    + pb.getError().getText());
+          break;
       default:
-        System.err.println("StudioAPI received unparseable data from server.");
+        System.err.println("CDP Client received unparseable data from server: " + pb.getMessageType().toString());
         break;
       }
 
@@ -237,31 +238,32 @@ class IOHandler {
     }
   }
 
-  /** Recursively parse a PBNode into a StudioAPI Node. */
-  private Node parseNodeData(PBNode pb) {
+  /** Recursively parse a StudioAPI.Node into a StudioAPI Node. */
+  private Node parseNodeData(StudioAPI.Node pb) {
     
-    PBInfo info = pb.getInfo();
+    StudioAPI.Info info = pb.getInfo();
     Node node = new Node(
-        info.getNodeID(),
+        info.getNodeId(),
         info.getNodeType(),
         info.getValueType(),
-        info.getName());
+        info.getName(),
+        info.getFlags());
     if (info.hasTypeName())
       node.setTypeName(info.getTypeName());
-    
-    if (info.hasIsResponder()) {
-    if (info.getIsResponder()) {
-      node.setConnectionData(new Node.ConnectionData());
-    } else {
-      node.setConnectionData(new Node.ConnectionData(
-          info.getServerAddr(),
-          info.getServerPort()));
-    }
+
+    if (info.hasIsLocal()) {
+      if (info.getIsLocal()) {
+        node.setConnectionData(new Node.ConnectionData());
+      } else {
+        node.setConnectionData(new Node.ConnectionData(
+            info.getServerAddr(),
+            info.getServerPort()));
+      }
     } else {
       node.setConnectionData(new Node.ConnectionData());
     }
 
-    for (PBNode child : pb.getNodeList()) {
+    for (StudioAPI.Node child : pb.getNodeList()) {
       node.addChild(parseNodeData(child));
     }
     
@@ -269,9 +271,9 @@ class IOHandler {
   }
   
   
-  /** Create a StudioAPI Variant from a PBVariantValue. */
-  static Variant createVariant(PBVariantValue pbv) {
-    double ts = pbv.hasTimeStamp() ? pbv.getTimeStamp() : 0.0;
+  /** Create a StudioAPI Variant from a StudioAPI.VariantValue. */
+  static Variant createVariant(StudioAPI.VariantValue pbv, long timeDiff) {
+    long ts = pbv.hasTimestamp() ? pbv.getTimestamp() + timeDiff : 0;
     Variant value;
     if (pbv.hasDValue())
       value = new Variant(CDPValueType.eDOUBLE, pbv.getDValue(), ts);
@@ -298,7 +300,7 @@ class IOHandler {
     else if (pbv.hasStrValue())
       value = new Variant(CDPValueType.eSTRING, pbv.getStrValue(), ts);
     else
-      value = new Variant(CDPValueType.eUNDEFINED, "<no value>", 0.0);
+      value = new Variant(CDPValueType.eUNDEFINED, "<no value>", 0);
     return value;
   }
 

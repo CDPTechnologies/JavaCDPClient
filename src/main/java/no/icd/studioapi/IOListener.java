@@ -1,12 +1,11 @@
-/**
- * (c)2014 ICD Software AS
+/*
+ * (c)2019 CDP Technologies AS
  */
 
 package no.icd.studioapi;
 
 /**
  * Callback interface used by IOHandler.
- * @author kpu@icd.no
  */
 interface IOListener {
   
@@ -28,12 +27,5 @@ interface IOListener {
    * @param value  The variant value that was received.
    */
   void valueReceived(int nodeID, Variant value);
-  
-  /**
-   * Called when a StructureChange event was received.
-   * @param nodeID Subscribed-to node's ID.
-   * @param event  The event data structure.
-   */
-  void structureChangeReceived(int nodeID, StructureChange event);
 
 }

@@ -1,5 +1,5 @@
 /**
- * (c)2014 ICD Software AS
+ * (c)2019 CDP Technologies AS
  */
 
 package no.icd.studioapi;
@@ -26,11 +26,11 @@ public class NodeTest {
   public void getLongName_ShouldIgnoreSystemNode() {
     Node n = new Node(0, CDPNodeType.CDP_SYSTEM, 
         CDPValueType.eUNDEFINED,
-        "CDP_SYSTEM");
+        "CDP_SYSTEM", 0);
     assertEquals("CDP_SYSTEM", n.getLongName());
     
     Node app = new Node(1, CDPNodeType.CDP_APPLICATION,
-        CDPValueType.eUNDEFINED, "Application");
+        CDPValueType.eUNDEFINED, "Application", 0);
     n.addChild(app);
     
     assertEquals("Application", app.getLongName());
