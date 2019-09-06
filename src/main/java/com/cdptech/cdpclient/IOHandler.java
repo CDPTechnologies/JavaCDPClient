@@ -2,18 +2,16 @@
  * (c)2019 CDP Technologies AS
  */
 
-package no.icd.studioapi;
-
-import no.icd.studioapi.Transport.State;
+package com.cdptech.cdpclient;
 
 import java.net.URI;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import com.google.protobuf.InvalidProtocolBufferException;
-import no.icd.studioapi.proto.StudioAPI;
-import no.icd.studioapi.proto.StudioAPI.CDPValueType;
-import no.icd.studioapi.proto.StudioAPI.Container;
+import com.cdptech.cdpclient.proto.StudioAPI;
+import com.cdptech.cdpclient.proto.StudioAPI.CDPValueType;
+import com.cdptech.cdpclient.proto.StudioAPI.Container;
 
 /**
  * IOHandler polls the WebSocket thread for new data and deserializes and 
@@ -65,17 +63,17 @@ class IOHandler {
   /** Call back state updates if monitored transport state has changed. */
   void updateState() {
     if (initInProgress) {
-      if (transport.getState() == State.CONNECTED) {
+      if (transport.getState() == Transport.State.CONNECTED) {
         initInProgress = false;
         timeSync.refreshDeltaIfNeeded();
         listener.initReady(true);
-      } else if (transport.getState() == State.DROPPED) {
+      } else if (transport.getState() == Transport.State.DROPPED) {
         initInProgress = false;
         listener.initReady(false);
       }
     }
     // drop is always forwarded
-    if (transport.getState() == State.DROPPED)
+    if (transport.getState() == Transport.State.DROPPED)
       listener.initReady(false);
   }
 

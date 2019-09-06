@@ -2,7 +2,7 @@
  * (c)2019 CDP Technologies AS
  */
 
-package no.icd.studioapi;
+package com.cdptech.cdpclient;
 
 import java.time.Instant;
 import java.util.ArrayList;

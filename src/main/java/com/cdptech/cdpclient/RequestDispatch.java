@@ -2,12 +2,12 @@
  * (c)2019 CDP Technologies AS
  */
 
-package no.icd.studioapi;
+package com.cdptech.cdpclient;
 
 import java.util.*;
 
-import no.icd.studioapi.Request.Status;
-import no.icd.studioapi.proto.StudioAPI.CDPValueType;
+import com.cdptech.cdpclient.proto.StudioAPI;
+import com.cdptech.cdpclient.Request.Status;
 
 /**
  * RequestDispatch is responsible for storing and updating a single connection's 
@@ -115,7 +115,7 @@ class RequestDispatch implements IOListener {
    * @param fs The maximum frequency at which values are expected
    */
   void subscribeToNodeValues(Node node, double fs) {
-    if (node.getValueType() == CDPValueType.eUNDEFINED)
+    if (node.getValueType() == StudioAPI.CDPValueType.eUNDEFINED)
       throw new UnsupportedOperationException("Node has no value type");
     node.hasValueSubscription = true;
     handler.valueRequest(node, fs);
@@ -129,14 +129,14 @@ class RequestDispatch implements IOListener {
   
   /** Request a single value for a node. */
   void requestValueForNode(Node node) {
-    if (node.getValueType() == CDPValueType.eUNDEFINED)
+    if (node.getValueType() == StudioAPI.CDPValueType.eUNDEFINED)
       throw new UnsupportedOperationException("Node has no value type");
     handler.valueRequest(node, 0);
   }
   
   /** Set the remote value for a node to the given variant. */
   void postValueForNode(Node node, Variant value) {
-    if (node.getValueType() == CDPValueType.eUNDEFINED)
+    if (node.getValueType() == StudioAPI.CDPValueType.eUNDEFINED)
       throw new UnsupportedOperationException("Node has no value type");
     if (node.getValueType() != value.getValueType())
       throw new UnsupportedOperationException("Variant value type mismatch");

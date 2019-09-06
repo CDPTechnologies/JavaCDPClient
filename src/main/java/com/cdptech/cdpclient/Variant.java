@@ -2,9 +2,9 @@
  * (c)2019 CDP Technologies AS
  */
 
-package no.icd.studioapi;
+package com.cdptech.cdpclient;
 
-import no.icd.studioapi.proto.StudioAPI.CDPValueType;
+import com.cdptech.cdpclient.proto.StudioAPI.CDPValueType;
 
 import java.time.Instant;
 

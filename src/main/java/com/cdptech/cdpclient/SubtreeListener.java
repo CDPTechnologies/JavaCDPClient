@@ -1,4 +1,4 @@
-package no.icd.studioapi;
+package com.cdptech.cdpclient;
 
 /**
  * Callback interface for a structure change listener.

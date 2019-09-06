@@ -2,13 +2,11 @@
  * (c)2019 CDP Technologies AS
  */
 
-package no.icd.studioapi;
+package com.cdptech.cdpclient;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
-
-import no.icd.studioapi.RequestDispatch.State;
 
 /**
  * Main Client class for initializing StudioAPI Java.
@@ -148,7 +146,7 @@ public class Client implements Runnable {
 	/** Called by a dispatch to notify it's ready. */
 	void dispatchReady(RequestDispatch dispatch) {
 	  for (RequestDispatch d : connections.values()) {
-	    if (d.getState() != State.ESTABLISHED)
+	    if (d.getState() != RequestDispatch.State.ESTABLISHED)
 	      break;
 	  }
     listener.clientReady(this);
@@ -196,7 +194,7 @@ public class Client implements Runnable {
     Iterator<Map.Entry<URI, RequestDispatch>> it = connections.entrySet().iterator();
     while (it.hasNext()) {
 	  Map.Entry<URI, RequestDispatch> entry = it.next();
-      if (entry.getValue().getState() != State.ESTABLISHED) {
+      if (entry.getValue().getState() != RequestDispatch.State.ESTABLISHED) {
       	lostConnections.add(entry.getKey());
         it.remove();
       }
@@ -229,7 +227,7 @@ public class Client implements Runnable {
 	/** Broadcast a root structure subscription to everyone but its handler. */
   void broadcastStructureSubscription() {
     for (RequestDispatch d : connections.values()) {
-      if (rootNode.getDispatch() != d && d.getState() == State.ESTABLISHED)
+      if (rootNode.getDispatch() != d && d.getState() == RequestDispatch.State.ESTABLISHED)
         d.subscribeToNodeStructure(rootNode);
     }
   }

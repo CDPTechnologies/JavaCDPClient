@@ -2,22 +2,22 @@
  * (c)2019 CDP Technologies AS
  */
 
-package no.icd.studioapi;
+package com.cdptech.cdpclient;
 
 import static org.junit.Assert.*;
 
-import no.icd.studioapi.proto.StudioAPI.VariantValue;
+import com.cdptech.cdpclient.proto.StudioAPI;
 
 import org.junit.Before;
 import org.junit.Test;
 
 public class IOHandlerTest {
 
-  VariantValue.Builder pbv;
+  StudioAPI.VariantValue.Builder pbv;
   
   @Before
   public void setUp() throws Exception {
-    pbv = VariantValue.newBuilder().setNodeId(5);
+    pbv = StudioAPI.VariantValue.newBuilder().setNodeId(5);
   }
 
   @Test

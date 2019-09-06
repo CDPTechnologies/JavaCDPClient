@@ -2,13 +2,11 @@
  * (c)2019 CDP Technologies AS
  */
 
-package no.icd.studioapi;
+package com.cdptech.cdpclient;
 
 import java.util.*;
 
-import no.icd.studioapi.proto.StudioAPI;
-import no.icd.studioapi.proto.StudioAPI.CDPNodeType;
-import no.icd.studioapi.proto.StudioAPI.CDPValueType;
+import com.cdptech.cdpclient.proto.StudioAPI;
 
 /**
  * The Node class represents a single element of the CDP System hierarchy.
@@ -34,8 +32,8 @@ public class Node {
   }
   
   private int nodeID;
-  private CDPNodeType nodeType;
-  private CDPValueType valueType;
+  private StudioAPI.CDPNodeType nodeType;
+  private StudioAPI.CDPValueType valueType;
   private String name;
   private String typeName;
   private boolean isReadOnly;
@@ -72,7 +70,7 @@ public class Node {
    *           still all value changes are received, larger packets simply improve performance.
    */
   public void subscribeToValueChanges(ValueListener listener, double fs) {
-    if (valueType != CDPValueType.eUNDEFINED)
+    if (valueType != StudioAPI.CDPValueType.eUNDEFINED)
       valueListenerFsMap.put(listener, fs);
     if (!hasValueSubscription)
       dispatch.subscribeToNodeValues(this, fs);
@@ -153,12 +151,12 @@ public class Node {
   }
   
   /** Get the node type of this Node. */
-  public CDPNodeType getNodeType() {
+  public StudioAPI.CDPNodeType getNodeType() {
     return nodeType;
   }
   
   /** Get the value type of this Node. */
-  public CDPValueType getValueType() {
+  public StudioAPI.CDPValueType getValueType() {
     return valueType;
   }
   
@@ -213,14 +211,14 @@ public class Node {
   }
 
   /** Nodes are constructed by StudioAPI only. */
-  Node(int id, CDPNodeType ntype, CDPValueType vtype, String name, int flags) {
+  Node(int id, StudioAPI.CDPNodeType ntype, StudioAPI.CDPValueType vtype, String name, int flags) {
     this.nodeID = id;
     this.nodeType = ntype;
     this.valueType = vtype;
     this.name = name;
     this.children = new ArrayList<Node>();
     this.polledChildren = false;
-    this.value = new Variant(CDPValueType.eUNDEFINED, "", 0);
+    this.value = new Variant(StudioAPI.CDPValueType.eUNDEFINED, "", 0);
     this.valueListenerFsMap = new HashMap<>();
     this.singleListeners = new HashSet<ValueListener>();
     this.subtreeListeners = new HashSet<SubtreeListener>();
@@ -386,7 +384,7 @@ public class Node {
   }
   
   boolean isRoot() {
-    return nodeType == CDPNodeType.CDP_SYSTEM;
+    return nodeType == StudioAPI.CDPNodeType.CDP_SYSTEM;
   }
   
   ConnectionData getConnectionData() {
