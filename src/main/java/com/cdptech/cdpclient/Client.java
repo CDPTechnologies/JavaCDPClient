@@ -9,22 +9,38 @@ import java.net.URISyntaxException;
 import java.util.*;
 
 /**
- * Main Client class for initializing StudioAPI Java.
+ * Main Client class for initializing the CDP Java client.
  *
  * Following is a small example:
  * <pre>
  * {@code
 Client client = new Client();
+
+// Connect the client. The CDP application will print its StudioAPIServer IP and port on startup.
 client.init("127.0.0.1", 7689, new NotificationListener() {
     public void clientReady(Client client) {
         System.out.println("Client connected");
+
+        // Find a node and print its value changes
         client.findNode("myApp.CPULoad").then((node, status) -> {
             if (status == Request.Status.RESOLVED)
                 node.subscribeToValueChanges(value -> System.out.println(value + "\t" + value.getTimestamp()), 10);
         });
+
+        // Find a node and change its value
         client.findNode("myApp.MySignal").then((node, status) -> {
             if (status == Request.Status.RESOLVED)
                 node.postValue(new Variant.Builder(StudioAPI.CDPValueType.eDOUBLE).parse("4").build());
+        });
+
+        // To connect to other CDP applications in the system, a listener should be used to detect when they come up
+        root.addSubtreeListener((Node changedNode, SubtreeChangeType changeType) -> {
+            if (changedNode.getNodeType() == StudioAPI.CDPNodeType.CDP_APPLICATION
+                    && changeType == SubtreeChangeType.eChildAdded) {
+                changedNode.find("CPULoad").then((node, status) -> {
+                    node.subscribeToValueChanges(value -> System.out.println(node.getLongName() + ": " + value));
+                });
+            }
         });
     }
     public void clientClosed(Client client) {
@@ -37,28 +53,23 @@ client.run();
  */
 public class Client implements Runnable {
 
-  private Map<URI, RequestDispatch> connections;
+  private Map<URI, RequestDispatch> connections = new HashMap<>();
   private Set<URI> lostConnections = new HashSet<>();
   private Node rootNode;
   private Set<Node> lostApps = new HashSet<>();
   private NotificationListener listener;
   private IOHandler ioHandler;
   private long lastReconnectTimeMs = 0;
-  private boolean cleanupConnections;
+  private boolean cleanupConnections = false;
   private boolean timeSyncEnabled = true;
   private boolean autoReconnect = true;
   private boolean clientClosed = false;
 
   /** Create a new StudioAPI Client instance. */
   public Client() {
-      connections = new HashMap<>();
-      rootNode = null;
-      listener = null;
-      cleanupConnections = false;
-      timeSyncEnabled = true;
   }
 
-  /** Initialise the client. Connects to server and notifies @a listener. */
+  /** Initialise the client. Connects to the server and notifies @a listener. */
   public void init(String addr, int port, NotificationListener listener) {
     this.listener = listener;
     clientClosed = false;
@@ -82,32 +93,36 @@ public class Client implements Runnable {
   }
 
   /**
-    * (asynchronous) Request node with provided path.
-    * @param nodePath Should contain dot separated path to target node.
+    * (asynchronous) Request node with the provided path.
+    * @param nodePath Should contain dot separated path to target node (e.g. "MyApp.MyComponent.MySignal").
     */
   public Request findNode(String nodePath) {
-      return getRootNode().find(nodePath);
+    return getRootNode().find(nodePath);
   }
 
   /**
     * Sets whether to enable automatic and periodic time sync. When enabled, the timestamps
     * received from remote machines (e.g. values received after calling subscribeToValueChanges())
-    * are adjusted for the clock difference between this machine and remote machine.
+    * are adjusted for the clock difference between this machine and remote machine. By default time sync is enabled.
     */
-  public void setTimeSyncEnabled(boolean enabled) {
+  public void setTimeSync(boolean enabled) {
     timeSyncEnabled = enabled;
     if (ioHandler != null)
       ioHandler.setTimeSyncEnabled(timeSyncEnabled);
   }
 
+  /**
+   * When enabled, the client keeps trying to reconnect after losing a connection instead of
+   * notifying listener of clientClosed() event. By default it is enabled.
+   */
   public void setAutoReconnect(boolean enabled) {
-      this.autoReconnect = enabled;
+    this.autoReconnect = enabled;
   }
 
   /** Event-loop method for use in single-threaded applications. */
   public void process() {
     for (RequestDispatch dispatch : connections.values())
-        dispatch.service();
+      dispatch.service();
     if (cleanupConnections)
       removeDroppedConnections();
     if (autoReconnect && !clientClosed  && (System.currentTimeMillis() - lastReconnectTimeMs > 200)) {
@@ -117,7 +132,7 @@ public class Client implements Runnable {
     }
   }
 
-  /** Runnable-interface auto-creates event loop in a new Thread. */
+  /** Runnable interface auto-creates event loop in a new Thread. */
   public void run() {
   while (true) {
     process();
@@ -131,7 +146,7 @@ public class Client implements Runnable {
   }
   }
 
-  /** Closes all connection and disables automatic reconnect. */
+  /** Closes all connections. */
   public void close() {
     clientClosed = true;
     for (RequestDispatch dispatch : connections.values())
@@ -191,14 +206,14 @@ public class Client implements Runnable {
   /** Post-process cleanup method. */
   private void removeDroppedConnections() {
     // remove dispatches
-  Iterator<Map.Entry<URI, RequestDispatch>> it = connections.entrySet().iterator();
-  while (it.hasNext()) {
-    Map.Entry<URI, RequestDispatch> entry = it.next();
-    if (entry.getValue().getState() != RequestDispatch.State.ESTABLISHED) {
-      lostConnections.add(entry.getKey());
-      it.remove();
+    Iterator<Map.Entry<URI, RequestDispatch>> it = connections.entrySet().iterator();
+    while (it.hasNext()) {
+      Map.Entry<URI, RequestDispatch> entry = it.next();
+      if (entry.getValue().getState() != RequestDispatch.State.ESTABLISHED) {
+        lostConnections.add(entry.getKey());
+        it.remove();
+      }
     }
-  }
 
     // remove nodes left without dispatches
     if (rootNode != null) {

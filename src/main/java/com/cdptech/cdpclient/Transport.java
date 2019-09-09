@@ -39,13 +39,11 @@ class Transport extends org.java_websocket.client.WebSocketClient {
   @Override
   public void onOpen(org.java_websocket.handshake.ServerHandshake arg0) {
     state = State.CONNECTED;
-//    System.err.println("Connection to " + this.uri + " established.");
   }
 
   @Override
   public void onClose(int arg0, String arg1, boolean arg2) {
     state = State.DROPPED;
-//    System.err.println("Connection to " + this.uri + " closed.");
   }
 
   /** All thrown exceptions propagate here. */

@@ -1,15 +1,13 @@
 package com.cdptech.cdpclient;
 
 /**
- * Callback interface for a structure change listener.
+ * Callback interface for a subtree change listener.
  */
 public interface SubtreeListener {
   
   /** 
-   * Called when a remote structure change affects the cache of the client.
-   * @param node The node which was subscribed to.
-   * @param event Detailed structure change event.
+   * Called when a remote structure change affects the subscribed subtree.
    */
-  public void subtreeChanged(Node node, SubtreeChange event);
+  public void subtreeChanged(Node changedNode, SubtreeChangeType changeType);
   
 }

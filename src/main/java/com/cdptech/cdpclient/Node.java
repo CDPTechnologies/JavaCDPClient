@@ -116,7 +116,7 @@ public class Node {
   }
 
   /**
-   * (asynchronous) Request node with provided path.
+   * (asynchronous) Request node with the provided path.
    * @param nodePath Should contain dot separated path to target node.
    */
   public Request find(String nodePath) {
@@ -164,6 +164,11 @@ public class Node {
   public String getName() {
     return name;
   }
+
+  /** Get the parent of this node. */
+  public Node getParent() {
+    return parent;
+  }
   
   /** Get the model name that this node represents. */
   public String getTypeName() {
@@ -177,7 +182,7 @@ public class Node {
     return parent.getLongName() + "." + name;
   }
   
-  /** Check if this node's value can not be changed. */
+  /** Check if this node's value can be changed. */
   public boolean isValueReadOnly() {
     return isReadOnly;
   }
@@ -245,7 +250,7 @@ public class Node {
     }
     children.add(child);
     child.setParent(this);
-    propagateSubtreeChange(new SubtreeChange(SubtreeChangeType.eChildAdded, child));
+    propagateSubtreeChange(child, SubtreeChangeType.eChildAdded);
     return true;
   }
   
@@ -273,24 +278,24 @@ public class Node {
   }
   
   /** Notify this node's subtree listeners of an event. */
-  private void notifySubtreeChanged(SubtreeChange event) {
+  private void notifySubtreeChanged(Node changedNode, SubtreeChangeType changeType) {
     for (SubtreeListener listener : subtreeListeners) {
-      listener.subtreeChanged(this, event);
+      listener.subtreeChanged(changedNode, changeType);
     }
   }
 
   void notifyNodeIsLost() {
-    notifySubtreeChanged(new SubtreeChange(SubtreeChangeType.eSubscribedNodeLost, this));
+    notifySubtreeChanged(this, SubtreeChangeType.eSubscribedNodeLost);
     dispatch = null;
     for (Node child : children)
       child.notifyNodeIsLost();
   }
 
-  private void propagateSubtreeChange(SubtreeChange event)
+  private void propagateSubtreeChange(Node changedNode, SubtreeChangeType changeType)
   {
-    notifySubtreeChanged(event);
+    notifySubtreeChanged(changedNode, changeType);
     if (getParent() != null)
-      getParent().propagateSubtreeChange(event);
+      getParent().propagateSubtreeChange(changedNode, changeType);
   }
   
   /** Remove all child nodes and unset the polled flag. */
@@ -304,7 +309,7 @@ public class Node {
     while (iter.hasNext()) {
       Node next = iter.next();
       if (next.nodeID == nodeID) {
-        propagateSubtreeChange(new SubtreeChange(SubtreeChangeType.eChildRemoved, next));
+        propagateSubtreeChange(next, SubtreeChangeType.eChildRemoved);
         next.notifyPendingDeletion();
         iter.remove();
         break;
@@ -313,7 +318,7 @@ public class Node {
   }
 
   private void notifyPendingDeletion() {
-    notifySubtreeChanged(new SubtreeChange(SubtreeChangeType.eChildRemoved, this));
+    notifySubtreeChanged(this, SubtreeChangeType.eChildRemoved);
     for (Node child : getChildList())
       child.notifyPendingDeletion();
   }
@@ -357,15 +362,11 @@ public class Node {
       if (!valueListenerFsMap.isEmpty()) {
         dispatch.subscribeToNodeValues(this, Collections.max(valueListenerFsMap.values()));
       }
-      notifySubtreeChanged(new SubtreeChange(SubtreeChangeType.eSubscribedNodeReconnected, this));
+      notifySubtreeChanged(this, SubtreeChangeType.eSubscribedNodeReconnected);
     } else {
       for (Node child : children)
         child.updateDispatch(null);
     }
-  }
-
-  public Node getParent() {
-    return parent;
   }
 
   void setNodeID(int nodeID) {
@@ -381,6 +382,10 @@ public class Node {
     for (ValueListener listener : valueListenerFsMap.keySet()) {
       listener.valueChanged(variant);
     }
+    for (ValueListener listener : singleListeners) {
+      listener.valueChanged(variant);
+    }
+    singleListeners.clear();
   }
   
   boolean isRoot() {
