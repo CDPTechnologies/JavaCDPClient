@@ -1,0 +1,80 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>API Overview</title>
+</head>
+
+<body>
+
+  A simple Java interface for the CDP Studio development platform that allows Java applications to interact with
+  CDP Applications - retrieve CDP Application structures and read-write object values. For more information
+  about CDP Studio see <a href="https://cdpstudio.com/">https://cdpstudio.com/</a>.
+
+  <h1>Usage</h1>
+
+  First start your CDP application created with <a href="https://cdpstudio.com/">CDP Studio</a>.
+  To find the correct IP and port, open Application Output in CDP Studio and look for the following line:
+
+  <p><code>13:43:31.781 StudioAPIServer: listening on 127.0.0.1:7689</code></p>
+
+  Next create your Java application. The example below shows how to connect to a CDP application
+  and subscribe to CDP signal value changes.
+
+  <pre>
+    <code>
+      import com.cdptech.cdpclient.*;
+      import com.cdptech.cdpclient.proto.StudioAPI;
+
+      ...
+
+      Client client = new Client();
+      client.init("127.0.0.1", 7689, new NotificationListener() {
+          public void clientReady(Client client) {
+              // Find a node and print its value changes
+              client.findNode("AppName.ComponentName.SignalName").then((node, status) -> {
+                  if (status == Request.Status.RESOLVED)
+                      node.subscribeToValueChanges(value -> System.out.println(value + "\t" + value.getTimestamp()), 10);
+              });
+          }
+          public void clientClosed(Client client) {
+              System.out.println("Client closed");
+          }
+      });
+      client.run();
+    </code>
+  </pre>
+
+  Once connected, it is also possible to change a signal value:
+
+  <pre>
+    <code>
+      // Find a node and change its value
+      client.findNode("AppName.ComponentName.SignalName").then((node, status) -> {
+          if (status == Request.Status.RESOLVED)
+              node.postValue(new Variant.Builder(StudioAPI.CDPValueType.eDOUBLE).parse("4").build());
+      });
+    </code>
+  </pre>
+
+  To connect with other CDP applications in the system, one should add a subtree listener to wait until
+  the other applicaiton come up:
+
+  <pre>
+    <code>
+      root.addSubtreeListener((Node changedNode, SubtreeChangeType changeType) -> {
+          if (changedNode.getNodeType() == StudioAPI.CDPNodeType.CDP_APPLICATION
+                  && changeType == SubtreeChangeType.eChildAdded) {
+              changedNode.find("CPULoad").then((node, status) -> {
+                  node.subscribeToValueChanges(value -> System.out.println(node.getLongName() + ": " + value));
+              });
+          }
+      });
+    </code>
+  </pre>
+
+  For more information see the API documentation of relavant classes.
+
+</body>
+</html>

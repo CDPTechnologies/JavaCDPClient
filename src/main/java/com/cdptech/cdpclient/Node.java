@@ -144,7 +144,7 @@ public class Node {
   /**
    * Returns the most recent value that this node has received. Remember to first subscribe to value changes.
    *
-   * @see #subscribeToValueChanges(ValueListener), {@link #requestValue(ValueListener)}
+   * @link {#subscribeToValueChanges(ValueListener)}, {@link #requestValue(ValueListener)}
    */
   public Variant getCachedValue() {
     return value;

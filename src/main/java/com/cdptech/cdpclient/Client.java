@@ -48,7 +48,7 @@ client.init("127.0.0.1", 7689, new NotificationListener() {
     }
 });
 client.run();
- * }
+}
  * </pre>
  */
 public class Client implements Runnable {

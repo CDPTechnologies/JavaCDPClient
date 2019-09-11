@@ -15,7 +15,7 @@ public interface NotificationListener {
   /**
    * Called when all connections are lost and the client is reset.
    *
-   * @apiNote Will not be called if automatic reconnect is true.
+   * Will not be called if automatic reconnect is enabled.
    */
   public void clientClosed(Client client);
   

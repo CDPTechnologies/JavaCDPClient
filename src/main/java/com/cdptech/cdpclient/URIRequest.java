@@ -6,11 +6,11 @@ package com.cdptech.cdpclient;
 
 import java.util.Queue;
 
-public class URIRequest extends Request {
+class URIRequest extends Request {
 
   private Queue<String> tokens;
 
-  public URIRequest(Queue<String> tokens) {
+  URIRequest(Queue<String> tokens) {
     this.tokens = tokens;
   }
 
