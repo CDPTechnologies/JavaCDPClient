@@ -63,7 +63,7 @@
 
   <pre>
     <code>
-      root.addSubtreeListener((Node changedNode, SubtreeChangeType changeType) -> {
+      client.getRootNode().addSubtreeListener((Node changedNode, SubtreeChangeType changeType) -> {
           if (changedNode.getNodeType() == StudioAPI.CDPNodeType.CDP_APPLICATION
                   && changeType == SubtreeChangeType.eChildAdded) {
               changedNode.find("CPULoad").then((node, status) -> {
