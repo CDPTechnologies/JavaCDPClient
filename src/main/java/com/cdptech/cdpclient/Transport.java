@@ -26,7 +26,7 @@ class Transport extends org.java_websocket.client.WebSocketClient {
   
   /** Create a transport with an URI and received data queue. */
   Transport(URI serverURI, BlockingQueue<byte[]> queue) {
-    super(serverURI, new org.java_websocket.drafts.Draft_17());
+    super(serverURI);
     this.queue = queue;
     this.state = State.IDLE;
   }
