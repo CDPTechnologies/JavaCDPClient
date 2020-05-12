@@ -310,7 +310,7 @@ class RequestDispatch implements IOListener {
   private void interceptNode(Node node) {
     for (Request req : new ArrayList<Request>(pendingRequests))
       req.offer(node);
-    pendingRequests.removeIf(req -> req.getStatus() == Status.RESOLVED);
+    pendingRequests.removeIf(req -> req.getStatus() != Status.PENDING);
   }
   
   /** Find a node from this connection's cache. */
