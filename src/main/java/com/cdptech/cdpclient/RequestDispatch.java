@@ -32,36 +32,20 @@ class RequestDispatch implements IOListener {
    * @param handler - The underlying connection handler.
    */
   RequestDispatch(Client client, IOHandler handler) {
-    
     this.client = client;
     this.handler = handler;
     this.pendingRequests = new LinkedList<Request>();
     connectionCache = new ArrayList<Node>();
     state = State.PENDING;
   }
-  
-  /** Initialise. */
-  void init() {
-    handler.init(this);
-  }
-  
+
   /** Initialise with a preset Application node. */
   void init(Node presetRoot) {
     presetRoot.setDispatch(this);
-    handler.init(this);
-  }
-  
-  /**
-   * Event loop mechanism. Polls underlying connection and calls queued 
-   * callbacks.
-   */
-  void service() {
-    handler.pollEvents();
+    handler.setDispatch(this);
   }
 
-  void close() {
-    handler.close();
-  }
+  void close() {}
 
   /**
    * Send a request for the children of a given node.
@@ -158,8 +142,9 @@ class RequestDispatch implements IOListener {
   }
 
   public void initReady(boolean success) {
-    if (success)
+    if (success) {
       handler.nodeRequest(null);
+    }
     else {
       state = State.DROPPED;
       client.dispatchDropped(this);

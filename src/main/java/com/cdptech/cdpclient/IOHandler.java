@@ -4,81 +4,42 @@
 
 package com.cdptech.cdpclient;
 
-import java.net.URI;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-
-import com.google.protobuf.InvalidProtocolBufferException;
 import com.cdptech.cdpclient.proto.StudioAPI;
 import com.cdptech.cdpclient.proto.StudioAPI.CDPValueType;
 import com.cdptech.cdpclient.proto.StudioAPI.Container;
+import com.google.protobuf.InvalidProtocolBufferException;
 
 /**
  * IOHandler polls the WebSocket thread for new data and deserializes and 
  * creates events based on it. It also takes requests, serializes them and
  * forwards them to WebSocket thread.
  */
-class IOHandler {
+class IOHandler implements Protocol {
 
-  private BlockingQueue<byte[]> queue;
   private Transport transport;
   private IOListener listener;
   private TimeSync timeSync;
-  private boolean initInProgress;
 
   /** Initialize an IOHandler with the given server URI. */
-  IOHandler(URI serverUri) {
-    queue = new LinkedBlockingQueue<byte[]>();
-    transport = new Transport(serverUri, queue);
-    listener = null;
+  IOHandler(Transport transport) {
+    this.transport = transport;
     timeSync = new TimeSync(this::timeRequest);
-    initInProgress = false;
   }
 
-  /** Create the WebSocket connection and return true if succeeded. */
-  void init(IOListener listener) {
+  void activate() {
+    timeSync.refreshDeltaIfNeeded();
+  }
+
+  void setDispatch(IOListener listener) {
     this.listener = listener;
-    transport.connect();
-    initInProgress = true;
-  }
-
-  public void close() {
-    transport.close();
   }
 
   void setTimeSyncEnabled(boolean enabled) {
     timeSync.setEnabled(enabled);
   }
-  
-  /** Check the incoming queue and parse any messages in it. */
-  void pollEvents() {
-    updateState();
-    while (!queue.isEmpty()) {  // TODO do we want to service the whole queue?
-      byte[] buffer = queue.poll();
-      parse(buffer);
-      timeSync.refreshDeltaIfNeeded();
-    }
-  }
-  
-  /** Call back state updates if monitored transport state has changed. */
-  void updateState() {
-    if (initInProgress) {
-      if (transport.getState() == Transport.State.CONNECTED) {
-        initInProgress = false;
-        timeSync.refreshDeltaIfNeeded();
-        listener.initReady(true);
-      } else if (transport.getState() == Transport.State.DROPPED) {
-        initInProgress = false;
-        listener.initReady(false);
-      }
-    }
-    // drop is always forwarded
-    if (transport.getState() == Transport.State.DROPPED)
-      listener.initReady(false);
-  }
 
   /** Create and send a time request. */
-  void timeRequest() {
+  private void timeRequest() {
     Container.Builder pb = Container.newBuilder()
             .setMessageType(Container.Type.eCurrentTimeRequest);
     transport.send(pb.build().toByteArray());
@@ -191,7 +152,7 @@ class IOHandler {
   }
 
   /** Parse a message from a buffer read from the RX queue and call events. */
-  private void parse(byte[] buf) {
+  public void parse(byte[] buf) {
     try {
       Container pb = Container.parseFrom(buf);
 
@@ -234,6 +195,7 @@ class IOHandler {
     } catch (InvalidProtocolBufferException e) {
       System.err.println("Failed to parse server data!");
     }
+    timeSync.refreshDeltaIfNeeded();
   }
 
   /** Recursively parse a StudioAPI.Node into a StudioAPI Node. */
