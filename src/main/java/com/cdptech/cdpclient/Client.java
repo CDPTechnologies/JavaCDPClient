@@ -4,12 +4,23 @@
 
 package com.cdptech.cdpclient;
 
+import lombok.SneakyThrows;
+
 import javax.net.SocketFactory;
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLParameters;
+import javax.net.ssl.TrustManagerFactory;
+import java.io.File;
+import java.io.FileInputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.KeyStore;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateFactory;
 import java.util.*;
 import java.util.function.BiConsumer;
+
+import static com.cdptech.cdpclient.AuthenticationRequest.AuthResultCode.CREDENTIALS_REQUIRED;
 
 /**
  * Main Client class for initializing the CDP Java client.
@@ -17,65 +28,58 @@ import java.util.function.BiConsumer;
  * Following is a small example:
  * <pre>
  * {@code
-Client client = new Client();
-
-// Connect the client. The CDP application will print its StudioAPIServer IP and port on startup.
-client.init("127.0.0.1", 7689, new NotificationListener() {
-    public void clientReady(Client client) {
-        System.out.println("Client connected");
-
-        // Find a node and print its value changes
-        client.findNode("myApp.CPULoad").then((node, status) -> {
-            if (status == Request.Status.RESOLVED)
-                node.subscribeToValueChanges(value -> System.out.println(value + "\t" + value.getTimestamp()), 10);
-        });
-
-        // Find a node and change its value
-        client.findNode("myApp.MySignal").then((node, status) -> {
-            if (status == Request.Status.RESOLVED)
-                node.postValue(new Variant.Builder(StudioAPI.CDPValueType.eDOUBLE).parse("4").build());
-        });
-
-        // To connect to other CDP applications in the system, a listener should be used to detect when they come up
-        root.addSubtreeListener((Node changedNode, SubtreeChangeType changeType) -> {
-            if (changedNode.getNodeType() == StudioAPI.CDPNodeType.CDP_APPLICATION
-                    && changeType == SubtreeChangeType.eChildAdded) {
-                changedNode.find("CPULoad").then((node, status) -> {
-                    node.subscribeToValueChanges(value -> System.out.println(node.getLongName() + ": " + value));
-                });
-            }
-        });
-    }
-    public void connectionError(URI serverURI, Exception e) { e.printStackTrace(); }
-    public void clientClosed(Client client) { System.out.println("Client closed"); }
-
-    // Optionally, if the application needs authentication, implement also the authenticationRequested callback:
-    public void authenticationRequested(AuthenticationRequest request) {
-        Application app = request.getApplication();
-        AuthResultCode code = app.getUserAuthResult().getCode();
-        Map<String, String> data = new HashMap<>();
-        if (request.getType() == CREDENTIALS) {
-            if (code == CREDENTIALS_REQUIRED || code == NEW_PASSWORD_REQUIRED) {
-                data.put(AuthenticationRequest.USER, "MyUserName");
-                data.put(AuthenticationRequest.PASSWORD, "MyPassword");
-                if (code == NEW_PASSWORD_REQUIRED) // The existing password of the user has expired
-                    data.put(AuthenticationRequest.NEW_PASSWORD, "MyNewPassword");
-                request.accept(data);
-            } else {
-                System.out.println("Authentication of " + app.getApplicationName() + " failed with code " + code);
-                request.reject();
-            }
-        } else { // either authentication was not needed or provided credentials were correct
-            request.accept(data); // Or request.reject() to cancel the connection
-        }
-    }
-});
-client.run();
-}
+ * Client client = new Client();
+ *
+ * // Optionally trust a self-signed certificate when encryption is enabled (by default it is disabled)
+ * // client.setTrustedCertificates(Collections.singletonList(new File("/path/to/application/StudioAPI.crt")), false);
+ *
+ * // Connect the client. The CDP application will print its StudioAPIServer IP and port on startup.
+ * // For authentication, use 'client.init("127.0.0.1", 7689, "user", "password", new NotificationListener()' format.
+ * // or implement the authenticationRequested() callback for more complex cases.
+ * client.init("127.0.0.1", 7689, new NotificationListener() {
+ *     public void clientReady(Client client) {
+ *         System.out.println("Client connected");
+ *
+ *         // Find a node and print its value changes
+ *         client.findNode("myApp.CPULoad").then((node, status) -> {
+ *             if (status == Request.Status.RESOLVED)
+ *                 node.subscribeToValueChanges(value -> System.out.println(value + "\t" + value.getTimestamp()), 10);
+ *         });
+ *
+ *         // Find a node and change its value
+ *         client.findNode("myApp.MySignal").then((node, status) -> {
+ *             if (status == Request.Status.RESOLVED)
+ *                 node.postValue(new Variant.Builder(StudioAPI.CDPValueType.eDOUBLE).parse("4").build());
+ *         });
+ *
+ *         // To connect to other CDP applications in the system, a listener should be used to detect when they come up
+ *         root.addSubtreeListener((Node changedNode, SubtreeChangeType changeType) -> {
+ *             if (changedNode.getNodeType() == StudioAPI.CDPNodeType.CDP_APPLICATION
+ *                     && changeType == SubtreeChangeType.eChildAdded) {
+ *                 changedNode.find("CPULoad").then((node, status) -> {
+ *                     node.subscribeToValueChanges(value -> System.out.println(node.getLongName() + ": " + value));
+ *                 });
+ *             }
+ *         });
+ *     }
+ *     public void connectionError(URI serverURI, Exception e) { e.printStackTrace(); }
+ *     public void clientClosed(Client client) { System.out.println("Client closed"); }
+ *     // void authenticationRequested(AuthenticationRequest request) {} // - override for more complex cases
+ * });
+ * client.run();
+ * }
  * </pre>
  *
- * Note that when using a self-signed certificate (e.g. the one generated by CDP Studio), make sure to use a custom
- * SocketFactory as described in {@link #setSocketFactory} documentation.
+ * Note that when using a self-signed certificate (e.g. the one generated by CDP Studio), make sure to do
+ * one of the following:
+ * <ul>
+ *   <li>Force the client to trust your certificate by calling {@link #setTrustedCertificates}.</li>
+ *   <li>Set a custom SocketFactory with {@link #setSocketFactory} to fine-tune the certificate handling.</li>
+ *   <li>Disable any certificate validation with {@link #setIgnoreCertificates}.</li>
+ * </ul>
+ * In production code it is recommended to instead use a trusted CA signed certificate.
+ *
+ * @see NotificationListener#authenticationRequested
  */
 public class Client implements Runnable {
 
@@ -92,12 +96,18 @@ public class Client implements Runnable {
   private boolean timeSyncEnabled = true;
   private boolean autoReconnect = true;
   private boolean clientClosed = false;
+  private String user;
+  private String password;
 
   /** Create a new StudioAPI Client instance. */
   public Client() {
   }
 
-  /** Initialise the client. Connects to the server and notifies @a listener. */
+  /**
+   * Initialise the client. Connects to the server and notifies @a listener. If authentication is enabled,
+   * the is a convenience method to initialise the client with the username and password. See
+   * {@link #init(String address, int port, String user, String password, NotificationListener)}
+   */
   public void init(String address, int port, NotificationListener listener) {
     this.listener = listener;
     clientClosed = false;
@@ -113,12 +123,28 @@ public class Client implements Runnable {
     }
   }
 
+  /**
+   * A convenience method to initialise the client and set the username and password needed to connect
+   * to the server. An alternative to this is to use the regular
+   * {@link #init(String address, int port, NotificationListener)} method and implement the
+   * authenticationRequested() method . The alternative will be  needed in more complex cases, see the
+   * documentation of {@link NotificationListener#authenticationRequested} for more information.
+   */
+  public void init(String address, int port, String user, String password, NotificationListener listener) {
+    this.user = user;
+    this.password = password;
+    init(address, port, listener);
+  }
+
   private String getDefaultScheme() {
     return socketFactory == null ? "ws" : "wss";
   }
 
   /**
-   * Call before init()
+   * Must be called before {@link Client#init}. Allows to fine-tune which server certificates are accepted
+   * for a secure connection. Note that calling this method will override {@link #setTrustedCertificates}
+   * and {@link #setIgnoreCertificates}.
+   *
    * @param socketFactory A custom SocketFactory which for example be used to configure a Keystore which would trust
    *                      self-signed SSL certificates.
    * @param socketParameterHandler Allows to configure the SSL parameters of a created socket. Can for example be
@@ -143,7 +169,7 @@ public class Client implements Runnable {
    * TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
    * trustManagerFactory.init(keyStore);
    *
-   * SSLContext sslContext = SSLContext.getInstance("TLS");
+   * SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
    * sslContext.init(null, trustManagerFactory.getTrustManagers(), null);
    *
    * client.setSocketFactory(sslContext.getSocketFactory(),
@@ -157,6 +183,74 @@ public class Client implements Runnable {
   public void setSocketFactory(SocketFactory socketFactory, BiConsumer<URI, SSLParameters> socketParameterHandler) {
     this.socketFactory = socketFactory;
     this.socketParameterHandler = socketParameterHandler;
+  }
+
+  /**
+   * Must be called before {@link #init}. This method should be used to make the client trust self-signed
+   * certificates, for example the default StudioAPI.crt generated by CDP Studio. In production code
+   * it is recommended to instead use a trusted CA signed certificate.
+   *
+   * <pre>
+   * {@code
+   * Client client = new Client();
+   *
+   * // Trust the default self-signed StudioAPI.crt generated by CDP Studio and disable
+   * // domain name verification (use the latter only in a test environment).
+   * client.setTrustedCertificates(Collections.singletonList(new File("/path/to/application/StudioAPI.crt")), false);
+   *
+   * client.init(...);
+   * ...
+   * }
+   * </pre>
+   *
+   * @apiNote Calling this method will override {@link #setIgnoreCertificates} and {@link #setSocketFactory}
+   *
+   * @param certificates List of .crt files.
+   * @param endpointIdentificationEnabled When enabled, verifies that the certificate is issued for the domain name
+   *                                      where the server is running. This might be necessary when testing with
+   *                                      the StudioAPI.crt that CDP Studio generated by default.
+   */
+  @SneakyThrows
+  public void setTrustedCertificates(List<File> certificates, boolean endpointIdentificationEnabled) {
+    KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+    keyStore.load(null, null);
+
+    for (File crtFile : certificates) {
+      Certificate certificate = CertificateFactory.getInstance("X.509").generateCertificate(new FileInputStream(crtFile));
+      keyStore.setCertificateEntry(crtFile.getAbsolutePath(), certificate);
+    }
+
+    TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+    trustManagerFactory.init(keyStore);
+
+    SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+    sslContext.init(null, trustManagerFactory.getTrustManagers(), null);
+
+    setSocketFactory(sslContext.getSocketFactory(), (uri, sslParameters) -> {
+      if (!endpointIdentificationEnabled)
+        sslParameters.setEndpointIdentificationAlgorithm(null);
+    });
+  }
+
+  /**
+   * Must be called before {@link #init}. Makes the client accepts all certificates from the server,
+   * even when the hostname does not match or the certificate is self-signed. This is useful:
+   * <ul>
+   *   <li>In a testing environment where security is not important</li>
+   *   <li>
+   *     When user has implemented the {@link NotificationListener#authenticationRequested} callback
+   *     and will make a manual verification of the certificate using the
+   *     {@link AuthenticationRequest.Application#getCertificates()}
+   *   </li>
+   * </ul>
+   *
+   * In production code it is recommended to instead use a trusted CA signed certificate.
+   *
+   * @apiNote Calling this method will override {@link #setTrustedCertificates} and {@link #setSocketFactory}
+   */
+  @SneakyThrows
+  public void setIgnoreCertificates(boolean ignoreCertificates) {
+    setSocketFactory(ignoreCertificates ? new TrustingSSLSocketFactory() : null, null);
   }
 
   /** Get a reference to the system node. CDP applications are children of this node. */
@@ -339,7 +433,22 @@ public class Client implements Runnable {
   }
 
   void requestAuthentication(AuthenticationRequest request) {
-    listener.authenticationRequested(request);
+    if (user != null && request.getType() == AuthenticationRequest.RequestType.CREDENTIALS) {
+      AuthenticationRequest.Application app = request.getApplication();
+      AuthenticationRequest.AuthResultCode code = app.getUserAuthResult().getCode();
+      Map<String, String> data = new HashMap<>();
+      if (code == CREDENTIALS_REQUIRED) {
+        data.put(AuthenticationRequest.USER, user);
+        data.put(AuthenticationRequest.PASSWORD, password);
+        request.accept(data);
+      } else {
+        String message = "Authentication of " + app.getApplicationName() + " failed: " + app.getUserAuthResult();
+        connectionError(app.getURI(), new RuntimeException(message));
+        request.reject();
+      }
+    } else {
+      listener.authenticationRequested(request);
+    }
   }
 
   void connectionError(URI serverURI, Exception e) {

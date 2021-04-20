@@ -44,6 +44,21 @@ class Connection implements AuthenticationRequest.Application {
     initInProgress = false;
   }
 
+  /** Create the WebSocket connection and return true if succeeded. */
+  void init() {
+    setUpTransport();
+    setUpHelloHandler();
+    setUpAuthHandler();
+    setUpIOHandler();
+    transport.connect();
+    initInProgress = true;
+  }
+
+  void close() {
+    dispatch.close();
+    transport.close();
+  }
+
   private void setUpTransport() {
     queue = new LinkedBlockingQueue<>();
     transport = new Transport(serverUri, queue, (e -> client.connectionError(serverUri, e)));
@@ -85,21 +100,6 @@ class Connection implements AuthenticationRequest.Application {
     dispatch.initReady(true);
     ioHandler.activate();
     activeProtocol = ioHandler;
-  }
-
-  /** Create the WebSocket connection and return true if succeeded. */
-  void init() {
-    setUpTransport();
-    setUpHelloHandler();
-    setUpAuthHandler();
-    setUpIOHandler();
-    transport.connect();
-    initInProgress = true;
-  }
-
-  void close() {
-    dispatch.close();
-    transport.close();
   }
 
   void setTimeSync(boolean enabled) {
