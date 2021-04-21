@@ -16,7 +16,7 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.BiConsumer;
 
-class Connection implements AuthenticationRequest.Application {
+class Connection {
 
   private Client client;
   private URI serverUri;
@@ -30,7 +30,7 @@ class Connection implements AuthenticationRequest.Application {
   private AuthenticationProtocol authHandler;
   private IOHandler ioHandler;
 
-  private AuthenticationRequest.UserAuthResult userAuthResult = new AuthenticationRequest.UserAuthResult();
+  private AuthRequest.UserAuthResult userAuthResult = new AuthRequest.UserAuthResult();
   private RequestDispatch dispatch;
   private boolean initInProgress;
 
@@ -70,22 +70,18 @@ class Connection implements AuthenticationRequest.Application {
 
   private void setUpHelloHandler() {
     helloHandler = new HelloProtocol(() -> {
-      if (helloHandler.getChallenge().isEmpty()) {
-        client.requestAuthentication(new ConnectionAuthRequest(AuthenticationRequest.RequestType.APPLICATION_ACCEPTANCE));
-      } else {
-        activeProtocol = authHandler;
-        client.requestAuthentication(new ConnectionAuthRequest(AuthenticationRequest.RequestType.CREDENTIALS));
-      }
+      client.requestAuthentication(new ConnectionAuthRequest(AuthRequest.RequestType.APPLICATION_ACCEPTANCE));
     });
   }
 
   private void setUpAuthHandler() {
     authHandler = new AuthenticationProtocol(transport, () -> {
-      if (getUserAuthResult().getCode() == AuthenticationRequest.AuthResultCode.GRANTED
-          || getUserAuthResult().getCode() == AuthenticationRequest.AuthResultCode.GRANTED_PASSWORD_WILL_EXPIRE_SOON) {
-        client.requestAuthentication(new ConnectionAuthRequest(AuthenticationRequest.RequestType.HANDSHAKE_ACCEPTANCE));
+      AuthRequest.AuthResultCode code = authHandler.getUserAuthResult().getCode();
+      if (code == AuthRequest.AuthResultCode.GRANTED
+          || code == AuthRequest.AuthResultCode.GRANTED_PASSWORD_WILL_EXPIRE_SOON) {
+        client.requestAuthentication(new ConnectionAuthRequest(AuthRequest.RequestType.HANDSHAKE_ACCEPTANCE));
       } else {
-        client.requestAuthentication(new ConnectionAuthRequest(AuthenticationRequest.RequestType.CREDENTIALS));
+        client.requestAuthentication(new ConnectionAuthRequest(AuthRequest.RequestType.CREDENTIALS));
       }
     });
   }
@@ -153,43 +149,11 @@ class Connection implements AuthenticationRequest.Application {
     }
   }
 
-  @Override
-  public String getSystemName() {
-    return helloHandler.getSystemName();
-  }
-
-  @Override
-  public String getApplicationName() {
-    return helloHandler.getApplicationName();
-  }
-
-  @Override
-  public URI getURI() {
+  URI getURI() {
     return serverUri;
   }
 
-  @Override
-  public AuthenticationRequest.CDPVersion getCDPVersion() {
-    return new AuthenticationRequest.CDPVersion(helloHandler.getCDPVersionMajor(), helloHandler.getCDPVersionMinor());
-  }
-
-  @Override
-  public Certificate[] getCertificates() {
-    if (transport.getSocket() instanceof SSLSocket) {
-      try {
-        return ((SSLSocket)transport.getSocket()).getSession().getPeerCertificates();
-      } catch (SSLPeerUnverifiedException ignored) {
-      }
-    }
-    return new Certificate[0];
-  }
-
-  @Override
-  public AuthenticationRequest.UserAuthResult getUserAuthResult() {
-    return authHandler.getUserAuthResult();
-  }
-
-  private class ConnectionAuthRequest implements AuthenticationRequest {
+  private class ConnectionAuthRequest implements AuthRequest {
 
     private final RequestType requestType;
 
@@ -198,19 +162,54 @@ class Connection implements AuthenticationRequest.Application {
     }
 
     @Override
+    public String getSystemName() {
+      return helloHandler.getSystemName();
+    }
+
+    @Override
+    public String getApplicationName() {
+      return helloHandler.getApplicationName();
+    }
+
+    @Override
+    public URI getServerURI() {
+      return serverUri;
+    }
+
+    @Override
+    public AuthRequest.CDPVersion getCDPVersion() {
+      return new AuthRequest.CDPVersion(helloHandler.getCDPVersionMajor(), helloHandler.getCDPVersionMinor());
+    }
+
+    @Override
+    public Certificate[] getTlsCertificates() {
+      if (transport.getSocket() instanceof SSLSocket) {
+        try {
+          return ((SSLSocket)transport.getSocket()).getSession().getPeerCertificates();
+        } catch (SSLPeerUnverifiedException ignored) {
+        }
+      }
+      return new Certificate[0];
+    }
+
+    @Override
     public RequestType getType() {
       return requestType;
     }
 
     @Override
-    public Application getApplication() {
-      return Connection.this;
+    public UserAuthResult getAuthResult() {
+      return authHandler.getUserAuthResult();
     }
 
     @Override
     public void accept(Map<String, String> data) {
-      if (requestType == RequestType.APPLICATION_ACCEPTANCE || requestType == RequestType.HANDSHAKE_ACCEPTANCE) {
+      if ((requestType == RequestType.APPLICATION_ACCEPTANCE && helloHandler.getChallenge().isEmpty())
+          || requestType == RequestType.HANDSHAKE_ACCEPTANCE) {
         switchToIOHandler();
+      } else if (requestType == RequestType.APPLICATION_ACCEPTANCE) {
+        activeProtocol = authHandler;
+        client.requestAuthentication(new ConnectionAuthRequest(RequestType.CREDENTIALS));
       } else {
         authHandler.authenticate(helloHandler.getChallenge(), data);
       }

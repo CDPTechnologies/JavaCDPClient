@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public interface AuthenticationRequest {
+public interface AuthRequest {
 
   String USER = "User";
   String PASSWORD = "Password";
@@ -27,12 +27,15 @@ public interface AuthenticationRequest {
     /** Sent by StudioAPI::Client when application requires credentials */
     CREDENTIALS,
     /**
-     * Sent by StudioAPI::Client when application connection has been successfully authenticated
+     * Sent by Client when application connection has been successfully authenticated
      * and it now asks for permission to continue with StudioAPI handshake.
      * This request can be used for:
      * <ul>
-     *   <li>cache validated credentials for sibling application connections</li>
-     *   <li>async prefetch model files, needed for structure, etc</li>
+     *   <li>Cache validated credentials for sibling application connections</li>
+     *   <li>
+     *     Check the authentication result and for example handle
+     *     {@link AuthResultCode#GRANTED_PASSWORD_WILL_EXPIRE_SOON}
+     *   </li>
      * </ul>
      */
     HANDSHAKE_ACCEPTANCE
@@ -67,7 +70,7 @@ public interface AuthenticationRequest {
 
   @Data
   class UserAuthResult {
-    private AuthResultCode code = AuthResultCode.CREDENTIALS_REQUIRED;
+    private AuthResultCode code;
     private String text;
     private List<Credential> additionalCredentials = new ArrayList<>();
   }
@@ -78,28 +81,27 @@ public interface AuthenticationRequest {
     private final int minor;
   }
 
-  /** Additional information about the found application. */
-  interface Application {
-    /** System name (from Hello message sent by StudioAPI application connected) */
-    String getSystemName();
-    /** Application name (from Hello message sent by StudioAPI application connected) */
-    String getApplicationName();
-    /** Application StudioAPI hostname or IP address and port */
-    URI getURI();
-    /** Application CDP version (major,minor) */
-    CDPVersion getCDPVersion();
-    /** Application certificates */
-    Certificate[] getCertificates();
-    /** State of the authentication  */
-    UserAuthResult getUserAuthResult();
-  }
-
+  /** System name (from Hello message sent by StudioAPI application connected) */
+  String getSystemName();
+  /** Application name (from Hello message sent by StudioAPI application connected) */
+  String getApplicationName();
+  /** Application StudioAPI hostname or IP address and port */
+  URI getServerURI();
+  /** Application CDP version (major,minor) */
+  CDPVersion getCDPVersion();
+  /** Application certificates */
+  Certificate[] getTlsCertificates();
   /** The request can ask for credentials or simply whether to connect to the found application */
   RequestType getType();
-  /** Additional information about the found application. */
-  Application getApplication();
+  /** State of the authentication  */
+  UserAuthResult getAuthResult();
 
-  /** Method to call to accept the application and provide requested credentials */
+  /**
+   * Method to call to accept the application and provide requested credentials.
+   * <p>Example: {@code accept(AuthResponse.password(user, pwd));}</p>
+   *
+   * @see AuthResponse
+   */
   void accept(Map<String, String> data);
   /** Method to call to reject the application */
   void reject();

@@ -20,7 +20,7 @@ import java.security.cert.CertificateFactory;
 import java.util.*;
 import java.util.function.BiConsumer;
 
-import static com.cdptech.cdpclient.AuthenticationRequest.AuthResultCode.CREDENTIALS_REQUIRED;
+import static com.cdptech.cdpclient.AuthRequest.AuthResultCode.CREDENTIALS_REQUIRED;
 
 /**
  * Main Client class for initializing the CDP Java client.
@@ -34,8 +34,6 @@ import static com.cdptech.cdpclient.AuthenticationRequest.AuthResultCode.CREDENT
  * // client.setTrustedCertificates(Collections.singletonList(new File("/path/to/application/StudioAPI.crt")), false);
  *
  * // Connect the client. The CDP application will print its StudioAPIServer IP and port on startup.
- * // For authentication, use 'client.init("127.0.0.1", 7689, "user", "password", new NotificationListener()' format.
- * // or implement the authenticationRequested() callback for more complex cases.
  * client.init("127.0.0.1", 7689, new NotificationListener() {
  *     public void clientReady(Client client) {
  *         System.out.println("Client connected");
@@ -64,7 +62,19 @@ import static com.cdptech.cdpclient.AuthenticationRequest.AuthResultCode.CREDENT
  *     }
  *     public void connectionError(URI serverURI, Exception e) { e.printStackTrace(); }
  *     public void clientClosed(Client client) { System.out.println("Client closed"); }
- *     // void authenticationRequested(AuthenticationRequest request) {} // - override for more complex cases
+ *
+ *     public void credentialsRequested(AuthRequest request) {
+ *         if (request.getAuthResult().getCode() == CREDENTIALS_REQUIRED) {
+ *             request.accept(AuthResponse.password(user, password));
+ *         } else {
+ *             System.out.println("Authentication failed: " + request.getAuthResult());
+ *             request.reject();
+ *         }
+ *     }
+ *
+ *     // Optionally override to manually verify certificates and approve/reject connections to applications
+ *     // public void acceptanceRequested(AuthRequest request) { request.accept(); }
+ *
  * });
  * client.run();
  * }
@@ -79,7 +89,8 @@ import static com.cdptech.cdpclient.AuthenticationRequest.AuthResultCode.CREDENT
  * </ul>
  * In production code it is recommended to instead use a trusted CA signed certificate.
  *
- * @see NotificationListener#authenticationRequested
+ * @see NotificationListener#credentialsRequested
+ * @see NotificationListener#acceptanceRequested
  */
 public class Client implements Runnable {
 
@@ -104,9 +115,7 @@ public class Client implements Runnable {
   }
 
   /**
-   * Initialise the client. Connects to the server and notifies @a listener. If authentication is enabled,
-   * the is a convenience method to initialise the client with the username and password. See
-   * {@link #init(String address, int port, String user, String password, NotificationListener)}
+   * Initialise the client. Connects to the server and notifies @a listener.
    */
   public void init(String address, int port, NotificationListener listener) {
     this.listener = listener;
@@ -121,19 +130,6 @@ public class Client implements Runnable {
     } catch (URISyntaxException e) {
       throw new IllegalArgumentException("Unable to parse server URI");
     }
-  }
-
-  /**
-   * A convenience method to initialise the client and set the username and password needed to connect
-   * to the server. An alternative to this is to use the regular
-   * {@link #init(String address, int port, NotificationListener)} method and implement the
-   * authenticationRequested() method . The alternative will be  needed in more complex cases, see the
-   * documentation of {@link NotificationListener#authenticationRequested} for more information.
-   */
-  public void init(String address, int port, String user, String password, NotificationListener listener) {
-    this.user = user;
-    this.password = password;
-    init(address, port, listener);
   }
 
   private String getDefaultScheme() {
@@ -238,9 +234,9 @@ public class Client implements Runnable {
    * <ul>
    *   <li>In a testing environment where security is not important</li>
    *   <li>
-   *     When user has implemented the {@link NotificationListener#authenticationRequested} callback
+   *     When user has implemented the {@link NotificationListener#acceptanceRequested} callback
    *     and will make a manual verification of the certificate using the
-   *     {@link AuthenticationRequest.Application#getCertificates()}
+   *     {@link AuthRequest#getTlsCertificates()}
    *   </li>
    * </ul>
    *
@@ -432,22 +428,11 @@ public class Client implements Runnable {
     return lostApps;
   }
 
-  void requestAuthentication(AuthenticationRequest request) {
-    if (user != null && request.getType() == AuthenticationRequest.RequestType.CREDENTIALS) {
-      AuthenticationRequest.Application app = request.getApplication();
-      AuthenticationRequest.AuthResultCode code = app.getUserAuthResult().getCode();
-      Map<String, String> data = new HashMap<>();
-      if (code == CREDENTIALS_REQUIRED) {
-        data.put(AuthenticationRequest.USER, user);
-        data.put(AuthenticationRequest.PASSWORD, password);
-        request.accept(data);
-      } else {
-        String message = "Authentication of " + app.getApplicationName() + " failed: " + app.getUserAuthResult();
-        connectionError(app.getURI(), new RuntimeException(message));
-        request.reject();
-      }
+  void requestAuthentication(AuthRequest request) {
+    if (request.getType() == AuthRequest.RequestType.CREDENTIALS) {
+      listener.credentialsRequested(request);
     } else {
-      listener.authenticationRequested(request);
+      listener.acceptanceRequested(request);
     }
   }
 

@@ -34,47 +34,46 @@ public interface NotificationListener {
    * <ul>
    *   <li>Authenticate using username and password</li>
    *   <li>Set a new password when the previous has expired</li>
-   *   <li>View the result of authentication attempts and handle errors</li>
-   *   <li>
-   *     Accept or reject connection to an application. Optionally check for a valid certificate using
-   *     {@link AuthenticationRequest.Application#getCertificates()}
-   *   </li>
+   *   <li>Handle authentication errors</li>
    * </ul>
    *
    * Here is a sample implementation:
    * <pre>
    * {@code
-   *     public void authenticationRequested(AuthenticationRequest request) {
-   *         Application app = request.getApplication();
-   *         AuthResultCode code = app.getUserAuthResult().getCode();
-   *         Map<String, String> data = new HashMap<>();
-   *         if (request.getType() == CREDENTIALS) {
-   *             if (code == CREDENTIALS_REQUIRED || code == NEW_PASSWORD_REQUIRED) {
-   *                 data.put(AuthenticationRequest.USER, "MyUserName");
-   *                 data.put(AuthenticationRequest.PASSWORD, "MyPassword");
-   *                 if (code == NEW_PASSWORD_REQUIRED) // The existing password of the user has expired
-   *                     data.put(AuthenticationRequest.NEW_PASSWORD, "MyNewPassword");
-   *                 request.accept(data);
-   *             } else {
-   *                 System.out.println("Authentication of " + app.getApplicationName()
-   *                       + " failed: " + app.getUserAuthResult());
-   *                 request.reject();
-   *             }
-   *         } else { // either authentication was not needed or provided credentials were correct
-   *             request.accept(data); // Or request.reject() to cancel the connection
+   *     public void credentialsRequested(AuthRequest request) {
+   *         if (request.getAuthResult().getCode() == CREDENTIALS_REQUIRED) {
+   *             request.accept(AuthResponse.password(user, password));
+   *         } else if (request.getAuthResult().getCode() == NEW_PASSWORD_REQUIRED) {
+   *             request.accept(AuthResponse.newPassword(user, password, "NewPassword"));
+   *         } else {
+   *             System.out.println("Authentication failed: " + request.getAuthResult());
+   *             request.reject(); // Or retry with different credentials
    *         }
    *     }
-   * }
    * </pre>
    */
-  default void authenticationRequested(AuthenticationRequest request) {
-    if (request.getType() == AuthenticationRequest.RequestType.APPLICATION_ACCEPTANCE
-        || request.getType() == AuthenticationRequest.RequestType.HANDSHAKE_ACCEPTANCE) {
-      request.accept();
-    } else {
-      throw new UnsupportedOperationException("Please implement authenticationRequested() method to connect to "
-          + request.getApplication().getApplicationName());
-    }
+  default void credentialsRequested(AuthRequest request) {
+    throw new UnsupportedOperationException("Please implement credentialsRequested() method to connect to "
+        + request.getApplicationName());
+  }
+
+  /**
+   * Called by the Client before and after authentication. Implementation must call either
+   * accept() or reject() on the request either immediately or asynchronously. Features:
+   *
+   * <ul>
+   *   <li>
+   *     Accept or reject connection to an application. Optionally check for a valid certificate using
+   *     {@link AuthRequest#getTlsCertificates()}
+   *   </li>
+   *   <li>
+   *     View the result of successful authentication attempts. Optionally handle
+   *     {@link AuthRequest.AuthResultCode#NEW_PASSWORD_REQUIRED}
+   *   </li>
+   * </ul>
+   */
+  default void acceptanceRequested(AuthRequest request) {
+    request.accept();
   }
 
 }

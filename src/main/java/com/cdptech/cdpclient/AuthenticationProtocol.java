@@ -5,7 +5,6 @@
 package com.cdptech.cdpclient;
 
 import com.cdptech.cdpclient.proto.StudioAPI;
-import com.cdptech.cdpclient.proto.StudioAPI.AuthRequest;
 import com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse;
 import com.cdptech.cdpclient.proto.StudioAPI.AuthResponse;
 import com.google.protobuf.ByteString;
@@ -25,7 +24,7 @@ class AuthenticationProtocol implements Protocol {
   private Transport transport;
   private Runnable finishedCallback;
   private MessageDigest digest;
-  private AuthenticationRequest.UserAuthResult userAuthResult;
+  private AuthRequest.UserAuthResult userAuthResult;
 
   AuthenticationProtocol(Transport transport, Runnable finishedCallback) {
     this.transport = transport;
@@ -37,8 +36,8 @@ class AuthenticationProtocol implements Protocol {
       throw new RuntimeException(e);
     }
 
-    userAuthResult = new AuthenticationRequest.UserAuthResult();
-    userAuthResult.setCode(AuthenticationRequest.AuthResultCode.CREDENTIALS_REQUIRED);
+    userAuthResult = new AuthRequest.UserAuthResult();
+    userAuthResult.setCode(AuthRequest.AuthResultCode.CREDENTIALS_REQUIRED);
     userAuthResult.setText("Credentials required");
   }
 
@@ -54,31 +53,31 @@ class AuthenticationProtocol implements Protocol {
   }
 
   private void updateUserAuthResult() {
-    userAuthResult = new AuthenticationRequest.UserAuthResult();
+    userAuthResult = new AuthRequest.UserAuthResult();
     userAuthResult.setCode(getResultCode());
     userAuthResult.setText(getResultText());
     userAuthResult.setAdditionalCredentials(getAdditionalChallenges());
   }
 
   void authenticate(String challenge, Map<String, String> data) {
-    if (!data.containsKey(AuthenticationRequest.USER)) {
+    if (!data.containsKey(AuthRequest.USER)) {
       notifyOfMissingUserName();
       return;
     }
 
-    String user = data.get(AuthenticationRequest.USER);
-    AuthRequest.Builder authRequest = AuthRequest.newBuilder().setUserId(user);
-    if (data.containsKey(AuthenticationRequest.PASSWORD)) {
+    String user = data.get(AuthRequest.USER);
+    StudioAPI.AuthRequest.Builder authRequest = StudioAPI.AuthRequest.newBuilder().setUserId(user);
+    if (data.containsKey(AuthRequest.PASSWORD)) {
       addPasswordResponse(challenge, data, authRequest, user);
     }
-    if (data.containsKey(AuthenticationRequest.NEW_PASSWORD)) {
+    if (data.containsKey(AuthRequest.NEW_PASSWORD)) {
       addNewPasswordResponse(data, authRequest, user);
     }
     transport.send(authRequest.build().toByteArray());
   }
 
-  private void addPasswordResponse(String challenge, Map<String, String> data, AuthRequest.Builder authRequest, String user) {
-    String password = data.get(AuthenticationRequest.PASSWORD);
+  private void addPasswordResponse(String challenge, Map<String, String> data, StudioAPI.AuthRequest.Builder authRequest, String user) {
+    String password = data.get(AuthRequest.PASSWORD);
     ChallengeResponse challengeResponse = ChallengeResponse.newBuilder()
         .setType("PasswordHash")
         .setResponse(ByteString.copyFrom(challengeHash(challenge, passwordHash(user, password))))
@@ -86,8 +85,8 @@ class AuthenticationProtocol implements Protocol {
     authRequest.addChallengeResponse(challengeResponse);
   }
 
-  private void addNewPasswordResponse(Map<String, String> data, AuthRequest.Builder authRequest, String user) {
-    String password = data.get(AuthenticationRequest.NEW_PASSWORD);
+  private void addNewPasswordResponse(Map<String, String> data, StudioAPI.AuthRequest.Builder authRequest, String user) {
+    String password = data.get(AuthRequest.NEW_PASSWORD);
     ChallengeResponse challengeResponse = ChallengeResponse.newBuilder()
         .setType("NewPasswordHash")
         .setResponse(ByteString.copyFrom(passwordHash(user, password)))
@@ -96,8 +95,8 @@ class AuthenticationProtocol implements Protocol {
   }
 
   private void notifyOfMissingUserName() {
-    userAuthResult = new AuthenticationRequest.UserAuthResult();
-    userAuthResult.setCode(AuthenticationRequest.AuthResultCode.USERNAME_REQUIRED);
+    userAuthResult = new AuthRequest.UserAuthResult();
+    userAuthResult.setCode(AuthRequest.AuthResultCode.USERNAME_REQUIRED);
     userAuthResult.setText("Authentication failed: username not specified");
     finishedCallback.run();
   }
@@ -118,36 +117,36 @@ class AuthenticationProtocol implements Protocol {
     return digest.digest(outputStream.toByteArray());
   }
 
-  AuthenticationRequest.UserAuthResult getUserAuthResult() {
+  AuthRequest.UserAuthResult getUserAuthResult() {
     return userAuthResult;
   }
 
-  private AuthenticationRequest.AuthResultCode getResultCode() {
+  private AuthRequest.AuthResultCode getResultCode() {
     switch (authMessage.getResultCode()) {
       case eUnknown:
-        return AuthenticationRequest.AuthResultCode.UNKNOWN;
+        return AuthRequest.AuthResultCode.UNKNOWN;
       case eGranted:
-        return AuthenticationRequest.AuthResultCode.GRANTED;
+        return AuthRequest.AuthResultCode.GRANTED;
       case eGrantedPasswordWillExpireSoon:
-        return AuthenticationRequest.AuthResultCode.GRANTED_PASSWORD_WILL_EXPIRE_SOON;
+        return AuthRequest.AuthResultCode.GRANTED_PASSWORD_WILL_EXPIRE_SOON;
       case eNewPasswordRequired:
-        return AuthenticationRequest.AuthResultCode.NEW_PASSWORD_REQUIRED;
+        return AuthRequest.AuthResultCode.NEW_PASSWORD_REQUIRED;
       case eInvalidChallengeResponse:
-        return AuthenticationRequest.AuthResultCode.INVALID_CHALLENGE_RESPONSE;
+        return AuthRequest.AuthResultCode.INVALID_CHALLENGE_RESPONSE;
       case eAdditionalResponseRequired:
-        return AuthenticationRequest.AuthResultCode.ADDITIONAL_RESPONSE_REQUIRED;
+        return AuthRequest.AuthResultCode.ADDITIONAL_RESPONSE_REQUIRED;
     }
-    return AuthenticationRequest.AuthResultCode.UNKNOWN;
+    return AuthRequest.AuthResultCode.UNKNOWN;
   }
 
   private String getResultText() {
     return authMessage.getResultText();
   }
 
-  private List<AuthenticationRequest.Credential> getAdditionalChallenges() {
-    List<AuthenticationRequest.Credential> challenges = new ArrayList<>();
+  private List<AuthRequest.Credential> getAdditionalChallenges() {
+    List<AuthRequest.Credential> challenges = new ArrayList<>();
     for (StudioAPI.AdditionalChallengeResponseRequired item : authMessage.getAdditionalChallengeResponseRequiredList()) {
-      AuthenticationRequest.Credential c = new AuthenticationRequest.Credential();
+      AuthRequest.Credential c = new AuthRequest.Credential();
       c.setType(item.getType());
       c.setPrompt(item.getPrompt());
       for (StudioAPI.AdditionalChallengeResponseRequired.Parameter parameter : item.getParameterList()) {
