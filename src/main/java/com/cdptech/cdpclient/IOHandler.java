@@ -55,6 +55,33 @@ class IOHandler implements Protocol {
 
     transport.send(pb.build().toByteArray());
   }
+
+  void addChildRequest(Node parentNode, String childName, String childTypeName) {
+    Container.Builder pb = Container.newBuilder()
+        .setMessageType(Container.Type.eChildAddRequest);
+
+    if (parentNode != null) {
+      pb.addChildAddRequest(StudioAPI.ChildAdd.newBuilder()
+          .setParentNodeId(parentNode.getNodeID())
+          .setChildName(childName)
+          .setChildTypeName(childTypeName).build());
+    }
+
+    transport.send(pb.build().toByteArray());
+  }
+
+  void removeChildRequest(Node parentNode, String childName) {
+    Container.Builder pb = Container.newBuilder()
+        .setMessageType(Container.Type.eChildRemoveRequest);
+
+    if (parentNode != null) {
+      pb.addChildRemoveRequest(StudioAPI.ChildRemove.newBuilder()
+          .setParentNodeId(parentNode.getNodeID())
+          .setChildName(childName).build());
+    }
+
+    transport.send(pb.build().toByteArray());
+  }
   
   /** Create a value request for a Node. Nonzero fs indicates subscription. */
   void valueRequest(Node node, double fs) {

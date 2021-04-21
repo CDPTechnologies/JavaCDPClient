@@ -92,6 +92,14 @@ class RequestDispatch implements IOListener {
     node.requestChildNodes();
     return r;
   }
+
+  void addChild(Node parentNode, String childName, String childTypeName) {
+    handler.addChildRequest(parentNode, childName, childTypeName);
+  }
+
+  void removeChild(Node parentNode, String childName) {
+    handler.removeChildRequest(parentNode, childName);
+  }
   
   /** 
    * Send a periodic value request for a node.
