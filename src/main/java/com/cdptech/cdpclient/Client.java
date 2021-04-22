@@ -20,8 +20,6 @@ import java.security.cert.CertificateFactory;
 import java.util.*;
 import java.util.function.BiConsumer;
 
-import static com.cdptech.cdpclient.AuthRequest.AuthResultCode.CREDENTIALS_REQUIRED;
-
 /**
  * Main Client class for initializing the CDP Java client.
  *
@@ -72,8 +70,9 @@ import static com.cdptech.cdpclient.AuthRequest.AuthResultCode.CREDENTIALS_REQUI
  *         }
  *     }
  *
- *     // Optionally override to manually verify certificates and approve/reject connections to applications
- *     // public void acceptanceRequested(AuthRequest request) { request.accept(); }
+ *     // Optionally override to manually verify/cache certificates and approve/reject connections to applications
+ *     // public void applicationAcceptanceRequested(AuthRequest request) { request.accept(); }
+ *     // public void handshakeAcceptanceRequested(AuthRequest request) { request.accept(); }
  *
  * });
  * client.run();
@@ -90,7 +89,8 @@ import static com.cdptech.cdpclient.AuthRequest.AuthResultCode.CREDENTIALS_REQUI
  * In production code it is recommended to instead use a trusted CA signed certificate.
  *
  * @see NotificationListener#credentialsRequested
- * @see NotificationListener#acceptanceRequested
+ * @see NotificationListener#applicationAcceptanceRequested
+ * @see NotificationListener#handshakeAcceptanceRequested
  */
 public class Client implements Runnable {
 
@@ -107,8 +107,6 @@ public class Client implements Runnable {
   private boolean timeSyncEnabled = true;
   private boolean autoReconnect = true;
   private boolean clientClosed = false;
-  private String user;
-  private String password;
 
   /** Create a new StudioAPI Client instance. */
   public Client() {
@@ -234,9 +232,9 @@ public class Client implements Runnable {
    * <ul>
    *   <li>In a testing environment where security is not important</li>
    *   <li>
-   *     When user has implemented the {@link NotificationListener#acceptanceRequested} callback
+   *     When user has implemented the {@link NotificationListener#applicationAcceptanceRequested} callback
    *     and will make a manual verification of the certificate using the
-   *     {@link AuthRequest#getTlsCertificates()}
+   *     {@link AuthRequest#getPeerCertificates()}
    *   </li>
    * </ul>
    *
@@ -428,12 +426,16 @@ public class Client implements Runnable {
     return lostApps;
   }
 
-  void requestAuthentication(AuthRequest request) {
-    if (request.getType() == AuthRequest.RequestType.CREDENTIALS) {
-      listener.credentialsRequested(request);
-    } else {
-      listener.acceptanceRequested(request);
-    }
+  void requestApplicationAcceptance(AuthRequest request) {
+    listener.applicationAcceptanceRequested(request);
+  }
+
+  void requestCredentials(AuthRequest request) {
+    listener.credentialsRequested(request);
+  }
+
+  void requestHandshakeAcceptance(AuthRequest request) {
+    listener.handshakeAcceptanceRequested(request);
   }
 
   void connectionError(URI serverURI, Exception e) {

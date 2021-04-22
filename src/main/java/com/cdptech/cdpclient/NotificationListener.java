@@ -58,21 +58,29 @@ public interface NotificationListener {
   }
 
   /**
-   * Called by the Client before and after authentication. Implementation must call either
-   * accept() or reject() on the request either immediately or asynchronously. Features:
-   *
+   * Called by the Client before authentication when either a TLS or a plain TCP connection is established
+   * with a new application. Implementation must call either accept() or reject() on the request
+   * either immediately or asynchronously. Optionally save the certificate using
+   * {@link AuthRequest#getPeerCertificates()} and verify it in future connections to detect
+   * man-in-the-middle attacks.
+   */
+  default void applicationAcceptanceRequested(AuthRequest request) {
+    request.accept();
+  }
+
+  /**
+   * Sent by the Client when an application connection has been successfully authenticated
+   * and it now asks for permission to continue with the StudioAPI handshake.
+   * This request can be used to:
    * <ul>
-   *   <li>
-   *     Accept or reject connection to an application. Optionally check for a valid certificate using
-   *     {@link AuthRequest#getTlsCertificates()}
-   *   </li>
+   *   <li>Cache validated credentials for sibling application connections.</li>
    *   <li>
    *     View the result of successful authentication attempts. Optionally handle
-   *     {@link AuthRequest.AuthResultCode#NEW_PASSWORD_REQUIRED}
+   *     {@link AuthRequest.AuthResultCode#GRANTED_PASSWORD_WILL_EXPIRE_SOON} and notify the user.
    *   </li>
    * </ul>
    */
-  default void acceptanceRequested(AuthRequest request) {
+  default void handshakeAcceptanceRequested(AuthRequest request) {
     request.accept();
   }
 

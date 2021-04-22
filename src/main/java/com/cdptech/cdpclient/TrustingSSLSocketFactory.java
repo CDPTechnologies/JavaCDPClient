@@ -27,27 +27,27 @@ class TrustingSSLSocketFactory extends SSLSocketFactory {
 
     TrustManager tm = new X509ExtendedTrustManager() {
       @Override
-      public void checkClientTrusted(X509Certificate[] x509Certificates, String s, Socket socket) throws CertificateException {
+      public void checkClientTrusted(X509Certificate[] x509Certificates, String s, Socket socket) {
       }
 
       @Override
-      public void checkServerTrusted(X509Certificate[] x509Certificates, String s, Socket socket) throws CertificateException {
+      public void checkServerTrusted(X509Certificate[] x509Certificates, String s, Socket socket) {
       }
 
       @Override
-      public void checkClientTrusted(X509Certificate[] x509Certificates, String s, SSLEngine sslEngine) throws CertificateException {
+      public void checkClientTrusted(X509Certificate[] x509Certificates, String s, SSLEngine sslEngine) {
       }
 
       @Override
-      public void checkServerTrusted(X509Certificate[] x509Certificates, String s, SSLEngine sslEngine) throws CertificateException {
+      public void checkServerTrusted(X509Certificate[] x509Certificates, String s, SSLEngine sslEngine) {
       }
 
       @Override
-      public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+      public void checkClientTrusted(X509Certificate[] chain, String authType) {
       }
 
       @Override
-      public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+      public void checkServerTrusted(X509Certificate[] chain, String authType) {
       }
 
       @Override

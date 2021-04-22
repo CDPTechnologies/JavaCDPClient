@@ -20,27 +20,6 @@ public interface AuthRequest {
   String NEW_PASSWORD = "NewPassword";
   // TODO: add key-based authentication when CDP starts supporting it
 
-  /** The request can ask for credentials or simply whether to connect to the found application */
-  enum RequestType {
-    /** Sent by StudioAPI::Client when new application TLS or plain TCP connection is established */
-    APPLICATION_ACCEPTANCE,
-    /** Sent by StudioAPI::Client when application requires credentials */
-    CREDENTIALS,
-    /**
-     * Sent by Client when application connection has been successfully authenticated
-     * and it now asks for permission to continue with StudioAPI handshake.
-     * This request can be used for:
-     * <ul>
-     *   <li>Cache validated credentials for sibling application connections</li>
-     *   <li>
-     *     Check the authentication result and for example handle
-     *     {@link AuthResultCode#GRANTED_PASSWORD_WILL_EXPIRE_SOON}
-     *   </li>
-     * </ul>
-     */
-    HANDSHAKE_ACCEPTANCE
-  }
-
   enum AuthResultCode {
     UNKNOWN,
     CREDENTIALS_REQUIRED,
@@ -90,9 +69,7 @@ public interface AuthRequest {
   /** Application CDP version (major,minor) */
   CDPVersion getCDPVersion();
   /** Application certificates */
-  Certificate[] getTlsCertificates();
-  /** The request can ask for credentials or simply whether to connect to the found application */
-  RequestType getType();
+  Certificate[] getPeerCertificates();
   /** State of the authentication  */
   UserAuthResult getAuthResult();
 

@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 class Connection {
 
@@ -70,8 +71,21 @@ class Connection {
 
   private void setUpHelloHandler() {
     helloHandler = new HelloProtocol(() -> {
-      client.requestAuthentication(new ConnectionAuthRequest(AuthRequest.RequestType.APPLICATION_ACCEPTANCE));
+      client.requestApplicationAcceptance(new ConnectionAuthRequest(ignored ->  {
+        if (helloHandler.getChallenge().isEmpty()) {
+          switchToIOHandler();
+        } else {
+          activeProtocol = authHandler;
+          requestCredentials();
+        }
+      }));
     });
+  }
+
+  private void requestCredentials() {
+    client.requestCredentials(new ConnectionAuthRequest(data -> {
+      authHandler.authenticate(helloHandler.getChallenge(), data);
+    }));
   }
 
   private void setUpAuthHandler() {
@@ -79,9 +93,9 @@ class Connection {
       AuthRequest.AuthResultCode code = authHandler.getUserAuthResult().getCode();
       if (code == AuthRequest.AuthResultCode.GRANTED
           || code == AuthRequest.AuthResultCode.GRANTED_PASSWORD_WILL_EXPIRE_SOON) {
-        client.requestAuthentication(new ConnectionAuthRequest(AuthRequest.RequestType.HANDSHAKE_ACCEPTANCE));
+        client.requestHandshakeAcceptance(new ConnectionAuthRequest(data -> switchToIOHandler()));
       } else {
-        client.requestAuthentication(new ConnectionAuthRequest(AuthRequest.RequestType.CREDENTIALS));
+        requestCredentials();
       }
     });
   }
@@ -155,10 +169,10 @@ class Connection {
 
   private class ConnectionAuthRequest implements AuthRequest {
 
-    private final RequestType requestType;
+    private final Consumer<Map<String, String>> onAccept;
 
-    ConnectionAuthRequest(RequestType requestType) {
-      this.requestType = requestType;
+    ConnectionAuthRequest(Consumer<Map<String, String>> onAccept) {
+      this.onAccept = onAccept;
     }
 
     @Override
@@ -182,7 +196,7 @@ class Connection {
     }
 
     @Override
-    public Certificate[] getTlsCertificates() {
+    public Certificate[] getPeerCertificates() {
       if (transport.getSocket() instanceof SSLSocket) {
         try {
           return ((SSLSocket)transport.getSocket()).getSession().getPeerCertificates();
@@ -193,26 +207,14 @@ class Connection {
     }
 
     @Override
-    public RequestType getType() {
-      return requestType;
-    }
-
-    @Override
     public UserAuthResult getAuthResult() {
       return authHandler.getUserAuthResult();
     }
 
     @Override
     public void accept(Map<String, String> data) {
-      if ((requestType == RequestType.APPLICATION_ACCEPTANCE && helloHandler.getChallenge().isEmpty())
-          || requestType == RequestType.HANDSHAKE_ACCEPTANCE) {
-        switchToIOHandler();
-      } else if (requestType == RequestType.APPLICATION_ACCEPTANCE) {
-        activeProtocol = authHandler;
-        client.requestAuthentication(new ConnectionAuthRequest(RequestType.CREDENTIALS));
-      } else {
-        authHandler.authenticate(helloHandler.getChallenge(), data);
-      }
+      onAccept.accept(data);
+
     }
 
     @Override
