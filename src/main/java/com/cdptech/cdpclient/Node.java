@@ -124,6 +124,25 @@ public class Node {
   }
 
   /**
+   * Sends a request to add a child to this node. Will be executed asynchronously if the server supports this.
+   * Use {@link #addSubtreeListener} to track if the change was successful.
+   * @param name The name of the child node.
+   * @param typeName The model of the added child node.
+   */
+  public void addChild(String name, String typeName) {
+    dispatch.addChild(this, name, typeName);
+  }
+
+  /**
+   * Sends a request to remove a child from this node. Will be executed asynchronously if the server supports this.
+   * Use {@link #addSubtreeListener} to track if the change was successful.
+   * @param name The name of the child node to remove.
+   */
+  public void removeChild(String name) {
+    dispatch.removeChild(this, name);
+  }
+
+  /**
    * (asynchronous) Request child node with provided name.
    * @param name Name of the child node.
    */

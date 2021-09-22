@@ -21,6 +21,22 @@ public final class StudioAPI {
      * <code>eUNSUPPORTED_CONTAINER_TYPE = 20;</code>
      */
     eUNSUPPORTED_CONTAINER_TYPE(1, 20),
+    /**
+     * <code>eVALUE_THROTTLING_OCCURRING = 30;</code>
+     */
+    eVALUE_THROTTLING_OCCURRING(2, 30),
+    /**
+     * <code>eVALUE_THROTTLING_STOPPED = 31;</code>
+     */
+    eVALUE_THROTTLING_STOPPED(3, 31),
+    /**
+     * <code>eCHILD_ADD_FAILED = 40;</code>
+     */
+    eCHILD_ADD_FAILED(4, 40),
+    /**
+     * <code>eCHILD_REMOVE_FAILED = 50;</code>
+     */
+    eCHILD_REMOVE_FAILED(5, 50),
     ;
 
     /**
@@ -31,6 +47,22 @@ public final class StudioAPI {
      * <code>eUNSUPPORTED_CONTAINER_TYPE = 20;</code>
      */
     public static final int eUNSUPPORTED_CONTAINER_TYPE_VALUE = 20;
+    /**
+     * <code>eVALUE_THROTTLING_OCCURRING = 30;</code>
+     */
+    public static final int eVALUE_THROTTLING_OCCURRING_VALUE = 30;
+    /**
+     * <code>eVALUE_THROTTLING_STOPPED = 31;</code>
+     */
+    public static final int eVALUE_THROTTLING_STOPPED_VALUE = 31;
+    /**
+     * <code>eCHILD_ADD_FAILED = 40;</code>
+     */
+    public static final int eCHILD_ADD_FAILED_VALUE = 40;
+    /**
+     * <code>eCHILD_REMOVE_FAILED = 50;</code>
+     */
+    public static final int eCHILD_REMOVE_FAILED_VALUE = 50;
 
 
     public final int getNumber() { return value; }
@@ -39,6 +71,10 @@ public final class StudioAPI {
       switch (value) {
         case 10: return eINVALID_REQUEST;
         case 20: return eUNSUPPORTED_CONTAINER_TYPE;
+        case 30: return eVALUE_THROTTLING_OCCURRING;
+        case 31: return eVALUE_THROTTLING_STOPPED;
+        case 40: return eCHILD_ADD_FAILED;
+        case 50: return eCHILD_REMOVE_FAILED;
         default: return null;
       }
     }
@@ -68,7 +104,7 @@ public final class StudioAPI {
    * Protobuf enum {@code StudioAPI.Proto.CDPNodeType}
    *
    * <pre>
-   ** CDP Node base type identifier.
+   ** CDP Node base type identifier. 
    * </pre>
    */
   public enum CDPNodeType
@@ -227,7 +263,7 @@ public final class StudioAPI {
    * Protobuf enum {@code StudioAPI.Proto.CDPValueType}
    *
    * <pre>
-   ** CDP Node value type identifier.
+   ** CDP Node value type identifier. 
    * </pre>
    */
   public enum CDPValueType
@@ -446,18 +482,71 @@ public final class StudioAPI {
     // optional bytes challenge = 5;
     /**
      * <code>optional bytes challenge = 5;</code>
+     *
+     * <pre>
+     * if challenge exists then server expects authentication (AuthRequest message)
+     * </pre>
      */
     boolean hasChallenge();
     /**
      * <code>optional bytes challenge = 5;</code>
+     *
+     * <pre>
+     * if challenge exists then server expects authentication (AuthRequest message)
+     * </pre>
      */
     com.google.protobuf.ByteString getChallenge();
+
+    // optional string application_name = 6;
+    /**
+     * <code>optional string application_name = 6;</code>
+     */
+    boolean hasApplicationName();
+    /**
+     * <code>optional string application_name = 6;</code>
+     */
+    java.lang.String getApplicationName();
+    /**
+     * <code>optional string application_name = 6;</code>
+     */
+    com.google.protobuf.ByteString
+        getApplicationNameBytes();
+
+    // optional uint32 cdp_version_major = 7;
+    /**
+     * <code>optional uint32 cdp_version_major = 7;</code>
+     */
+    boolean hasCdpVersionMajor();
+    /**
+     * <code>optional uint32 cdp_version_major = 7;</code>
+     */
+    int getCdpVersionMajor();
+
+    // optional uint32 cdp_version_minor = 8;
+    /**
+     * <code>optional uint32 cdp_version_minor = 8;</code>
+     */
+    boolean hasCdpVersionMinor();
+    /**
+     * <code>optional uint32 cdp_version_minor = 8;</code>
+     */
+    int getCdpVersionMinor();
+
+    // optional uint32 cdp_version_patch = 9;
+    /**
+     * <code>optional uint32 cdp_version_patch = 9;</code>
+     */
+    boolean hasCdpVersionPatch();
+    /**
+     * <code>optional uint32 cdp_version_patch = 9;</code>
+     */
+    int getCdpVersionPatch();
   }
   /**
    * Protobuf type {@code StudioAPI.Proto.Hello}
    *
    * <pre>
-   ** Initial server connection response.
+   ** Initial server connection response. 
    * </pre>
    */
   public static final class Hello extends
@@ -528,6 +617,26 @@ public final class StudioAPI {
               challenge_ = input.readBytes();
               break;
             }
+            case 50: {
+              bitField0_ |= 0x00000010;
+              applicationName_ = input.readBytes();
+              break;
+            }
+            case 56: {
+              bitField0_ |= 0x00000020;
+              cdpVersionMajor_ = input.readUInt32();
+              break;
+            }
+            case 64: {
+              bitField0_ |= 0x00000040;
+              cdpVersionMinor_ = input.readUInt32();
+              break;
+            }
+            case 72: {
+              bitField0_ |= 0x00000080;
+              cdpVersionPatch_ = input.readUInt32();
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -575,7 +684,7 @@ public final class StudioAPI {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
@@ -591,7 +700,7 @@ public final class StudioAPI {
         getSystemNameBytes() {
       java.lang.Object ref = systemName_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         systemName_ = b;
@@ -661,15 +770,114 @@ public final class StudioAPI {
     private com.google.protobuf.ByteString challenge_;
     /**
      * <code>optional bytes challenge = 5;</code>
+     *
+     * <pre>
+     * if challenge exists then server expects authentication (AuthRequest message)
+     * </pre>
      */
     public boolean hasChallenge() {
       return ((bitField0_ & 0x00000008) == 0x00000008);
     }
     /**
      * <code>optional bytes challenge = 5;</code>
+     *
+     * <pre>
+     * if challenge exists then server expects authentication (AuthRequest message)
+     * </pre>
      */
     public com.google.protobuf.ByteString getChallenge() {
       return challenge_;
+    }
+
+    // optional string application_name = 6;
+    public static final int APPLICATION_NAME_FIELD_NUMBER = 6;
+    private java.lang.Object applicationName_;
+    /**
+     * <code>optional string application_name = 6;</code>
+     */
+    public boolean hasApplicationName() {
+      return ((bitField0_ & 0x00000010) == 0x00000010);
+    }
+    /**
+     * <code>optional string application_name = 6;</code>
+     */
+    public java.lang.String getApplicationName() {
+      java.lang.Object ref = applicationName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          applicationName_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string application_name = 6;</code>
+     */
+    public com.google.protobuf.ByteString
+        getApplicationNameBytes() {
+      java.lang.Object ref = applicationName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        applicationName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // optional uint32 cdp_version_major = 7;
+    public static final int CDP_VERSION_MAJOR_FIELD_NUMBER = 7;
+    private int cdpVersionMajor_;
+    /**
+     * <code>optional uint32 cdp_version_major = 7;</code>
+     */
+    public boolean hasCdpVersionMajor() {
+      return ((bitField0_ & 0x00000020) == 0x00000020);
+    }
+    /**
+     * <code>optional uint32 cdp_version_major = 7;</code>
+     */
+    public int getCdpVersionMajor() {
+      return cdpVersionMajor_;
+    }
+
+    // optional uint32 cdp_version_minor = 8;
+    public static final int CDP_VERSION_MINOR_FIELD_NUMBER = 8;
+    private int cdpVersionMinor_;
+    /**
+     * <code>optional uint32 cdp_version_minor = 8;</code>
+     */
+    public boolean hasCdpVersionMinor() {
+      return ((bitField0_ & 0x00000040) == 0x00000040);
+    }
+    /**
+     * <code>optional uint32 cdp_version_minor = 8;</code>
+     */
+    public int getCdpVersionMinor() {
+      return cdpVersionMinor_;
+    }
+
+    // optional uint32 cdp_version_patch = 9;
+    public static final int CDP_VERSION_PATCH_FIELD_NUMBER = 9;
+    private int cdpVersionPatch_;
+    /**
+     * <code>optional uint32 cdp_version_patch = 9;</code>
+     */
+    public boolean hasCdpVersionPatch() {
+      return ((bitField0_ & 0x00000080) == 0x00000080);
+    }
+    /**
+     * <code>optional uint32 cdp_version_patch = 9;</code>
+     */
+    public int getCdpVersionPatch() {
+      return cdpVersionPatch_;
     }
 
     private void initFields() {
@@ -678,6 +886,10 @@ public final class StudioAPI {
       incrementalVersion_ = 0;
       publicKey_ = java.util.Collections.emptyList();
       challenge_ = com.google.protobuf.ByteString.EMPTY;
+      applicationName_ = "";
+      cdpVersionMajor_ = 0;
+      cdpVersionMinor_ = 0;
+      cdpVersionPatch_ = 0;
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -718,6 +930,18 @@ public final class StudioAPI {
       if (((bitField0_ & 0x00000008) == 0x00000008)) {
         output.writeBytes(5, challenge_);
       }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        output.writeBytes(6, getApplicationNameBytes());
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        output.writeUInt32(7, cdpVersionMajor_);
+      }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        output.writeUInt32(8, cdpVersionMinor_);
+      }
+      if (((bitField0_ & 0x00000080) == 0x00000080)) {
+        output.writeUInt32(9, cdpVersionPatch_);
+      }
     }
 
     private int memoizedSerializedSize = -1;
@@ -751,6 +975,22 @@ public final class StudioAPI {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(5, challenge_);
       }
+      if (((bitField0_ & 0x00000010) == 0x00000010)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(6, getApplicationNameBytes());
+      }
+      if (((bitField0_ & 0x00000020) == 0x00000020)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(7, cdpVersionMajor_);
+      }
+      if (((bitField0_ & 0x00000040) == 0x00000040)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(8, cdpVersionMinor_);
+      }
+      if (((bitField0_ & 0x00000080) == 0x00000080)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(9, cdpVersionPatch_);
+      }
       memoizedSerializedSize = size;
       return size;
     }
@@ -762,53 +1002,53 @@ public final class StudioAPI {
       return super.writeReplace();
     }
 
-    public static StudioAPI.Hello parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Hello parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StudioAPI.Hello parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Hello parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StudioAPI.Hello parseFrom(byte[] data)
+    public static com.cdptech.cdpclient.proto.StudioAPI.Hello parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StudioAPI.Hello parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Hello parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StudioAPI.Hello parseFrom(java.io.InputStream input)
+    public static com.cdptech.cdpclient.proto.StudioAPI.Hello parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static StudioAPI.Hello parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Hello parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static StudioAPI.Hello parseDelimitedFrom(java.io.InputStream input)
+    public static com.cdptech.cdpclient.proto.StudioAPI.Hello parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static StudioAPI.Hello parseDelimitedFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Hello parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static StudioAPI.Hello parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Hello parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static StudioAPI.Hello parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Hello parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -817,7 +1057,7 @@ public final class StudioAPI {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(StudioAPI.Hello prototype) {
+    public static Builder newBuilder(com.cdptech.cdpclient.proto.StudioAPI.Hello prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -826,14 +1066,14 @@ public final class StudioAPI {
      * Protobuf type {@code StudioAPI.Proto.Hello}
      *
      * <pre>
-     ** Initial server connection response.
+     ** Initial server connection response. 
      * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.Builder<
-          StudioAPI.Hello, Builder>
-        implements StudioAPI.HelloOrBuilder {
-      // Construct using StudioAPI.Hello.newBuilder()
+          com.cdptech.cdpclient.proto.StudioAPI.Hello, Builder>
+        implements com.cdptech.cdpclient.proto.StudioAPI.HelloOrBuilder {
+      // Construct using com.cdptech.cdpclient.proto.StudioAPI.Hello.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -856,6 +1096,14 @@ public final class StudioAPI {
         bitField0_ = (bitField0_ & ~0x00000008);
         challenge_ = com.google.protobuf.ByteString.EMPTY;
         bitField0_ = (bitField0_ & ~0x00000010);
+        applicationName_ = "";
+        bitField0_ = (bitField0_ & ~0x00000020);
+        cdpVersionMajor_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000040);
+        cdpVersionMinor_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000080);
+        cdpVersionPatch_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000100);
         return this;
       }
 
@@ -863,20 +1111,20 @@ public final class StudioAPI {
         return create().mergeFrom(buildPartial());
       }
 
-      public StudioAPI.Hello getDefaultInstanceForType() {
-        return StudioAPI.Hello.getDefaultInstance();
+      public com.cdptech.cdpclient.proto.StudioAPI.Hello getDefaultInstanceForType() {
+        return com.cdptech.cdpclient.proto.StudioAPI.Hello.getDefaultInstance();
       }
 
-      public StudioAPI.Hello build() {
-        StudioAPI.Hello result = buildPartial();
+      public com.cdptech.cdpclient.proto.StudioAPI.Hello build() {
+        com.cdptech.cdpclient.proto.StudioAPI.Hello result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public StudioAPI.Hello buildPartial() {
-        StudioAPI.Hello result = new StudioAPI.Hello(this);
+      public com.cdptech.cdpclient.proto.StudioAPI.Hello buildPartial() {
+        com.cdptech.cdpclient.proto.StudioAPI.Hello result = new com.cdptech.cdpclient.proto.StudioAPI.Hello(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -900,16 +1148,32 @@ public final class StudioAPI {
           to_bitField0_ |= 0x00000008;
         }
         result.challenge_ = challenge_;
+        if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+          to_bitField0_ |= 0x00000010;
+        }
+        result.applicationName_ = applicationName_;
+        if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
+          to_bitField0_ |= 0x00000020;
+        }
+        result.cdpVersionMajor_ = cdpVersionMajor_;
+        if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
+          to_bitField0_ |= 0x00000040;
+        }
+        result.cdpVersionMinor_ = cdpVersionMinor_;
+        if (((from_bitField0_ & 0x00000100) == 0x00000100)) {
+          to_bitField0_ |= 0x00000080;
+        }
+        result.cdpVersionPatch_ = cdpVersionPatch_;
         result.bitField0_ = to_bitField0_;
         return result;
       }
 
-      public Builder mergeFrom(StudioAPI.Hello other) {
-        if (other == StudioAPI.Hello.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.cdptech.cdpclient.proto.StudioAPI.Hello other) {
+        if (other == com.cdptech.cdpclient.proto.StudioAPI.Hello.getDefaultInstance()) return this;
         if (other.hasSystemName()) {
           bitField0_ |= 0x00000001;
           systemName_ = other.systemName_;
-
+          
         }
         if (other.hasCompatVersion()) {
           setCompatVersion(other.getCompatVersion());
@@ -925,25 +1189,39 @@ public final class StudioAPI {
             ensurePublicKeyIsMutable();
             publicKey_.addAll(other.publicKey_);
           }
-
+          
         }
         if (other.hasChallenge()) {
           setChallenge(other.getChallenge());
+        }
+        if (other.hasApplicationName()) {
+          bitField0_ |= 0x00000020;
+          applicationName_ = other.applicationName_;
+          
+        }
+        if (other.hasCdpVersionMajor()) {
+          setCdpVersionMajor(other.getCdpVersionMajor());
+        }
+        if (other.hasCdpVersionMinor()) {
+          setCdpVersionMinor(other.getCdpVersionMinor());
+        }
+        if (other.hasCdpVersionPatch()) {
+          setCdpVersionPatch(other.getCdpVersionPatch());
         }
         return this;
       }
 
       public final boolean isInitialized() {
         if (!hasSystemName()) {
-
+          
           return false;
         }
         if (!hasCompatVersion()) {
-
+          
           return false;
         }
         if (!hasIncrementalVersion()) {
-
+          
           return false;
         }
         return true;
@@ -953,11 +1231,11 @@ public final class StudioAPI {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        StudioAPI.Hello parsedMessage = null;
+        com.cdptech.cdpclient.proto.StudioAPI.Hello parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (StudioAPI.Hello) e.getUnfinishedMessage();
+          parsedMessage = (com.cdptech.cdpclient.proto.StudioAPI.Hello) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -997,7 +1275,7 @@ public final class StudioAPI {
           getSystemNameBytes() {
         java.lang.Object ref = systemName_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           systemName_ = b;
@@ -1016,7 +1294,7 @@ public final class StudioAPI {
   }
   bitField0_ |= 0x00000001;
         systemName_ = value;
-
+        
         return this;
       }
       /**
@@ -1025,7 +1303,7 @@ public final class StudioAPI {
       public Builder clearSystemName() {
         bitField0_ = (bitField0_ & ~0x00000001);
         systemName_ = getDefaultInstance().getSystemName();
-
+        
         return this;
       }
       /**
@@ -1038,7 +1316,7 @@ public final class StudioAPI {
   }
   bitField0_ |= 0x00000001;
         systemName_ = value;
-
+        
         return this;
       }
 
@@ -1062,7 +1340,7 @@ public final class StudioAPI {
       public Builder setCompatVersion(int value) {
         bitField0_ |= 0x00000002;
         compatVersion_ = value;
-
+        
         return this;
       }
       /**
@@ -1071,7 +1349,7 @@ public final class StudioAPI {
       public Builder clearCompatVersion() {
         bitField0_ = (bitField0_ & ~0x00000002);
         compatVersion_ = 1;
-
+        
         return this;
       }
 
@@ -1095,7 +1373,7 @@ public final class StudioAPI {
       public Builder setIncrementalVersion(int value) {
         bitField0_ |= 0x00000004;
         incrementalVersion_ = value;
-
+        
         return this;
       }
       /**
@@ -1104,7 +1382,7 @@ public final class StudioAPI {
       public Builder clearIncrementalVersion() {
         bitField0_ = (bitField0_ & ~0x00000004);
         incrementalVersion_ = 0;
-
+        
         return this;
       }
 
@@ -1145,7 +1423,7 @@ public final class StudioAPI {
   }
   ensurePublicKeyIsMutable();
         publicKey_.set(index, value);
-
+        
         return this;
       }
       /**
@@ -1157,7 +1435,7 @@ public final class StudioAPI {
   }
   ensurePublicKeyIsMutable();
         publicKey_.add(value);
-
+        
         return this;
       }
       /**
@@ -1167,7 +1445,7 @@ public final class StudioAPI {
           java.lang.Iterable<? extends com.google.protobuf.ByteString> values) {
         ensurePublicKeyIsMutable();
         super.addAll(values, publicKey_);
-
+        
         return this;
       }
       /**
@@ -1176,7 +1454,7 @@ public final class StudioAPI {
       public Builder clearPublicKey() {
         publicKey_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000008);
-
+        
         return this;
       }
 
@@ -1184,18 +1462,30 @@ public final class StudioAPI {
       private com.google.protobuf.ByteString challenge_ = com.google.protobuf.ByteString.EMPTY;
       /**
        * <code>optional bytes challenge = 5;</code>
+       *
+       * <pre>
+       * if challenge exists then server expects authentication (AuthRequest message)
+       * </pre>
        */
       public boolean hasChallenge() {
         return ((bitField0_ & 0x00000010) == 0x00000010);
       }
       /**
        * <code>optional bytes challenge = 5;</code>
+       *
+       * <pre>
+       * if challenge exists then server expects authentication (AuthRequest message)
+       * </pre>
        */
       public com.google.protobuf.ByteString getChallenge() {
         return challenge_;
       }
       /**
        * <code>optional bytes challenge = 5;</code>
+       *
+       * <pre>
+       * if challenge exists then server expects authentication (AuthRequest message)
+       * </pre>
        */
       public Builder setChallenge(com.google.protobuf.ByteString value) {
         if (value == null) {
@@ -1203,16 +1493,193 @@ public final class StudioAPI {
   }
   bitField0_ |= 0x00000010;
         challenge_ = value;
-
+        
         return this;
       }
       /**
        * <code>optional bytes challenge = 5;</code>
+       *
+       * <pre>
+       * if challenge exists then server expects authentication (AuthRequest message)
+       * </pre>
        */
       public Builder clearChallenge() {
         bitField0_ = (bitField0_ & ~0x00000010);
         challenge_ = getDefaultInstance().getChallenge();
+        
+        return this;
+      }
 
+      // optional string application_name = 6;
+      private java.lang.Object applicationName_ = "";
+      /**
+       * <code>optional string application_name = 6;</code>
+       */
+      public boolean hasApplicationName() {
+        return ((bitField0_ & 0x00000020) == 0x00000020);
+      }
+      /**
+       * <code>optional string application_name = 6;</code>
+       */
+      public java.lang.String getApplicationName() {
+        java.lang.Object ref = applicationName_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          applicationName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string application_name = 6;</code>
+       */
+      public com.google.protobuf.ByteString
+          getApplicationNameBytes() {
+        java.lang.Object ref = applicationName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          applicationName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string application_name = 6;</code>
+       */
+      public Builder setApplicationName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000020;
+        applicationName_ = value;
+        
+        return this;
+      }
+      /**
+       * <code>optional string application_name = 6;</code>
+       */
+      public Builder clearApplicationName() {
+        bitField0_ = (bitField0_ & ~0x00000020);
+        applicationName_ = getDefaultInstance().getApplicationName();
+        
+        return this;
+      }
+      /**
+       * <code>optional string application_name = 6;</code>
+       */
+      public Builder setApplicationNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000020;
+        applicationName_ = value;
+        
+        return this;
+      }
+
+      // optional uint32 cdp_version_major = 7;
+      private int cdpVersionMajor_ ;
+      /**
+       * <code>optional uint32 cdp_version_major = 7;</code>
+       */
+      public boolean hasCdpVersionMajor() {
+        return ((bitField0_ & 0x00000040) == 0x00000040);
+      }
+      /**
+       * <code>optional uint32 cdp_version_major = 7;</code>
+       */
+      public int getCdpVersionMajor() {
+        return cdpVersionMajor_;
+      }
+      /**
+       * <code>optional uint32 cdp_version_major = 7;</code>
+       */
+      public Builder setCdpVersionMajor(int value) {
+        bitField0_ |= 0x00000040;
+        cdpVersionMajor_ = value;
+        
+        return this;
+      }
+      /**
+       * <code>optional uint32 cdp_version_major = 7;</code>
+       */
+      public Builder clearCdpVersionMajor() {
+        bitField0_ = (bitField0_ & ~0x00000040);
+        cdpVersionMajor_ = 0;
+        
+        return this;
+      }
+
+      // optional uint32 cdp_version_minor = 8;
+      private int cdpVersionMinor_ ;
+      /**
+       * <code>optional uint32 cdp_version_minor = 8;</code>
+       */
+      public boolean hasCdpVersionMinor() {
+        return ((bitField0_ & 0x00000080) == 0x00000080);
+      }
+      /**
+       * <code>optional uint32 cdp_version_minor = 8;</code>
+       */
+      public int getCdpVersionMinor() {
+        return cdpVersionMinor_;
+      }
+      /**
+       * <code>optional uint32 cdp_version_minor = 8;</code>
+       */
+      public Builder setCdpVersionMinor(int value) {
+        bitField0_ |= 0x00000080;
+        cdpVersionMinor_ = value;
+        
+        return this;
+      }
+      /**
+       * <code>optional uint32 cdp_version_minor = 8;</code>
+       */
+      public Builder clearCdpVersionMinor() {
+        bitField0_ = (bitField0_ & ~0x00000080);
+        cdpVersionMinor_ = 0;
+        
+        return this;
+      }
+
+      // optional uint32 cdp_version_patch = 9;
+      private int cdpVersionPatch_ ;
+      /**
+       * <code>optional uint32 cdp_version_patch = 9;</code>
+       */
+      public boolean hasCdpVersionPatch() {
+        return ((bitField0_ & 0x00000100) == 0x00000100);
+      }
+      /**
+       * <code>optional uint32 cdp_version_patch = 9;</code>
+       */
+      public int getCdpVersionPatch() {
+        return cdpVersionPatch_;
+      }
+      /**
+       * <code>optional uint32 cdp_version_patch = 9;</code>
+       */
+      public Builder setCdpVersionPatch(int value) {
+        bitField0_ |= 0x00000100;
+        cdpVersionPatch_ = value;
+        
+        return this;
+      }
+      /**
+       * <code>optional uint32 cdp_version_patch = 9;</code>
+       */
+      public Builder clearCdpVersionPatch() {
+        bitField0_ = (bitField0_ & ~0x00000100);
+        cdpVersionPatch_ = 0;
+        
         return this;
       }
 
@@ -1227,56 +1694,66 @@ public final class StudioAPI {
     // @@protoc_insertion_point(class_scope:StudioAPI.Proto.Hello)
   }
 
-  public interface ChallengeSolutionOrBuilder
+  public interface AuthRequestOrBuilder
       extends com.google.protobuf.MessageLiteOrBuilder {
 
-    // required bytes public_key = 1;
+    // optional string user_id = 1;
     /**
-     * <code>required bytes public_key = 1;</code>
+     * <code>optional string user_id = 1;</code>
      */
-    boolean hasPublicKey();
+    boolean hasUserId();
     /**
-     * <code>required bytes public_key = 1;</code>
+     * <code>optional string user_id = 1;</code>
      */
-    com.google.protobuf.ByteString getPublicKey();
+    java.lang.String getUserId();
+    /**
+     * <code>optional string user_id = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getUserIdBytes();
 
-    // required bytes signed_data = 2;
+    // repeated .StudioAPI.Proto.AuthRequest.ChallengeResponse challenge_response = 2;
     /**
-     * <code>required bytes signed_data = 2;</code>
+     * <code>repeated .StudioAPI.Proto.AuthRequest.ChallengeResponse challenge_response = 2;</code>
      */
-    boolean hasSignedData();
+    java.util.List<com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse> 
+        getChallengeResponseList();
     /**
-     * <code>required bytes signed_data = 2;</code>
+     * <code>repeated .StudioAPI.Proto.AuthRequest.ChallengeResponse challenge_response = 2;</code>
      */
-    com.google.protobuf.ByteString getSignedData();
+    com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse getChallengeResponse(int index);
+    /**
+     * <code>repeated .StudioAPI.Proto.AuthRequest.ChallengeResponse challenge_response = 2;</code>
+     */
+    int getChallengeResponseCount();
   }
   /**
-   * Protobuf type {@code StudioAPI.Proto.ChallengeSolution}
+   * Protobuf type {@code StudioAPI.Proto.AuthRequest}
    *
    * <pre>
-   ** Server expects this response if it sent a challenge.
+   ** Server expects this response if it sent a auth_required true. 
    * </pre>
    */
-  public static final class ChallengeSolution extends
+  public static final class AuthRequest extends
       com.google.protobuf.GeneratedMessageLite
-      implements ChallengeSolutionOrBuilder {
-    // Use ChallengeSolution.newBuilder() to construct.
-    private ChallengeSolution(com.google.protobuf.GeneratedMessageLite.Builder builder) {
+      implements AuthRequestOrBuilder {
+    // Use AuthRequest.newBuilder() to construct.
+    private AuthRequest(com.google.protobuf.GeneratedMessageLite.Builder builder) {
       super(builder);
 
     }
-    private ChallengeSolution(boolean noInit) {}
+    private AuthRequest(boolean noInit) {}
 
-    private static final ChallengeSolution defaultInstance;
-    public static ChallengeSolution getDefaultInstance() {
+    private static final AuthRequest defaultInstance;
+    public static AuthRequest getDefaultInstance() {
       return defaultInstance;
     }
 
-    public ChallengeSolution getDefaultInstanceForType() {
+    public AuthRequest getDefaultInstanceForType() {
       return defaultInstance;
     }
 
-    private ChallengeSolution(
+    private AuthRequest(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -1299,12 +1776,15 @@ public final class StudioAPI {
             }
             case 10: {
               bitField0_ |= 0x00000001;
-              publicKey_ = input.readBytes();
+              userId_ = input.readBytes();
               break;
             }
             case 18: {
-              bitField0_ |= 0x00000002;
-              signedData_ = input.readBytes();
+              if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+                challengeResponse_ = new java.util.ArrayList<com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse>();
+                mutable_bitField0_ |= 0x00000002;
+              }
+              challengeResponse_.add(input.readMessage(com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse.PARSER, extensionRegistry));
               break;
             }
           }
@@ -1315,74 +1795,640 @@ public final class StudioAPI {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
+          challengeResponse_ = java.util.Collections.unmodifiableList(challengeResponse_);
+        }
         makeExtensionsImmutable();
       }
     }
-    public static com.google.protobuf.Parser<ChallengeSolution> PARSER =
-        new com.google.protobuf.AbstractParser<ChallengeSolution>() {
-      public ChallengeSolution parsePartialFrom(
+    public static com.google.protobuf.Parser<AuthRequest> PARSER =
+        new com.google.protobuf.AbstractParser<AuthRequest>() {
+      public AuthRequest parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new ChallengeSolution(input, extensionRegistry);
+        return new AuthRequest(input, extensionRegistry);
       }
     };
 
     @java.lang.Override
-    public com.google.protobuf.Parser<ChallengeSolution> getParserForType() {
+    public com.google.protobuf.Parser<AuthRequest> getParserForType() {
       return PARSER;
     }
 
-    private int bitField0_;
-    // required bytes public_key = 1;
-    public static final int PUBLIC_KEY_FIELD_NUMBER = 1;
-    private com.google.protobuf.ByteString publicKey_;
+    public interface ChallengeResponseOrBuilder
+        extends com.google.protobuf.MessageLiteOrBuilder {
+
+      // optional string type = 1;
+      /**
+       * <code>optional string type = 1;</code>
+       */
+      boolean hasType();
+      /**
+       * <code>optional string type = 1;</code>
+       */
+      java.lang.String getType();
+      /**
+       * <code>optional string type = 1;</code>
+       */
+      com.google.protobuf.ByteString
+          getTypeBytes();
+
+      // optional bytes response = 2;
+      /**
+       * <code>optional bytes response = 2;</code>
+       *
+       * <pre>
+       * data corresponding to the type, eg. hash(challenge + password)
+       * </pre>
+       */
+      boolean hasResponse();
+      /**
+       * <code>optional bytes response = 2;</code>
+       *
+       * <pre>
+       * data corresponding to the type, eg. hash(challenge + password)
+       * </pre>
+       */
+      com.google.protobuf.ByteString getResponse();
+    }
     /**
-     * <code>required bytes public_key = 1;</code>
+     * Protobuf type {@code StudioAPI.Proto.AuthRequest.ChallengeResponse}
      */
-    public boolean hasPublicKey() {
+    public static final class ChallengeResponse extends
+        com.google.protobuf.GeneratedMessageLite
+        implements ChallengeResponseOrBuilder {
+      // Use ChallengeResponse.newBuilder() to construct.
+      private ChallengeResponse(com.google.protobuf.GeneratedMessageLite.Builder builder) {
+        super(builder);
+
+      }
+      private ChallengeResponse(boolean noInit) {}
+
+      private static final ChallengeResponse defaultInstance;
+      public static ChallengeResponse getDefaultInstance() {
+        return defaultInstance;
+      }
+
+      public ChallengeResponse getDefaultInstanceForType() {
+        return defaultInstance;
+      }
+
+      private ChallengeResponse(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        initFields();
+        int mutable_bitField0_ = 0;
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              default: {
+                if (!parseUnknownField(input,
+                                       extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
+              case 10: {
+                bitField0_ |= 0x00000001;
+                type_ = input.readBytes();
+                break;
+              }
+              case 18: {
+                bitField0_ |= 0x00000002;
+                response_ = input.readBytes();
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e.getMessage()).setUnfinishedMessage(this);
+        } finally {
+          makeExtensionsImmutable();
+        }
+      }
+      public static com.google.protobuf.Parser<ChallengeResponse> PARSER =
+          new com.google.protobuf.AbstractParser<ChallengeResponse>() {
+        public ChallengeResponse parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new ChallengeResponse(input, extensionRegistry);
+        }
+      };
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<ChallengeResponse> getParserForType() {
+        return PARSER;
+      }
+
+      private int bitField0_;
+      // optional string type = 1;
+      public static final int TYPE_FIELD_NUMBER = 1;
+      private java.lang.Object type_;
+      /**
+       * <code>optional string type = 1;</code>
+       */
+      public boolean hasType() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional string type = 1;</code>
+       */
+      public java.lang.String getType() {
+        java.lang.Object ref = type_;
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            type_ = s;
+          }
+          return s;
+        }
+      }
+      /**
+       * <code>optional string type = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getTypeBytes() {
+        java.lang.Object ref = type_;
+        if (ref instanceof java.lang.String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          type_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+
+      // optional bytes response = 2;
+      public static final int RESPONSE_FIELD_NUMBER = 2;
+      private com.google.protobuf.ByteString response_;
+      /**
+       * <code>optional bytes response = 2;</code>
+       *
+       * <pre>
+       * data corresponding to the type, eg. hash(challenge + password)
+       * </pre>
+       */
+      public boolean hasResponse() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional bytes response = 2;</code>
+       *
+       * <pre>
+       * data corresponding to the type, eg. hash(challenge + password)
+       * </pre>
+       */
+      public com.google.protobuf.ByteString getResponse() {
+        return response_;
+      }
+
+      private void initFields() {
+        type_ = "";
+        response_ = com.google.protobuf.ByteString.EMPTY;
+      }
+      private byte memoizedIsInitialized = -1;
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized != -1) return isInitialized == 1;
+
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        getSerializedSize();
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          output.writeBytes(1, getTypeBytes());
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          output.writeBytes(2, response_);
+        }
+      }
+
+      private int memoizedSerializedSize = -1;
+      public int getSerializedSize() {
+        int size = memoizedSerializedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBytesSize(1, getTypeBytes());
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBytesSize(2, response_);
+        }
+        memoizedSerializedSize = size;
+        return size;
+      }
+
+      private static final long serialVersionUID = 0L;
+      @java.lang.Override
+      protected java.lang.Object writeReplace()
+          throws java.io.ObjectStreamException {
+        return super.writeReplace();
+      }
+
+      public static com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+      public static com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input);
+      }
+      public static com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input, extensionRegistry);
+      }
+      public static com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+
+      public static Builder newBuilder() { return Builder.create(); }
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder(com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse prototype) {
+        return newBuilder().mergeFrom(prototype);
+      }
+      public Builder toBuilder() { return newBuilder(this); }
+
+      /**
+       * Protobuf type {@code StudioAPI.Proto.AuthRequest.ChallengeResponse}
+       */
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessageLite.Builder<
+            com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse, Builder>
+          implements com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponseOrBuilder {
+        // Construct using com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private void maybeForceBuilderInitialization() {
+        }
+        private static Builder create() {
+          return new Builder();
+        }
+
+        public Builder clear() {
+          super.clear();
+          type_ = "";
+          bitField0_ = (bitField0_ & ~0x00000001);
+          response_ = com.google.protobuf.ByteString.EMPTY;
+          bitField0_ = (bitField0_ & ~0x00000002);
+          return this;
+        }
+
+        public Builder clone() {
+          return create().mergeFrom(buildPartial());
+        }
+
+        public com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse getDefaultInstanceForType() {
+          return com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse.getDefaultInstance();
+        }
+
+        public com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse build() {
+          com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        public com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse buildPartial() {
+          com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse result = new com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse(this);
+          int from_bitField0_ = bitField0_;
+          int to_bitField0_ = 0;
+          if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+            to_bitField0_ |= 0x00000001;
+          }
+          result.type_ = type_;
+          if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+            to_bitField0_ |= 0x00000002;
+          }
+          result.response_ = response_;
+          result.bitField0_ = to_bitField0_;
+          return result;
+        }
+
+        public Builder mergeFrom(com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse other) {
+          if (other == com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse.getDefaultInstance()) return this;
+          if (other.hasType()) {
+            bitField0_ |= 0x00000001;
+            type_ = other.type_;
+            
+          }
+          if (other.hasResponse()) {
+            setResponse(other.getResponse());
+          }
+          return this;
+        }
+
+        public final boolean isInitialized() {
+          return true;
+        }
+
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse) e.getUnfinishedMessage();
+            throw e;
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+        private int bitField0_;
+
+        // optional string type = 1;
+        private java.lang.Object type_ = "";
+        /**
+         * <code>optional string type = 1;</code>
+         */
+        public boolean hasType() {
+          return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+        /**
+         * <code>optional string type = 1;</code>
+         */
+        public java.lang.String getType() {
+          java.lang.Object ref = type_;
+          if (!(ref instanceof java.lang.String)) {
+            java.lang.String s = ((com.google.protobuf.ByteString) ref)
+                .toStringUtf8();
+            type_ = s;
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
+        }
+        /**
+         * <code>optional string type = 1;</code>
+         */
+        public com.google.protobuf.ByteString
+            getTypeBytes() {
+          java.lang.Object ref = type_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            type_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+        /**
+         * <code>optional string type = 1;</code>
+         */
+        public Builder setType(
+            java.lang.String value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+          type_ = value;
+          
+          return this;
+        }
+        /**
+         * <code>optional string type = 1;</code>
+         */
+        public Builder clearType() {
+          bitField0_ = (bitField0_ & ~0x00000001);
+          type_ = getDefaultInstance().getType();
+          
+          return this;
+        }
+        /**
+         * <code>optional string type = 1;</code>
+         */
+        public Builder setTypeBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+          type_ = value;
+          
+          return this;
+        }
+
+        // optional bytes response = 2;
+        private com.google.protobuf.ByteString response_ = com.google.protobuf.ByteString.EMPTY;
+        /**
+         * <code>optional bytes response = 2;</code>
+         *
+         * <pre>
+         * data corresponding to the type, eg. hash(challenge + password)
+         * </pre>
+         */
+        public boolean hasResponse() {
+          return ((bitField0_ & 0x00000002) == 0x00000002);
+        }
+        /**
+         * <code>optional bytes response = 2;</code>
+         *
+         * <pre>
+         * data corresponding to the type, eg. hash(challenge + password)
+         * </pre>
+         */
+        public com.google.protobuf.ByteString getResponse() {
+          return response_;
+        }
+        /**
+         * <code>optional bytes response = 2;</code>
+         *
+         * <pre>
+         * data corresponding to the type, eg. hash(challenge + password)
+         * </pre>
+         */
+        public Builder setResponse(com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+          response_ = value;
+          
+          return this;
+        }
+        /**
+         * <code>optional bytes response = 2;</code>
+         *
+         * <pre>
+         * data corresponding to the type, eg. hash(challenge + password)
+         * </pre>
+         */
+        public Builder clearResponse() {
+          bitField0_ = (bitField0_ & ~0x00000002);
+          response_ = getDefaultInstance().getResponse();
+          
+          return this;
+        }
+
+        // @@protoc_insertion_point(builder_scope:StudioAPI.Proto.AuthRequest.ChallengeResponse)
+      }
+
+      static {
+        defaultInstance = new ChallengeResponse(true);
+        defaultInstance.initFields();
+      }
+
+      // @@protoc_insertion_point(class_scope:StudioAPI.Proto.AuthRequest.ChallengeResponse)
+    }
+
+    private int bitField0_;
+    // optional string user_id = 1;
+    public static final int USER_ID_FIELD_NUMBER = 1;
+    private java.lang.Object userId_;
+    /**
+     * <code>optional string user_id = 1;</code>
+     */
+    public boolean hasUserId() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required bytes public_key = 1;</code>
+     * <code>optional string user_id = 1;</code>
      */
-    public com.google.protobuf.ByteString getPublicKey() {
-      return publicKey_;
+    public java.lang.String getUserId() {
+      java.lang.Object ref = userId_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          userId_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string user_id = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getUserIdBytes() {
+      java.lang.Object ref = userId_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        userId_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
     }
 
-    // required bytes signed_data = 2;
-    public static final int SIGNED_DATA_FIELD_NUMBER = 2;
-    private com.google.protobuf.ByteString signedData_;
+    // repeated .StudioAPI.Proto.AuthRequest.ChallengeResponse challenge_response = 2;
+    public static final int CHALLENGE_RESPONSE_FIELD_NUMBER = 2;
+    private java.util.List<com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse> challengeResponse_;
     /**
-     * <code>required bytes signed_data = 2;</code>
+     * <code>repeated .StudioAPI.Proto.AuthRequest.ChallengeResponse challenge_response = 2;</code>
      */
-    public boolean hasSignedData() {
-      return ((bitField0_ & 0x00000002) == 0x00000002);
+    public java.util.List<com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse> getChallengeResponseList() {
+      return challengeResponse_;
     }
     /**
-     * <code>required bytes signed_data = 2;</code>
+     * <code>repeated .StudioAPI.Proto.AuthRequest.ChallengeResponse challenge_response = 2;</code>
      */
-    public com.google.protobuf.ByteString getSignedData() {
-      return signedData_;
+    public java.util.List<? extends com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponseOrBuilder> 
+        getChallengeResponseOrBuilderList() {
+      return challengeResponse_;
+    }
+    /**
+     * <code>repeated .StudioAPI.Proto.AuthRequest.ChallengeResponse challenge_response = 2;</code>
+     */
+    public int getChallengeResponseCount() {
+      return challengeResponse_.size();
+    }
+    /**
+     * <code>repeated .StudioAPI.Proto.AuthRequest.ChallengeResponse challenge_response = 2;</code>
+     */
+    public com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse getChallengeResponse(int index) {
+      return challengeResponse_.get(index);
+    }
+    /**
+     * <code>repeated .StudioAPI.Proto.AuthRequest.ChallengeResponse challenge_response = 2;</code>
+     */
+    public com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponseOrBuilder getChallengeResponseOrBuilder(
+        int index) {
+      return challengeResponse_.get(index);
     }
 
     private void initFields() {
-      publicKey_ = com.google.protobuf.ByteString.EMPTY;
-      signedData_ = com.google.protobuf.ByteString.EMPTY;
+      userId_ = "";
+      challengeResponse_ = java.util.Collections.emptyList();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
-      if (!hasPublicKey()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
-      if (!hasSignedData()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -1391,10 +2437,10 @@ public final class StudioAPI {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBytes(1, publicKey_);
+        output.writeBytes(1, getUserIdBytes());
       }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
-        output.writeBytes(2, signedData_);
+      for (int i = 0; i < challengeResponse_.size(); i++) {
+        output.writeMessage(2, challengeResponse_.get(i));
       }
     }
 
@@ -1406,11 +2452,11 @@ public final class StudioAPI {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(1, publicKey_);
+          .computeBytesSize(1, getUserIdBytes());
       }
-      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+      for (int i = 0; i < challengeResponse_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBytesSize(2, signedData_);
+          .computeMessageSize(2, challengeResponse_.get(i));
       }
       memoizedSerializedSize = size;
       return size;
@@ -1423,53 +2469,53 @@ public final class StudioAPI {
       return super.writeReplace();
     }
 
-    public static StudioAPI.ChallengeSolution parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.AuthRequest parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StudioAPI.ChallengeSolution parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.AuthRequest parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StudioAPI.ChallengeSolution parseFrom(byte[] data)
+    public static com.cdptech.cdpclient.proto.StudioAPI.AuthRequest parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StudioAPI.ChallengeSolution parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.AuthRequest parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StudioAPI.ChallengeSolution parseFrom(java.io.InputStream input)
+    public static com.cdptech.cdpclient.proto.StudioAPI.AuthRequest parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static StudioAPI.ChallengeSolution parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.AuthRequest parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static StudioAPI.ChallengeSolution parseDelimitedFrom(java.io.InputStream input)
+    public static com.cdptech.cdpclient.proto.StudioAPI.AuthRequest parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static StudioAPI.ChallengeSolution parseDelimitedFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.AuthRequest parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static StudioAPI.ChallengeSolution parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.AuthRequest parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static StudioAPI.ChallengeSolution parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.AuthRequest parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -1478,23 +2524,23 @@ public final class StudioAPI {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(StudioAPI.ChallengeSolution prototype) {
+    public static Builder newBuilder(com.cdptech.cdpclient.proto.StudioAPI.AuthRequest prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
 
     /**
-     * Protobuf type {@code StudioAPI.Proto.ChallengeSolution}
+     * Protobuf type {@code StudioAPI.Proto.AuthRequest}
      *
      * <pre>
-     ** Server expects this response if it sent a challenge.
+     ** Server expects this response if it sent a auth_required true. 
      * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.Builder<
-          StudioAPI.ChallengeSolution, Builder>
-        implements StudioAPI.ChallengeSolutionOrBuilder {
-      // Construct using StudioAPI.ChallengeSolution.newBuilder()
+          com.cdptech.cdpclient.proto.StudioAPI.AuthRequest, Builder>
+        implements com.cdptech.cdpclient.proto.StudioAPI.AuthRequestOrBuilder {
+      // Construct using com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -1507,9 +2553,9 @@ public final class StudioAPI {
 
       public Builder clear() {
         super.clear();
-        publicKey_ = com.google.protobuf.ByteString.EMPTY;
+        userId_ = "";
         bitField0_ = (bitField0_ & ~0x00000001);
-        signedData_ = com.google.protobuf.ByteString.EMPTY;
+        challengeResponse_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
       }
@@ -1518,54 +2564,56 @@ public final class StudioAPI {
         return create().mergeFrom(buildPartial());
       }
 
-      public StudioAPI.ChallengeSolution getDefaultInstanceForType() {
-        return StudioAPI.ChallengeSolution.getDefaultInstance();
+      public com.cdptech.cdpclient.proto.StudioAPI.AuthRequest getDefaultInstanceForType() {
+        return com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.getDefaultInstance();
       }
 
-      public StudioAPI.ChallengeSolution build() {
-        StudioAPI.ChallengeSolution result = buildPartial();
+      public com.cdptech.cdpclient.proto.StudioAPI.AuthRequest build() {
+        com.cdptech.cdpclient.proto.StudioAPI.AuthRequest result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public StudioAPI.ChallengeSolution buildPartial() {
-        StudioAPI.ChallengeSolution result = new StudioAPI.ChallengeSolution(this);
+      public com.cdptech.cdpclient.proto.StudioAPI.AuthRequest buildPartial() {
+        com.cdptech.cdpclient.proto.StudioAPI.AuthRequest result = new com.cdptech.cdpclient.proto.StudioAPI.AuthRequest(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        result.publicKey_ = publicKey_;
-        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
-          to_bitField0_ |= 0x00000002;
+        result.userId_ = userId_;
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          challengeResponse_ = java.util.Collections.unmodifiableList(challengeResponse_);
+          bitField0_ = (bitField0_ & ~0x00000002);
         }
-        result.signedData_ = signedData_;
+        result.challengeResponse_ = challengeResponse_;
         result.bitField0_ = to_bitField0_;
         return result;
       }
 
-      public Builder mergeFrom(StudioAPI.ChallengeSolution other) {
-        if (other == StudioAPI.ChallengeSolution.getDefaultInstance()) return this;
-        if (other.hasPublicKey()) {
-          setPublicKey(other.getPublicKey());
+      public Builder mergeFrom(com.cdptech.cdpclient.proto.StudioAPI.AuthRequest other) {
+        if (other == com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.getDefaultInstance()) return this;
+        if (other.hasUserId()) {
+          bitField0_ |= 0x00000001;
+          userId_ = other.userId_;
+          
         }
-        if (other.hasSignedData()) {
-          setSignedData(other.getSignedData());
+        if (!other.challengeResponse_.isEmpty()) {
+          if (challengeResponse_.isEmpty()) {
+            challengeResponse_ = other.challengeResponse_;
+            bitField0_ = (bitField0_ & ~0x00000002);
+          } else {
+            ensureChallengeResponseIsMutable();
+            challengeResponse_.addAll(other.challengeResponse_);
+          }
+          
         }
         return this;
       }
 
       public final boolean isInitialized() {
-        if (!hasPublicKey()) {
-
-          return false;
-        }
-        if (!hasSignedData()) {
-
-          return false;
-        }
         return true;
       }
 
@@ -1573,11 +2621,11 @@ public final class StudioAPI {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        StudioAPI.ChallengeSolution parsedMessage = null;
+        com.cdptech.cdpclient.proto.StudioAPI.AuthRequest parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (StudioAPI.ChallengeSolution) e.getUnfinishedMessage();
+          parsedMessage = (com.cdptech.cdpclient.proto.StudioAPI.AuthRequest) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -1588,129 +2636,1626 @@ public final class StudioAPI {
       }
       private int bitField0_;
 
-      // required bytes public_key = 1;
-      private com.google.protobuf.ByteString publicKey_ = com.google.protobuf.ByteString.EMPTY;
+      // optional string user_id = 1;
+      private java.lang.Object userId_ = "";
       /**
-       * <code>required bytes public_key = 1;</code>
+       * <code>optional string user_id = 1;</code>
        */
-      public boolean hasPublicKey() {
+      public boolean hasUserId() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required bytes public_key = 1;</code>
+       * <code>optional string user_id = 1;</code>
        */
-      public com.google.protobuf.ByteString getPublicKey() {
-        return publicKey_;
+      public java.lang.String getUserId() {
+        java.lang.Object ref = userId_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          userId_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
       }
       /**
-       * <code>required bytes public_key = 1;</code>
+       * <code>optional string user_id = 1;</code>
        */
-      public Builder setPublicKey(com.google.protobuf.ByteString value) {
+      public com.google.protobuf.ByteString
+          getUserIdBytes() {
+        java.lang.Object ref = userId_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          userId_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string user_id = 1;</code>
+       */
+      public Builder setUserId(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000001;
-        publicKey_ = value;
-
+        userId_ = value;
+        
         return this;
       }
       /**
-       * <code>required bytes public_key = 1;</code>
+       * <code>optional string user_id = 1;</code>
        */
-      public Builder clearPublicKey() {
+      public Builder clearUserId() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        publicKey_ = getDefaultInstance().getPublicKey();
+        userId_ = getDefaultInstance().getUserId();
+        
+        return this;
+      }
+      /**
+       * <code>optional string user_id = 1;</code>
+       */
+      public Builder setUserIdBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        userId_ = value;
+        
+        return this;
+      }
+
+      // repeated .StudioAPI.Proto.AuthRequest.ChallengeResponse challenge_response = 2;
+      private java.util.List<com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse> challengeResponse_ =
+        java.util.Collections.emptyList();
+      private void ensureChallengeResponseIsMutable() {
+        if (!((bitField0_ & 0x00000002) == 0x00000002)) {
+          challengeResponse_ = new java.util.ArrayList<com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse>(challengeResponse_);
+          bitField0_ |= 0x00000002;
+         }
+      }
+
+      /**
+       * <code>repeated .StudioAPI.Proto.AuthRequest.ChallengeResponse challenge_response = 2;</code>
+       */
+      public java.util.List<com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse> getChallengeResponseList() {
+        return java.util.Collections.unmodifiableList(challengeResponse_);
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AuthRequest.ChallengeResponse challenge_response = 2;</code>
+       */
+      public int getChallengeResponseCount() {
+        return challengeResponse_.size();
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AuthRequest.ChallengeResponse challenge_response = 2;</code>
+       */
+      public com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse getChallengeResponse(int index) {
+        return challengeResponse_.get(index);
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AuthRequest.ChallengeResponse challenge_response = 2;</code>
+       */
+      public Builder setChallengeResponse(
+          int index, com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureChallengeResponseIsMutable();
+        challengeResponse_.set(index, value);
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AuthRequest.ChallengeResponse challenge_response = 2;</code>
+       */
+      public Builder setChallengeResponse(
+          int index, com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse.Builder builderForValue) {
+        ensureChallengeResponseIsMutable();
+        challengeResponse_.set(index, builderForValue.build());
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AuthRequest.ChallengeResponse challenge_response = 2;</code>
+       */
+      public Builder addChallengeResponse(com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureChallengeResponseIsMutable();
+        challengeResponse_.add(value);
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AuthRequest.ChallengeResponse challenge_response = 2;</code>
+       */
+      public Builder addChallengeResponse(
+          int index, com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureChallengeResponseIsMutable();
+        challengeResponse_.add(index, value);
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AuthRequest.ChallengeResponse challenge_response = 2;</code>
+       */
+      public Builder addChallengeResponse(
+          com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse.Builder builderForValue) {
+        ensureChallengeResponseIsMutable();
+        challengeResponse_.add(builderForValue.build());
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AuthRequest.ChallengeResponse challenge_response = 2;</code>
+       */
+      public Builder addChallengeResponse(
+          int index, com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse.Builder builderForValue) {
+        ensureChallengeResponseIsMutable();
+        challengeResponse_.add(index, builderForValue.build());
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AuthRequest.ChallengeResponse challenge_response = 2;</code>
+       */
+      public Builder addAllChallengeResponse(
+          java.lang.Iterable<? extends com.cdptech.cdpclient.proto.StudioAPI.AuthRequest.ChallengeResponse> values) {
+        ensureChallengeResponseIsMutable();
+        super.addAll(values, challengeResponse_);
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AuthRequest.ChallengeResponse challenge_response = 2;</code>
+       */
+      public Builder clearChallengeResponse() {
+        challengeResponse_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000002);
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AuthRequest.ChallengeResponse challenge_response = 2;</code>
+       */
+      public Builder removeChallengeResponse(int index) {
+        ensureChallengeResponseIsMutable();
+        challengeResponse_.remove(index);
 
         return this;
       }
 
-      // required bytes signed_data = 2;
-      private com.google.protobuf.ByteString signedData_ = com.google.protobuf.ByteString.EMPTY;
+      // @@protoc_insertion_point(builder_scope:StudioAPI.Proto.AuthRequest)
+    }
+
+    static {
+      defaultInstance = new AuthRequest(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:StudioAPI.Proto.AuthRequest)
+  }
+
+  public interface AdditionalChallengeResponseRequiredOrBuilder
+      extends com.google.protobuf.MessageLiteOrBuilder {
+
+    // optional string type = 1;
+    /**
+     * <code>optional string type = 1;</code>
+     */
+    boolean hasType();
+    /**
+     * <code>optional string type = 1;</code>
+     */
+    java.lang.String getType();
+    /**
+     * <code>optional string type = 1;</code>
+     */
+    com.google.protobuf.ByteString
+        getTypeBytes();
+
+    // optional string prompt = 2;
+    /**
+     * <code>optional string prompt = 2;</code>
+     */
+    boolean hasPrompt();
+    /**
+     * <code>optional string prompt = 2;</code>
+     */
+    java.lang.String getPrompt();
+    /**
+     * <code>optional string prompt = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getPromptBytes();
+
+    // repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired.Parameter parameter = 3;
+    /**
+     * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired.Parameter parameter = 3;</code>
+     */
+    java.util.List<com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter> 
+        getParameterList();
+    /**
+     * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired.Parameter parameter = 3;</code>
+     */
+    com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter getParameter(int index);
+    /**
+     * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired.Parameter parameter = 3;</code>
+     */
+    int getParameterCount();
+  }
+  /**
+   * Protobuf type {@code StudioAPI.Proto.AdditionalChallengeResponseRequired}
+   */
+  public static final class AdditionalChallengeResponseRequired extends
+      com.google.protobuf.GeneratedMessageLite
+      implements AdditionalChallengeResponseRequiredOrBuilder {
+    // Use AdditionalChallengeResponseRequired.newBuilder() to construct.
+    private AdditionalChallengeResponseRequired(com.google.protobuf.GeneratedMessageLite.Builder builder) {
+      super(builder);
+
+    }
+    private AdditionalChallengeResponseRequired(boolean noInit) {}
+
+    private static final AdditionalChallengeResponseRequired defaultInstance;
+    public static AdditionalChallengeResponseRequired getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public AdditionalChallengeResponseRequired getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private AdditionalChallengeResponseRequired(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 10: {
+              bitField0_ |= 0x00000001;
+              type_ = input.readBytes();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              prompt_ = input.readBytes();
+              break;
+            }
+            case 26: {
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+                parameter_ = new java.util.ArrayList<com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter>();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              parameter_.add(input.readMessage(com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter.PARSER, extensionRegistry));
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+          parameter_ = java.util.Collections.unmodifiableList(parameter_);
+        }
+        makeExtensionsImmutable();
+      }
+    }
+    public static com.google.protobuf.Parser<AdditionalChallengeResponseRequired> PARSER =
+        new com.google.protobuf.AbstractParser<AdditionalChallengeResponseRequired>() {
+      public AdditionalChallengeResponseRequired parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new AdditionalChallengeResponseRequired(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<AdditionalChallengeResponseRequired> getParserForType() {
+      return PARSER;
+    }
+
+    public interface ParameterOrBuilder
+        extends com.google.protobuf.MessageLiteOrBuilder {
+
+      // optional string name = 1;
       /**
-       * <code>required bytes signed_data = 2;</code>
+       * <code>optional string name = 1;</code>
        */
-      public boolean hasSignedData() {
+      boolean hasName();
+      /**
+       * <code>optional string name = 1;</code>
+       */
+      java.lang.String getName();
+      /**
+       * <code>optional string name = 1;</code>
+       */
+      com.google.protobuf.ByteString
+          getNameBytes();
+
+      // optional string value = 2;
+      /**
+       * <code>optional string value = 2;</code>
+       */
+      boolean hasValue();
+      /**
+       * <code>optional string value = 2;</code>
+       */
+      java.lang.String getValue();
+      /**
+       * <code>optional string value = 2;</code>
+       */
+      com.google.protobuf.ByteString
+          getValueBytes();
+    }
+    /**
+     * Protobuf type {@code StudioAPI.Proto.AdditionalChallengeResponseRequired.Parameter}
+     */
+    public static final class Parameter extends
+        com.google.protobuf.GeneratedMessageLite
+        implements ParameterOrBuilder {
+      // Use Parameter.newBuilder() to construct.
+      private Parameter(com.google.protobuf.GeneratedMessageLite.Builder builder) {
+        super(builder);
+
+      }
+      private Parameter(boolean noInit) {}
+
+      private static final Parameter defaultInstance;
+      public static Parameter getDefaultInstance() {
+        return defaultInstance;
+      }
+
+      public Parameter getDefaultInstanceForType() {
+        return defaultInstance;
+      }
+
+      private Parameter(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        initFields();
+        int mutable_bitField0_ = 0;
+        try {
+          boolean done = false;
+          while (!done) {
+            int tag = input.readTag();
+            switch (tag) {
+              case 0:
+                done = true;
+                break;
+              default: {
+                if (!parseUnknownField(input,
+                                       extensionRegistry, tag)) {
+                  done = true;
+                }
+                break;
+              }
+              case 10: {
+                bitField0_ |= 0x00000001;
+                name_ = input.readBytes();
+                break;
+              }
+              case 18: {
+                bitField0_ |= 0x00000002;
+                value_ = input.readBytes();
+                break;
+              }
+            }
+          }
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          throw e.setUnfinishedMessage(this);
+        } catch (java.io.IOException e) {
+          throw new com.google.protobuf.InvalidProtocolBufferException(
+              e.getMessage()).setUnfinishedMessage(this);
+        } finally {
+          makeExtensionsImmutable();
+        }
+      }
+      public static com.google.protobuf.Parser<Parameter> PARSER =
+          new com.google.protobuf.AbstractParser<Parameter>() {
+        public Parameter parsePartialFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws com.google.protobuf.InvalidProtocolBufferException {
+          return new Parameter(input, extensionRegistry);
+        }
+      };
+
+      @java.lang.Override
+      public com.google.protobuf.Parser<Parameter> getParserForType() {
+        return PARSER;
+      }
+
+      private int bitField0_;
+      // optional string name = 1;
+      public static final int NAME_FIELD_NUMBER = 1;
+      private java.lang.Object name_;
+      /**
+       * <code>optional string name = 1;</code>
+       */
+      public boolean hasName() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional string name = 1;</code>
+       */
+      public java.lang.String getName() {
+        java.lang.Object ref = name_;
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            name_ = s;
+          }
+          return s;
+        }
+      }
+      /**
+       * <code>optional string name = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getNameBytes() {
+        java.lang.Object ref = name_;
+        if (ref instanceof java.lang.String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          name_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+
+      // optional string value = 2;
+      public static final int VALUE_FIELD_NUMBER = 2;
+      private java.lang.Object value_;
+      /**
+       * <code>optional string value = 2;</code>
+       */
+      public boolean hasValue() {
         return ((bitField0_ & 0x00000002) == 0x00000002);
       }
       /**
-       * <code>required bytes signed_data = 2;</code>
+       * <code>optional string value = 2;</code>
        */
-      public com.google.protobuf.ByteString getSignedData() {
-        return signedData_;
+      public java.lang.String getValue() {
+        java.lang.Object ref = value_;
+        if (ref instanceof java.lang.String) {
+          return (java.lang.String) ref;
+        } else {
+          com.google.protobuf.ByteString bs = 
+              (com.google.protobuf.ByteString) ref;
+          java.lang.String s = bs.toStringUtf8();
+          if (bs.isValidUtf8()) {
+            value_ = s;
+          }
+          return s;
+        }
       }
       /**
-       * <code>required bytes signed_data = 2;</code>
+       * <code>optional string value = 2;</code>
        */
-      public Builder setSignedData(com.google.protobuf.ByteString value) {
+      public com.google.protobuf.ByteString
+          getValueBytes() {
+        java.lang.Object ref = value_;
+        if (ref instanceof java.lang.String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          value_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+
+      private void initFields() {
+        name_ = "";
+        value_ = "";
+      }
+      private byte memoizedIsInitialized = -1;
+      public final boolean isInitialized() {
+        byte isInitialized = memoizedIsInitialized;
+        if (isInitialized != -1) return isInitialized == 1;
+
+        memoizedIsInitialized = 1;
+        return true;
+      }
+
+      public void writeTo(com.google.protobuf.CodedOutputStream output)
+                          throws java.io.IOException {
+        getSerializedSize();
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          output.writeBytes(1, getNameBytes());
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          output.writeBytes(2, getValueBytes());
+        }
+      }
+
+      private int memoizedSerializedSize = -1;
+      public int getSerializedSize() {
+        int size = memoizedSerializedSize;
+        if (size != -1) return size;
+
+        size = 0;
+        if (((bitField0_ & 0x00000001) == 0x00000001)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBytesSize(1, getNameBytes());
+        }
+        if (((bitField0_ & 0x00000002) == 0x00000002)) {
+          size += com.google.protobuf.CodedOutputStream
+            .computeBytesSize(2, getValueBytes());
+        }
+        memoizedSerializedSize = size;
+        return size;
+      }
+
+      private static final long serialVersionUID = 0L;
+      @java.lang.Override
+      protected java.lang.Object writeReplace()
+          throws java.io.ObjectStreamException {
+        return super.writeReplace();
+      }
+
+      public static com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter parseFrom(
+          com.google.protobuf.ByteString data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter parseFrom(
+          com.google.protobuf.ByteString data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter parseFrom(byte[] data)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data);
+      }
+      public static com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter parseFrom(
+          byte[] data,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return PARSER.parseFrom(data, extensionRegistry);
+      }
+      public static com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter parseFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter parseFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+      public static com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter parseDelimitedFrom(java.io.InputStream input)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input);
+      }
+      public static com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter parseDelimitedFrom(
+          java.io.InputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseDelimitedFrom(input, extensionRegistry);
+      }
+      public static com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter parseFrom(
+          com.google.protobuf.CodedInputStream input)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input);
+      }
+      public static com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter parseFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        return PARSER.parseFrom(input, extensionRegistry);
+      }
+
+      public static Builder newBuilder() { return Builder.create(); }
+      public Builder newBuilderForType() { return newBuilder(); }
+      public static Builder newBuilder(com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter prototype) {
+        return newBuilder().mergeFrom(prototype);
+      }
+      public Builder toBuilder() { return newBuilder(this); }
+
+      /**
+       * Protobuf type {@code StudioAPI.Proto.AdditionalChallengeResponseRequired.Parameter}
+       */
+      public static final class Builder extends
+          com.google.protobuf.GeneratedMessageLite.Builder<
+            com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter, Builder>
+          implements com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.ParameterOrBuilder {
+        // Construct using com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter.newBuilder()
+        private Builder() {
+          maybeForceBuilderInitialization();
+        }
+
+        private void maybeForceBuilderInitialization() {
+        }
+        private static Builder create() {
+          return new Builder();
+        }
+
+        public Builder clear() {
+          super.clear();
+          name_ = "";
+          bitField0_ = (bitField0_ & ~0x00000001);
+          value_ = "";
+          bitField0_ = (bitField0_ & ~0x00000002);
+          return this;
+        }
+
+        public Builder clone() {
+          return create().mergeFrom(buildPartial());
+        }
+
+        public com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter getDefaultInstanceForType() {
+          return com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter.getDefaultInstance();
+        }
+
+        public com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter build() {
+          com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter result = buildPartial();
+          if (!result.isInitialized()) {
+            throw newUninitializedMessageException(result);
+          }
+          return result;
+        }
+
+        public com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter buildPartial() {
+          com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter result = new com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter(this);
+          int from_bitField0_ = bitField0_;
+          int to_bitField0_ = 0;
+          if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+            to_bitField0_ |= 0x00000001;
+          }
+          result.name_ = name_;
+          if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+            to_bitField0_ |= 0x00000002;
+          }
+          result.value_ = value_;
+          result.bitField0_ = to_bitField0_;
+          return result;
+        }
+
+        public Builder mergeFrom(com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter other) {
+          if (other == com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter.getDefaultInstance()) return this;
+          if (other.hasName()) {
+            bitField0_ |= 0x00000001;
+            name_ = other.name_;
+            
+          }
+          if (other.hasValue()) {
+            bitField0_ |= 0x00000002;
+            value_ = other.value_;
+            
+          }
+          return this;
+        }
+
+        public final boolean isInitialized() {
+          return true;
+        }
+
+        public Builder mergeFrom(
+            com.google.protobuf.CodedInputStream input,
+            com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+            throws java.io.IOException {
+          com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter parsedMessage = null;
+          try {
+            parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+          } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+            parsedMessage = (com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter) e.getUnfinishedMessage();
+            throw e;
+          } finally {
+            if (parsedMessage != null) {
+              mergeFrom(parsedMessage);
+            }
+          }
+          return this;
+        }
+        private int bitField0_;
+
+        // optional string name = 1;
+        private java.lang.Object name_ = "";
+        /**
+         * <code>optional string name = 1;</code>
+         */
+        public boolean hasName() {
+          return ((bitField0_ & 0x00000001) == 0x00000001);
+        }
+        /**
+         * <code>optional string name = 1;</code>
+         */
+        public java.lang.String getName() {
+          java.lang.Object ref = name_;
+          if (!(ref instanceof java.lang.String)) {
+            java.lang.String s = ((com.google.protobuf.ByteString) ref)
+                .toStringUtf8();
+            name_ = s;
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
+        }
+        /**
+         * <code>optional string name = 1;</code>
+         */
+        public com.google.protobuf.ByteString
+            getNameBytes() {
+          java.lang.Object ref = name_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            name_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+        /**
+         * <code>optional string name = 1;</code>
+         */
+        public Builder setName(
+            java.lang.String value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+          name_ = value;
+          
+          return this;
+        }
+        /**
+         * <code>optional string name = 1;</code>
+         */
+        public Builder clearName() {
+          bitField0_ = (bitField0_ & ~0x00000001);
+          name_ = getDefaultInstance().getName();
+          
+          return this;
+        }
+        /**
+         * <code>optional string name = 1;</code>
+         */
+        public Builder setNameBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+          name_ = value;
+          
+          return this;
+        }
+
+        // optional string value = 2;
+        private java.lang.Object value_ = "";
+        /**
+         * <code>optional string value = 2;</code>
+         */
+        public boolean hasValue() {
+          return ((bitField0_ & 0x00000002) == 0x00000002);
+        }
+        /**
+         * <code>optional string value = 2;</code>
+         */
+        public java.lang.String getValue() {
+          java.lang.Object ref = value_;
+          if (!(ref instanceof java.lang.String)) {
+            java.lang.String s = ((com.google.protobuf.ByteString) ref)
+                .toStringUtf8();
+            value_ = s;
+            return s;
+          } else {
+            return (java.lang.String) ref;
+          }
+        }
+        /**
+         * <code>optional string value = 2;</code>
+         */
+        public com.google.protobuf.ByteString
+            getValueBytes() {
+          java.lang.Object ref = value_;
+          if (ref instanceof String) {
+            com.google.protobuf.ByteString b = 
+                com.google.protobuf.ByteString.copyFromUtf8(
+                    (java.lang.String) ref);
+            value_ = b;
+            return b;
+          } else {
+            return (com.google.protobuf.ByteString) ref;
+          }
+        }
+        /**
+         * <code>optional string value = 2;</code>
+         */
+        public Builder setValue(
+            java.lang.String value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+          value_ = value;
+          
+          return this;
+        }
+        /**
+         * <code>optional string value = 2;</code>
+         */
+        public Builder clearValue() {
+          bitField0_ = (bitField0_ & ~0x00000002);
+          value_ = getDefaultInstance().getValue();
+          
+          return this;
+        }
+        /**
+         * <code>optional string value = 2;</code>
+         */
+        public Builder setValueBytes(
+            com.google.protobuf.ByteString value) {
+          if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+          value_ = value;
+          
+          return this;
+        }
+
+        // @@protoc_insertion_point(builder_scope:StudioAPI.Proto.AdditionalChallengeResponseRequired.Parameter)
+      }
+
+      static {
+        defaultInstance = new Parameter(true);
+        defaultInstance.initFields();
+      }
+
+      // @@protoc_insertion_point(class_scope:StudioAPI.Proto.AdditionalChallengeResponseRequired.Parameter)
+    }
+
+    private int bitField0_;
+    // optional string type = 1;
+    public static final int TYPE_FIELD_NUMBER = 1;
+    private java.lang.Object type_;
+    /**
+     * <code>optional string type = 1;</code>
+     */
+    public boolean hasType() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>optional string type = 1;</code>
+     */
+    public java.lang.String getType() {
+      java.lang.Object ref = type_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          type_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string type = 1;</code>
+     */
+    public com.google.protobuf.ByteString
+        getTypeBytes() {
+      java.lang.Object ref = type_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        type_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // optional string prompt = 2;
+    public static final int PROMPT_FIELD_NUMBER = 2;
+    private java.lang.Object prompt_;
+    /**
+     * <code>optional string prompt = 2;</code>
+     */
+    public boolean hasPrompt() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional string prompt = 2;</code>
+     */
+    public java.lang.String getPrompt() {
+      java.lang.Object ref = prompt_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          prompt_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string prompt = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getPromptBytes() {
+      java.lang.Object ref = prompt_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        prompt_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired.Parameter parameter = 3;
+    public static final int PARAMETER_FIELD_NUMBER = 3;
+    private java.util.List<com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter> parameter_;
+    /**
+     * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired.Parameter parameter = 3;</code>
+     */
+    public java.util.List<com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter> getParameterList() {
+      return parameter_;
+    }
+    /**
+     * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired.Parameter parameter = 3;</code>
+     */
+    public java.util.List<? extends com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.ParameterOrBuilder> 
+        getParameterOrBuilderList() {
+      return parameter_;
+    }
+    /**
+     * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired.Parameter parameter = 3;</code>
+     */
+    public int getParameterCount() {
+      return parameter_.size();
+    }
+    /**
+     * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired.Parameter parameter = 3;</code>
+     */
+    public com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter getParameter(int index) {
+      return parameter_.get(index);
+    }
+    /**
+     * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired.Parameter parameter = 3;</code>
+     */
+    public com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.ParameterOrBuilder getParameterOrBuilder(
+        int index) {
+      return parameter_.get(index);
+    }
+
+    private void initFields() {
+      type_ = "";
+      prompt_ = "";
+      parameter_ = java.util.Collections.emptyList();
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeBytes(1, getTypeBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getPromptBytes());
+      }
+      for (int i = 0; i < parameter_.size(); i++) {
+        output.writeMessage(3, parameter_.get(i));
+      }
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(1, getTypeBytes());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getPromptBytes());
+      }
+      for (int i = 0; i < parameter_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, parameter_.get(i));
+      }
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    /**
+     * Protobuf type {@code StudioAPI.Proto.AdditionalChallengeResponseRequired}
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageLite.Builder<
+          com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired, Builder>
+        implements com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequiredOrBuilder {
+      // Construct using com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private void maybeForceBuilderInitialization() {
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        type_ = "";
+        bitField0_ = (bitField0_ & ~0x00000001);
+        prompt_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        parameter_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired getDefaultInstanceForType() {
+        return com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.getDefaultInstance();
+      }
+
+      public com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired build() {
+        com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired buildPartial() {
+        com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired result = new com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.type_ = type_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.prompt_ = prompt_;
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          parameter_ = java.util.Collections.unmodifiableList(parameter_);
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.parameter_ = parameter_;
+        result.bitField0_ = to_bitField0_;
+        return result;
+      }
+
+      public Builder mergeFrom(com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired other) {
+        if (other == com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.getDefaultInstance()) return this;
+        if (other.hasType()) {
+          bitField0_ |= 0x00000001;
+          type_ = other.type_;
+          
+        }
+        if (other.hasPrompt()) {
+          bitField0_ |= 0x00000002;
+          prompt_ = other.prompt_;
+          
+        }
+        if (!other.parameter_.isEmpty()) {
+          if (parameter_.isEmpty()) {
+            parameter_ = other.parameter_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureParameterIsMutable();
+            parameter_.addAll(other.parameter_);
+          }
+          
+        }
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // optional string type = 1;
+      private java.lang.Object type_ = "";
+      /**
+       * <code>optional string type = 1;</code>
+       */
+      public boolean hasType() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>optional string type = 1;</code>
+       */
+      public java.lang.String getType() {
+        java.lang.Object ref = type_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          type_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string type = 1;</code>
+       */
+      public com.google.protobuf.ByteString
+          getTypeBytes() {
+        java.lang.Object ref = type_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          type_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string type = 1;</code>
+       */
+      public Builder setType(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        type_ = value;
+        
+        return this;
+      }
+      /**
+       * <code>optional string type = 1;</code>
+       */
+      public Builder clearType() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        type_ = getDefaultInstance().getType();
+        
+        return this;
+      }
+      /**
+       * <code>optional string type = 1;</code>
+       */
+      public Builder setTypeBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000001;
+        type_ = value;
+        
+        return this;
+      }
+
+      // optional string prompt = 2;
+      private java.lang.Object prompt_ = "";
+      /**
+       * <code>optional string prompt = 2;</code>
+       */
+      public boolean hasPrompt() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional string prompt = 2;</code>
+       */
+      public java.lang.String getPrompt() {
+        java.lang.Object ref = prompt_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          prompt_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string prompt = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getPromptBytes() {
+        java.lang.Object ref = prompt_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          prompt_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string prompt = 2;</code>
+       */
+      public Builder setPrompt(
+          java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   bitField0_ |= 0x00000002;
-        signedData_ = value;
+        prompt_ = value;
+        
+        return this;
+      }
+      /**
+       * <code>optional string prompt = 2;</code>
+       */
+      public Builder clearPrompt() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        prompt_ = getDefaultInstance().getPrompt();
+        
+        return this;
+      }
+      /**
+       * <code>optional string prompt = 2;</code>
+       */
+      public Builder setPromptBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        prompt_ = value;
+        
+        return this;
+      }
+
+      // repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired.Parameter parameter = 3;
+      private java.util.List<com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter> parameter_ =
+        java.util.Collections.emptyList();
+      private void ensureParameterIsMutable() {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+          parameter_ = new java.util.ArrayList<com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter>(parameter_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+
+      /**
+       * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired.Parameter parameter = 3;</code>
+       */
+      public java.util.List<com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter> getParameterList() {
+        return java.util.Collections.unmodifiableList(parameter_);
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired.Parameter parameter = 3;</code>
+       */
+      public int getParameterCount() {
+        return parameter_.size();
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired.Parameter parameter = 3;</code>
+       */
+      public com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter getParameter(int index) {
+        return parameter_.get(index);
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired.Parameter parameter = 3;</code>
+       */
+      public Builder setParameter(
+          int index, com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureParameterIsMutable();
+        parameter_.set(index, value);
 
         return this;
       }
       /**
-       * <code>required bytes signed_data = 2;</code>
+       * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired.Parameter parameter = 3;</code>
        */
-      public Builder clearSignedData() {
-        bitField0_ = (bitField0_ & ~0x00000002);
-        signedData_ = getDefaultInstance().getSignedData();
+      public Builder setParameter(
+          int index, com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter.Builder builderForValue) {
+        ensureParameterIsMutable();
+        parameter_.set(index, builderForValue.build());
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired.Parameter parameter = 3;</code>
+       */
+      public Builder addParameter(com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureParameterIsMutable();
+        parameter_.add(value);
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired.Parameter parameter = 3;</code>
+       */
+      public Builder addParameter(
+          int index, com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureParameterIsMutable();
+        parameter_.add(index, value);
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired.Parameter parameter = 3;</code>
+       */
+      public Builder addParameter(
+          com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter.Builder builderForValue) {
+        ensureParameterIsMutable();
+        parameter_.add(builderForValue.build());
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired.Parameter parameter = 3;</code>
+       */
+      public Builder addParameter(
+          int index, com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter.Builder builderForValue) {
+        ensureParameterIsMutable();
+        parameter_.add(index, builderForValue.build());
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired.Parameter parameter = 3;</code>
+       */
+      public Builder addAllParameter(
+          java.lang.Iterable<? extends com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Parameter> values) {
+        ensureParameterIsMutable();
+        super.addAll(values, parameter_);
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired.Parameter parameter = 3;</code>
+       */
+      public Builder clearParameter() {
+        parameter_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000004);
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired.Parameter parameter = 3;</code>
+       */
+      public Builder removeParameter(int index) {
+        ensureParameterIsMutable();
+        parameter_.remove(index);
 
         return this;
       }
 
-      // @@protoc_insertion_point(builder_scope:StudioAPI.Proto.ChallengeSolution)
+      // @@protoc_insertion_point(builder_scope:StudioAPI.Proto.AdditionalChallengeResponseRequired)
     }
 
     static {
-      defaultInstance = new ChallengeSolution(true);
+      defaultInstance = new AdditionalChallengeResponseRequired(true);
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:StudioAPI.Proto.ChallengeSolution)
+    // @@protoc_insertion_point(class_scope:StudioAPI.Proto.AdditionalChallengeResponseRequired)
   }
 
-  public interface ChallengeResponseOrBuilder
+  public interface AuthResponseOrBuilder
       extends com.google.protobuf.MessageLiteOrBuilder {
 
-    // required bool success = 1;
+    // optional .StudioAPI.Proto.AuthResponse.AuthResultCode result_code = 1;
     /**
-     * <code>required bool success = 1;</code>
+     * <code>optional .StudioAPI.Proto.AuthResponse.AuthResultCode result_code = 1;</code>
      */
-    boolean hasSuccess();
+    boolean hasResultCode();
     /**
-     * <code>required bool success = 1;</code>
+     * <code>optional .StudioAPI.Proto.AuthResponse.AuthResultCode result_code = 1;</code>
      */
-    boolean getSuccess();
+    com.cdptech.cdpclient.proto.StudioAPI.AuthResponse.AuthResultCode getResultCode();
+
+    // optional string result_text = 2;
+    /**
+     * <code>optional string result_text = 2;</code>
+     */
+    boolean hasResultText();
+    /**
+     * <code>optional string result_text = 2;</code>
+     */
+    java.lang.String getResultText();
+    /**
+     * <code>optional string result_text = 2;</code>
+     */
+    com.google.protobuf.ByteString
+        getResultTextBytes();
+
+    // repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired additional_challenge_response_required = 3;
+    /**
+     * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired additional_challenge_response_required = 3;</code>
+     */
+    java.util.List<com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired> 
+        getAdditionalChallengeResponseRequiredList();
+    /**
+     * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired additional_challenge_response_required = 3;</code>
+     */
+    com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired getAdditionalChallengeResponseRequired(int index);
+    /**
+     * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired additional_challenge_response_required = 3;</code>
+     */
+    int getAdditionalChallengeResponseRequiredCount();
   }
   /**
-   * Protobuf type {@code StudioAPI.Proto.ChallengeResponse}
+   * Protobuf type {@code StudioAPI.Proto.AuthResponse}
    *
    * <pre>
-   ** Sent by server as a response to a ChallengeSolution.
+   ** Sent by server as a response to a AuthRequest. 
    * </pre>
    */
-  public static final class ChallengeResponse extends
+  public static final class AuthResponse extends
       com.google.protobuf.GeneratedMessageLite
-      implements ChallengeResponseOrBuilder {
-    // Use ChallengeResponse.newBuilder() to construct.
-    private ChallengeResponse(com.google.protobuf.GeneratedMessageLite.Builder builder) {
+      implements AuthResponseOrBuilder {
+    // Use AuthResponse.newBuilder() to construct.
+    private AuthResponse(com.google.protobuf.GeneratedMessageLite.Builder builder) {
       super(builder);
 
     }
-    private ChallengeResponse(boolean noInit) {}
+    private AuthResponse(boolean noInit) {}
 
-    private static final ChallengeResponse defaultInstance;
-    public static ChallengeResponse getDefaultInstance() {
+    private static final AuthResponse defaultInstance;
+    public static AuthResponse getDefaultInstance() {
       return defaultInstance;
     }
 
-    public ChallengeResponse getDefaultInstanceForType() {
+    public AuthResponse getDefaultInstanceForType() {
       return defaultInstance;
     }
 
-    private ChallengeResponse(
+    private AuthResponse(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
@@ -1732,8 +4277,25 @@ public final class StudioAPI {
               break;
             }
             case 8: {
-              bitField0_ |= 0x00000001;
-              success_ = input.readBool();
+              int rawValue = input.readEnum();
+              com.cdptech.cdpclient.proto.StudioAPI.AuthResponse.AuthResultCode value = com.cdptech.cdpclient.proto.StudioAPI.AuthResponse.AuthResultCode.valueOf(rawValue);
+              if (value != null) {
+                bitField0_ |= 0x00000001;
+                resultCode_ = value;
+              }
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              resultText_ = input.readBytes();
+              break;
+            }
+            case 26: {
+              if (!((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+                additionalChallengeResponseRequired_ = new java.util.ArrayList<com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired>();
+                mutable_bitField0_ |= 0x00000004;
+              }
+              additionalChallengeResponseRequired_.add(input.readMessage(com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.PARSER, extensionRegistry));
               break;
             }
           }
@@ -1744,53 +4306,241 @@ public final class StudioAPI {
         throw new com.google.protobuf.InvalidProtocolBufferException(
             e.getMessage()).setUnfinishedMessage(this);
       } finally {
+        if (((mutable_bitField0_ & 0x00000004) == 0x00000004)) {
+          additionalChallengeResponseRequired_ = java.util.Collections.unmodifiableList(additionalChallengeResponseRequired_);
+        }
         makeExtensionsImmutable();
       }
     }
-    public static com.google.protobuf.Parser<ChallengeResponse> PARSER =
-        new com.google.protobuf.AbstractParser<ChallengeResponse>() {
-      public ChallengeResponse parsePartialFrom(
+    public static com.google.protobuf.Parser<AuthResponse> PARSER =
+        new com.google.protobuf.AbstractParser<AuthResponse>() {
+      public AuthResponse parsePartialFrom(
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws com.google.protobuf.InvalidProtocolBufferException {
-        return new ChallengeResponse(input, extensionRegistry);
+        return new AuthResponse(input, extensionRegistry);
       }
     };
 
     @java.lang.Override
-    public com.google.protobuf.Parser<ChallengeResponse> getParserForType() {
+    public com.google.protobuf.Parser<AuthResponse> getParserForType() {
       return PARSER;
     }
 
-    private int bitField0_;
-    // required bool success = 1;
-    public static final int SUCCESS_FIELD_NUMBER = 1;
-    private boolean success_;
     /**
-     * <code>required bool success = 1;</code>
+     * Protobuf enum {@code StudioAPI.Proto.AuthResponse.AuthResultCode}
      */
-    public boolean hasSuccess() {
+    public enum AuthResultCode
+        implements com.google.protobuf.Internal.EnumLite {
+      /**
+       * <code>eUnknown = 0;</code>
+       */
+      eUnknown(0, 0),
+      /**
+       * <code>eGranted = 1;</code>
+       */
+      eGranted(1, 1),
+      /**
+       * <code>eGrantedPasswordWillExpireSoon = 2;</code>
+       *
+       * <pre>
+       * expiry timestamp is provided in result_text
+       * </pre>
+       */
+      eGrantedPasswordWillExpireSoon(2, 2),
+      /**
+       * <code>eNewPasswordRequired = 10;</code>
+       *
+       * <pre>
+       * AuthRequest with additional response with new username + password hash is required
+       * </pre>
+       */
+      eNewPasswordRequired(3, 10),
+      /**
+       * <code>eInvalidChallengeResponse = 11;</code>
+       */
+      eInvalidChallengeResponse(4, 11),
+      /**
+       * <code>eAdditionalResponseRequired = 12;</code>
+       */
+      eAdditionalResponseRequired(5, 12),
+      ;
+
+      /**
+       * <code>eUnknown = 0;</code>
+       */
+      public static final int eUnknown_VALUE = 0;
+      /**
+       * <code>eGranted = 1;</code>
+       */
+      public static final int eGranted_VALUE = 1;
+      /**
+       * <code>eGrantedPasswordWillExpireSoon = 2;</code>
+       *
+       * <pre>
+       * expiry timestamp is provided in result_text
+       * </pre>
+       */
+      public static final int eGrantedPasswordWillExpireSoon_VALUE = 2;
+      /**
+       * <code>eNewPasswordRequired = 10;</code>
+       *
+       * <pre>
+       * AuthRequest with additional response with new username + password hash is required
+       * </pre>
+       */
+      public static final int eNewPasswordRequired_VALUE = 10;
+      /**
+       * <code>eInvalidChallengeResponse = 11;</code>
+       */
+      public static final int eInvalidChallengeResponse_VALUE = 11;
+      /**
+       * <code>eAdditionalResponseRequired = 12;</code>
+       */
+      public static final int eAdditionalResponseRequired_VALUE = 12;
+
+
+      public final int getNumber() { return value; }
+
+      public static AuthResultCode valueOf(int value) {
+        switch (value) {
+          case 0: return eUnknown;
+          case 1: return eGranted;
+          case 2: return eGrantedPasswordWillExpireSoon;
+          case 10: return eNewPasswordRequired;
+          case 11: return eInvalidChallengeResponse;
+          case 12: return eAdditionalResponseRequired;
+          default: return null;
+        }
+      }
+
+      public static com.google.protobuf.Internal.EnumLiteMap<AuthResultCode>
+          internalGetValueMap() {
+        return internalValueMap;
+      }
+      private static com.google.protobuf.Internal.EnumLiteMap<AuthResultCode>
+          internalValueMap =
+            new com.google.protobuf.Internal.EnumLiteMap<AuthResultCode>() {
+              public AuthResultCode findValueByNumber(int number) {
+                return AuthResultCode.valueOf(number);
+              }
+            };
+
+      private final int value;
+
+      private AuthResultCode(int index, int value) {
+        this.value = value;
+      }
+
+      // @@protoc_insertion_point(enum_scope:StudioAPI.Proto.AuthResponse.AuthResultCode)
+    }
+
+    private int bitField0_;
+    // optional .StudioAPI.Proto.AuthResponse.AuthResultCode result_code = 1;
+    public static final int RESULT_CODE_FIELD_NUMBER = 1;
+    private com.cdptech.cdpclient.proto.StudioAPI.AuthResponse.AuthResultCode resultCode_;
+    /**
+     * <code>optional .StudioAPI.Proto.AuthResponse.AuthResultCode result_code = 1;</code>
+     */
+    public boolean hasResultCode() {
       return ((bitField0_ & 0x00000001) == 0x00000001);
     }
     /**
-     * <code>required bool success = 1;</code>
+     * <code>optional .StudioAPI.Proto.AuthResponse.AuthResultCode result_code = 1;</code>
      */
-    public boolean getSuccess() {
-      return success_;
+    public com.cdptech.cdpclient.proto.StudioAPI.AuthResponse.AuthResultCode getResultCode() {
+      return resultCode_;
+    }
+
+    // optional string result_text = 2;
+    public static final int RESULT_TEXT_FIELD_NUMBER = 2;
+    private java.lang.Object resultText_;
+    /**
+     * <code>optional string result_text = 2;</code>
+     */
+    public boolean hasResultText() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>optional string result_text = 2;</code>
+     */
+    public java.lang.String getResultText() {
+      java.lang.Object ref = resultText_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          resultText_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string result_text = 2;</code>
+     */
+    public com.google.protobuf.ByteString
+        getResultTextBytes() {
+      java.lang.Object ref = resultText_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        resultText_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired additional_challenge_response_required = 3;
+    public static final int ADDITIONAL_CHALLENGE_RESPONSE_REQUIRED_FIELD_NUMBER = 3;
+    private java.util.List<com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired> additionalChallengeResponseRequired_;
+    /**
+     * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired additional_challenge_response_required = 3;</code>
+     */
+    public java.util.List<com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired> getAdditionalChallengeResponseRequiredList() {
+      return additionalChallengeResponseRequired_;
+    }
+    /**
+     * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired additional_challenge_response_required = 3;</code>
+     */
+    public java.util.List<? extends com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequiredOrBuilder> 
+        getAdditionalChallengeResponseRequiredOrBuilderList() {
+      return additionalChallengeResponseRequired_;
+    }
+    /**
+     * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired additional_challenge_response_required = 3;</code>
+     */
+    public int getAdditionalChallengeResponseRequiredCount() {
+      return additionalChallengeResponseRequired_.size();
+    }
+    /**
+     * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired additional_challenge_response_required = 3;</code>
+     */
+    public com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired getAdditionalChallengeResponseRequired(int index) {
+      return additionalChallengeResponseRequired_.get(index);
+    }
+    /**
+     * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired additional_challenge_response_required = 3;</code>
+     */
+    public com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequiredOrBuilder getAdditionalChallengeResponseRequiredOrBuilder(
+        int index) {
+      return additionalChallengeResponseRequired_.get(index);
     }
 
     private void initFields() {
-      success_ = false;
+      resultCode_ = com.cdptech.cdpclient.proto.StudioAPI.AuthResponse.AuthResultCode.eUnknown;
+      resultText_ = "";
+      additionalChallengeResponseRequired_ = java.util.Collections.emptyList();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
       byte isInitialized = memoizedIsInitialized;
       if (isInitialized != -1) return isInitialized == 1;
 
-      if (!hasSuccess()) {
-        memoizedIsInitialized = 0;
-        return false;
-      }
       memoizedIsInitialized = 1;
       return true;
     }
@@ -1799,7 +4549,13 @@ public final class StudioAPI {
                         throws java.io.IOException {
       getSerializedSize();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
-        output.writeBool(1, success_);
+        output.writeEnum(1, resultCode_.getNumber());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getResultTextBytes());
+      }
+      for (int i = 0; i < additionalChallengeResponseRequired_.size(); i++) {
+        output.writeMessage(3, additionalChallengeResponseRequired_.get(i));
       }
     }
 
@@ -1811,7 +4567,15 @@ public final class StudioAPI {
       size = 0;
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         size += com.google.protobuf.CodedOutputStream
-          .computeBoolSize(1, success_);
+          .computeEnumSize(1, resultCode_.getNumber());
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getResultTextBytes());
+      }
+      for (int i = 0; i < additionalChallengeResponseRequired_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(3, additionalChallengeResponseRequired_.get(i));
       }
       memoizedSerializedSize = size;
       return size;
@@ -1824,53 +4588,53 @@ public final class StudioAPI {
       return super.writeReplace();
     }
 
-    public static StudioAPI.ChallengeResponse parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.AuthResponse parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StudioAPI.ChallengeResponse parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.AuthResponse parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StudioAPI.ChallengeResponse parseFrom(byte[] data)
+    public static com.cdptech.cdpclient.proto.StudioAPI.AuthResponse parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StudioAPI.ChallengeResponse parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.AuthResponse parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StudioAPI.ChallengeResponse parseFrom(java.io.InputStream input)
+    public static com.cdptech.cdpclient.proto.StudioAPI.AuthResponse parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static StudioAPI.ChallengeResponse parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.AuthResponse parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static StudioAPI.ChallengeResponse parseDelimitedFrom(java.io.InputStream input)
+    public static com.cdptech.cdpclient.proto.StudioAPI.AuthResponse parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static StudioAPI.ChallengeResponse parseDelimitedFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.AuthResponse parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static StudioAPI.ChallengeResponse parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.AuthResponse parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static StudioAPI.ChallengeResponse parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.AuthResponse parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -1879,23 +4643,23 @@ public final class StudioAPI {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(StudioAPI.ChallengeResponse prototype) {
+    public static Builder newBuilder(com.cdptech.cdpclient.proto.StudioAPI.AuthResponse prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
 
     /**
-     * Protobuf type {@code StudioAPI.Proto.ChallengeResponse}
+     * Protobuf type {@code StudioAPI.Proto.AuthResponse}
      *
      * <pre>
-     ** Sent by server as a response to a ChallengeSolution.
+     ** Sent by server as a response to a AuthRequest. 
      * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.Builder<
-          StudioAPI.ChallengeResponse, Builder>
-        implements StudioAPI.ChallengeResponseOrBuilder {
-      // Construct using StudioAPI.ChallengeResponse.newBuilder()
+          com.cdptech.cdpclient.proto.StudioAPI.AuthResponse, Builder>
+        implements com.cdptech.cdpclient.proto.StudioAPI.AuthResponseOrBuilder {
+      // Construct using com.cdptech.cdpclient.proto.StudioAPI.AuthResponse.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -1908,8 +4672,12 @@ public final class StudioAPI {
 
       public Builder clear() {
         super.clear();
-        success_ = false;
+        resultCode_ = com.cdptech.cdpclient.proto.StudioAPI.AuthResponse.AuthResultCode.eUnknown;
         bitField0_ = (bitField0_ & ~0x00000001);
+        resultText_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        additionalChallengeResponseRequired_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000004);
         return this;
       }
 
@@ -1917,43 +4685,63 @@ public final class StudioAPI {
         return create().mergeFrom(buildPartial());
       }
 
-      public StudioAPI.ChallengeResponse getDefaultInstanceForType() {
-        return StudioAPI.ChallengeResponse.getDefaultInstance();
+      public com.cdptech.cdpclient.proto.StudioAPI.AuthResponse getDefaultInstanceForType() {
+        return com.cdptech.cdpclient.proto.StudioAPI.AuthResponse.getDefaultInstance();
       }
 
-      public StudioAPI.ChallengeResponse build() {
-        StudioAPI.ChallengeResponse result = buildPartial();
+      public com.cdptech.cdpclient.proto.StudioAPI.AuthResponse build() {
+        com.cdptech.cdpclient.proto.StudioAPI.AuthResponse result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public StudioAPI.ChallengeResponse buildPartial() {
-        StudioAPI.ChallengeResponse result = new StudioAPI.ChallengeResponse(this);
+      public com.cdptech.cdpclient.proto.StudioAPI.AuthResponse buildPartial() {
+        com.cdptech.cdpclient.proto.StudioAPI.AuthResponse result = new com.cdptech.cdpclient.proto.StudioAPI.AuthResponse(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
           to_bitField0_ |= 0x00000001;
         }
-        result.success_ = success_;
+        result.resultCode_ = resultCode_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.resultText_ = resultText_;
+        if (((bitField0_ & 0x00000004) == 0x00000004)) {
+          additionalChallengeResponseRequired_ = java.util.Collections.unmodifiableList(additionalChallengeResponseRequired_);
+          bitField0_ = (bitField0_ & ~0x00000004);
+        }
+        result.additionalChallengeResponseRequired_ = additionalChallengeResponseRequired_;
         result.bitField0_ = to_bitField0_;
         return result;
       }
 
-      public Builder mergeFrom(StudioAPI.ChallengeResponse other) {
-        if (other == StudioAPI.ChallengeResponse.getDefaultInstance()) return this;
-        if (other.hasSuccess()) {
-          setSuccess(other.getSuccess());
+      public Builder mergeFrom(com.cdptech.cdpclient.proto.StudioAPI.AuthResponse other) {
+        if (other == com.cdptech.cdpclient.proto.StudioAPI.AuthResponse.getDefaultInstance()) return this;
+        if (other.hasResultCode()) {
+          setResultCode(other.getResultCode());
+        }
+        if (other.hasResultText()) {
+          bitField0_ |= 0x00000002;
+          resultText_ = other.resultText_;
+          
+        }
+        if (!other.additionalChallengeResponseRequired_.isEmpty()) {
+          if (additionalChallengeResponseRequired_.isEmpty()) {
+            additionalChallengeResponseRequired_ = other.additionalChallengeResponseRequired_;
+            bitField0_ = (bitField0_ & ~0x00000004);
+          } else {
+            ensureAdditionalChallengeResponseRequiredIsMutable();
+            additionalChallengeResponseRequired_.addAll(other.additionalChallengeResponseRequired_);
+          }
+          
         }
         return this;
       }
 
       public final boolean isInitialized() {
-        if (!hasSuccess()) {
-
-          return false;
-        }
         return true;
       }
 
@@ -1961,11 +4749,11 @@ public final class StudioAPI {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        StudioAPI.ChallengeResponse parsedMessage = null;
+        com.cdptech.cdpclient.proto.StudioAPI.AuthResponse parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (StudioAPI.ChallengeResponse) e.getUnfinishedMessage();
+          parsedMessage = (com.cdptech.cdpclient.proto.StudioAPI.AuthResponse) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -1976,51 +4764,253 @@ public final class StudioAPI {
       }
       private int bitField0_;
 
-      // required bool success = 1;
-      private boolean success_ ;
+      // optional .StudioAPI.Proto.AuthResponse.AuthResultCode result_code = 1;
+      private com.cdptech.cdpclient.proto.StudioAPI.AuthResponse.AuthResultCode resultCode_ = com.cdptech.cdpclient.proto.StudioAPI.AuthResponse.AuthResultCode.eUnknown;
       /**
-       * <code>required bool success = 1;</code>
+       * <code>optional .StudioAPI.Proto.AuthResponse.AuthResultCode result_code = 1;</code>
        */
-      public boolean hasSuccess() {
+      public boolean hasResultCode() {
         return ((bitField0_ & 0x00000001) == 0x00000001);
       }
       /**
-       * <code>required bool success = 1;</code>
+       * <code>optional .StudioAPI.Proto.AuthResponse.AuthResultCode result_code = 1;</code>
        */
-      public boolean getSuccess() {
-        return success_;
+      public com.cdptech.cdpclient.proto.StudioAPI.AuthResponse.AuthResultCode getResultCode() {
+        return resultCode_;
       }
       /**
-       * <code>required bool success = 1;</code>
+       * <code>optional .StudioAPI.Proto.AuthResponse.AuthResultCode result_code = 1;</code>
        */
-      public Builder setSuccess(boolean value) {
+      public Builder setResultCode(com.cdptech.cdpclient.proto.StudioAPI.AuthResponse.AuthResultCode value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
         bitField0_ |= 0x00000001;
-        success_ = value;
+        resultCode_ = value;
+        
+        return this;
+      }
+      /**
+       * <code>optional .StudioAPI.Proto.AuthResponse.AuthResultCode result_code = 1;</code>
+       */
+      public Builder clearResultCode() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        resultCode_ = com.cdptech.cdpclient.proto.StudioAPI.AuthResponse.AuthResultCode.eUnknown;
+        
+        return this;
+      }
+
+      // optional string result_text = 2;
+      private java.lang.Object resultText_ = "";
+      /**
+       * <code>optional string result_text = 2;</code>
+       */
+      public boolean hasResultText() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>optional string result_text = 2;</code>
+       */
+      public java.lang.String getResultText() {
+        java.lang.Object ref = resultText_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          resultText_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string result_text = 2;</code>
+       */
+      public com.google.protobuf.ByteString
+          getResultTextBytes() {
+        java.lang.Object ref = resultText_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          resultText_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string result_text = 2;</code>
+       */
+      public Builder setResultText(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        resultText_ = value;
+        
+        return this;
+      }
+      /**
+       * <code>optional string result_text = 2;</code>
+       */
+      public Builder clearResultText() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        resultText_ = getDefaultInstance().getResultText();
+        
+        return this;
+      }
+      /**
+       * <code>optional string result_text = 2;</code>
+       */
+      public Builder setResultTextBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        resultText_ = value;
+        
+        return this;
+      }
+
+      // repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired additional_challenge_response_required = 3;
+      private java.util.List<com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired> additionalChallengeResponseRequired_ =
+        java.util.Collections.emptyList();
+      private void ensureAdditionalChallengeResponseRequiredIsMutable() {
+        if (!((bitField0_ & 0x00000004) == 0x00000004)) {
+          additionalChallengeResponseRequired_ = new java.util.ArrayList<com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired>(additionalChallengeResponseRequired_);
+          bitField0_ |= 0x00000004;
+         }
+      }
+
+      /**
+       * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired additional_challenge_response_required = 3;</code>
+       */
+      public java.util.List<com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired> getAdditionalChallengeResponseRequiredList() {
+        return java.util.Collections.unmodifiableList(additionalChallengeResponseRequired_);
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired additional_challenge_response_required = 3;</code>
+       */
+      public int getAdditionalChallengeResponseRequiredCount() {
+        return additionalChallengeResponseRequired_.size();
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired additional_challenge_response_required = 3;</code>
+       */
+      public com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired getAdditionalChallengeResponseRequired(int index) {
+        return additionalChallengeResponseRequired_.get(index);
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired additional_challenge_response_required = 3;</code>
+       */
+      public Builder setAdditionalChallengeResponseRequired(
+          int index, com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureAdditionalChallengeResponseRequiredIsMutable();
+        additionalChallengeResponseRequired_.set(index, value);
 
         return this;
       }
       /**
-       * <code>required bool success = 1;</code>
+       * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired additional_challenge_response_required = 3;</code>
        */
-      public Builder clearSuccess() {
-        bitField0_ = (bitField0_ & ~0x00000001);
-        success_ = false;
+      public Builder setAdditionalChallengeResponseRequired(
+          int index, com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Builder builderForValue) {
+        ensureAdditionalChallengeResponseRequiredIsMutable();
+        additionalChallengeResponseRequired_.set(index, builderForValue.build());
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired additional_challenge_response_required = 3;</code>
+       */
+      public Builder addAdditionalChallengeResponseRequired(com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureAdditionalChallengeResponseRequiredIsMutable();
+        additionalChallengeResponseRequired_.add(value);
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired additional_challenge_response_required = 3;</code>
+       */
+      public Builder addAdditionalChallengeResponseRequired(
+          int index, com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureAdditionalChallengeResponseRequiredIsMutable();
+        additionalChallengeResponseRequired_.add(index, value);
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired additional_challenge_response_required = 3;</code>
+       */
+      public Builder addAdditionalChallengeResponseRequired(
+          com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Builder builderForValue) {
+        ensureAdditionalChallengeResponseRequiredIsMutable();
+        additionalChallengeResponseRequired_.add(builderForValue.build());
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired additional_challenge_response_required = 3;</code>
+       */
+      public Builder addAdditionalChallengeResponseRequired(
+          int index, com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired.Builder builderForValue) {
+        ensureAdditionalChallengeResponseRequiredIsMutable();
+        additionalChallengeResponseRequired_.add(index, builderForValue.build());
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired additional_challenge_response_required = 3;</code>
+       */
+      public Builder addAllAdditionalChallengeResponseRequired(
+          java.lang.Iterable<? extends com.cdptech.cdpclient.proto.StudioAPI.AdditionalChallengeResponseRequired> values) {
+        ensureAdditionalChallengeResponseRequiredIsMutable();
+        super.addAll(values, additionalChallengeResponseRequired_);
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired additional_challenge_response_required = 3;</code>
+       */
+      public Builder clearAdditionalChallengeResponseRequired() {
+        additionalChallengeResponseRequired_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000004);
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.AdditionalChallengeResponseRequired additional_challenge_response_required = 3;</code>
+       */
+      public Builder removeAdditionalChallengeResponseRequired(int index) {
+        ensureAdditionalChallengeResponseRequiredIsMutable();
+        additionalChallengeResponseRequired_.remove(index);
 
         return this;
       }
 
-      // @@protoc_insertion_point(builder_scope:StudioAPI.Proto.ChallengeResponse)
+      // @@protoc_insertion_point(builder_scope:StudioAPI.Proto.AuthResponse)
     }
 
     static {
-      defaultInstance = new ChallengeResponse(true);
+      defaultInstance = new AuthResponse(true);
       defaultInstance.initFields();
     }
 
-    // @@protoc_insertion_point(class_scope:StudioAPI.Proto.ChallengeResponse)
+    // @@protoc_insertion_point(class_scope:StudioAPI.Proto.AuthResponse)
   }
 
-  public interface ContainerOrBuilder extends
+  public interface ContainerOrBuilder extends 
        com.google.protobuf.GeneratedMessageLite.
             ExtendableMessageOrBuilder<Container> {
 
@@ -2032,7 +5022,7 @@ public final class StudioAPI {
     /**
      * <code>optional .StudioAPI.Proto.Container.Type message_type = 1;</code>
      */
-    StudioAPI.Container.Type getMessageType();
+    com.cdptech.cdpclient.proto.StudioAPI.Container.Type getMessageType();
 
     // optional .StudioAPI.Proto.Error error = 2;
     /**
@@ -2042,7 +5032,7 @@ public final class StudioAPI {
     /**
      * <code>optional .StudioAPI.Proto.Error error = 2;</code>
      */
-    StudioAPI.Error getError();
+    com.cdptech.cdpclient.proto.StudioAPI.Error getError();
 
     // repeated uint32 structure_request = 3;
     /**
@@ -2062,12 +5052,12 @@ public final class StudioAPI {
     /**
      * <code>repeated .StudioAPI.Proto.Node structure_response = 4;</code>
      */
-    java.util.List<StudioAPI.Node>
+    java.util.List<com.cdptech.cdpclient.proto.StudioAPI.Node> 
         getStructureResponseList();
     /**
      * <code>repeated .StudioAPI.Proto.Node structure_response = 4;</code>
      */
-    StudioAPI.Node getStructureResponse(int index);
+    com.cdptech.cdpclient.proto.StudioAPI.Node getStructureResponse(int index);
     /**
      * <code>repeated .StudioAPI.Proto.Node structure_response = 4;</code>
      */
@@ -2077,12 +5067,12 @@ public final class StudioAPI {
     /**
      * <code>repeated .StudioAPI.Proto.ValueRequest getter_request = 5;</code>
      */
-    java.util.List<StudioAPI.ValueRequest>
+    java.util.List<com.cdptech.cdpclient.proto.StudioAPI.ValueRequest> 
         getGetterRequestList();
     /**
      * <code>repeated .StudioAPI.Proto.ValueRequest getter_request = 5;</code>
      */
-    StudioAPI.ValueRequest getGetterRequest(int index);
+    com.cdptech.cdpclient.proto.StudioAPI.ValueRequest getGetterRequest(int index);
     /**
      * <code>repeated .StudioAPI.Proto.ValueRequest getter_request = 5;</code>
      */
@@ -2092,12 +5082,12 @@ public final class StudioAPI {
     /**
      * <code>repeated .StudioAPI.Proto.VariantValue getter_response = 6;</code>
      */
-    java.util.List<StudioAPI.VariantValue>
+    java.util.List<com.cdptech.cdpclient.proto.StudioAPI.VariantValue> 
         getGetterResponseList();
     /**
      * <code>repeated .StudioAPI.Proto.VariantValue getter_response = 6;</code>
      */
-    StudioAPI.VariantValue getGetterResponse(int index);
+    com.cdptech.cdpclient.proto.StudioAPI.VariantValue getGetterResponse(int index);
     /**
      * <code>repeated .StudioAPI.Proto.VariantValue getter_response = 6;</code>
      */
@@ -2107,12 +5097,12 @@ public final class StudioAPI {
     /**
      * <code>repeated .StudioAPI.Proto.VariantValue setter_request = 7;</code>
      */
-    java.util.List<StudioAPI.VariantValue>
+    java.util.List<com.cdptech.cdpclient.proto.StudioAPI.VariantValue> 
         getSetterRequestList();
     /**
      * <code>repeated .StudioAPI.Proto.VariantValue setter_request = 7;</code>
      */
-    StudioAPI.VariantValue getSetterRequest(int index);
+    com.cdptech.cdpclient.proto.StudioAPI.VariantValue getSetterRequest(int index);
     /**
      * <code>repeated .StudioAPI.Proto.VariantValue setter_request = 7;</code>
      */
@@ -2153,19 +5143,49 @@ public final class StudioAPI {
      * <code>optional uint64 current_time_response = 9;</code>
      */
     long getCurrentTimeResponse();
+
+    // repeated .StudioAPI.Proto.ChildAdd child_add_request = 10;
+    /**
+     * <code>repeated .StudioAPI.Proto.ChildAdd child_add_request = 10;</code>
+     */
+    java.util.List<com.cdptech.cdpclient.proto.StudioAPI.ChildAdd> 
+        getChildAddRequestList();
+    /**
+     * <code>repeated .StudioAPI.Proto.ChildAdd child_add_request = 10;</code>
+     */
+    com.cdptech.cdpclient.proto.StudioAPI.ChildAdd getChildAddRequest(int index);
+    /**
+     * <code>repeated .StudioAPI.Proto.ChildAdd child_add_request = 10;</code>
+     */
+    int getChildAddRequestCount();
+
+    // repeated .StudioAPI.Proto.ChildRemove child_remove_request = 11;
+    /**
+     * <code>repeated .StudioAPI.Proto.ChildRemove child_remove_request = 11;</code>
+     */
+    java.util.List<com.cdptech.cdpclient.proto.StudioAPI.ChildRemove> 
+        getChildRemoveRequestList();
+    /**
+     * <code>repeated .StudioAPI.Proto.ChildRemove child_remove_request = 11;</code>
+     */
+    com.cdptech.cdpclient.proto.StudioAPI.ChildRemove getChildRemoveRequest(int index);
+    /**
+     * <code>repeated .StudioAPI.Proto.ChildRemove child_remove_request = 11;</code>
+     */
+    int getChildRemoveRequestCount();
   }
   /**
    * Protobuf type {@code StudioAPI.Proto.Container}
    *
    * <pre>
-   ** Common union-style base type for all Protobuf messages in StudioAPI.
+   ** Common union-style base type for all Protobuf messages in StudioAPI. 
    * </pre>
    */
   public static final class Container extends
       com.google.protobuf.GeneratedMessageLite.ExtendableMessage<
         Container> implements ContainerOrBuilder {
     // Use Container.newBuilder() to construct.
-    private Container(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<StudioAPI.Container, ?> builder) {
+    private Container(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<com.cdptech.cdpclient.proto.StudioAPI.Container, ?> builder) {
       super(builder);
 
     }
@@ -2203,7 +5223,7 @@ public final class StudioAPI {
             }
             case 8: {
               int rawValue = input.readEnum();
-              StudioAPI.Container.Type value = StudioAPI.Container.Type.valueOf(rawValue);
+              com.cdptech.cdpclient.proto.StudioAPI.Container.Type value = com.cdptech.cdpclient.proto.StudioAPI.Container.Type.valueOf(rawValue);
               if (value != null) {
                 bitField0_ |= 0x00000001;
                 messageType_ = value;
@@ -2211,11 +5231,11 @@ public final class StudioAPI {
               break;
             }
             case 18: {
-              StudioAPI.Error.Builder subBuilder = null;
+              com.cdptech.cdpclient.proto.StudioAPI.Error.Builder subBuilder = null;
               if (((bitField0_ & 0x00000002) == 0x00000002)) {
                 subBuilder = error_.toBuilder();
               }
-              error_ = input.readMessage(StudioAPI.Error.PARSER, extensionRegistry);
+              error_ = input.readMessage(com.cdptech.cdpclient.proto.StudioAPI.Error.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(error_);
                 error_ = subBuilder.buildPartial();
@@ -2246,34 +5266,34 @@ public final class StudioAPI {
             }
             case 34: {
               if (!((mutable_bitField0_ & 0x00000008) == 0x00000008)) {
-                structureResponse_ = new java.util.ArrayList<StudioAPI.Node>();
+                structureResponse_ = new java.util.ArrayList<com.cdptech.cdpclient.proto.StudioAPI.Node>();
                 mutable_bitField0_ |= 0x00000008;
               }
-              structureResponse_.add(input.readMessage(StudioAPI.Node.PARSER, extensionRegistry));
+              structureResponse_.add(input.readMessage(com.cdptech.cdpclient.proto.StudioAPI.Node.PARSER, extensionRegistry));
               break;
             }
             case 42: {
               if (!((mutable_bitField0_ & 0x00000010) == 0x00000010)) {
-                getterRequest_ = new java.util.ArrayList<StudioAPI.ValueRequest>();
+                getterRequest_ = new java.util.ArrayList<com.cdptech.cdpclient.proto.StudioAPI.ValueRequest>();
                 mutable_bitField0_ |= 0x00000010;
               }
-              getterRequest_.add(input.readMessage(StudioAPI.ValueRequest.PARSER, extensionRegistry));
+              getterRequest_.add(input.readMessage(com.cdptech.cdpclient.proto.StudioAPI.ValueRequest.PARSER, extensionRegistry));
               break;
             }
             case 50: {
               if (!((mutable_bitField0_ & 0x00000020) == 0x00000020)) {
-                getterResponse_ = new java.util.ArrayList<StudioAPI.VariantValue>();
+                getterResponse_ = new java.util.ArrayList<com.cdptech.cdpclient.proto.StudioAPI.VariantValue>();
                 mutable_bitField0_ |= 0x00000020;
               }
-              getterResponse_.add(input.readMessage(StudioAPI.VariantValue.PARSER, extensionRegistry));
+              getterResponse_.add(input.readMessage(com.cdptech.cdpclient.proto.StudioAPI.VariantValue.PARSER, extensionRegistry));
               break;
             }
             case 58: {
               if (!((mutable_bitField0_ & 0x00000040) == 0x00000040)) {
-                setterRequest_ = new java.util.ArrayList<StudioAPI.VariantValue>();
+                setterRequest_ = new java.util.ArrayList<com.cdptech.cdpclient.proto.StudioAPI.VariantValue>();
                 mutable_bitField0_ |= 0x00000040;
               }
-              setterRequest_.add(input.readMessage(StudioAPI.VariantValue.PARSER, extensionRegistry));
+              setterRequest_.add(input.readMessage(com.cdptech.cdpclient.proto.StudioAPI.VariantValue.PARSER, extensionRegistry));
               break;
             }
             case 64: {
@@ -2302,6 +5322,22 @@ public final class StudioAPI {
               currentTimeResponse_ = input.readUInt64();
               break;
             }
+            case 82: {
+              if (!((mutable_bitField0_ & 0x00000200) == 0x00000200)) {
+                childAddRequest_ = new java.util.ArrayList<com.cdptech.cdpclient.proto.StudioAPI.ChildAdd>();
+                mutable_bitField0_ |= 0x00000200;
+              }
+              childAddRequest_.add(input.readMessage(com.cdptech.cdpclient.proto.StudioAPI.ChildAdd.PARSER, extensionRegistry));
+              break;
+            }
+            case 90: {
+              if (!((mutable_bitField0_ & 0x00000400) == 0x00000400)) {
+                childRemoveRequest_ = new java.util.ArrayList<com.cdptech.cdpclient.proto.StudioAPI.ChildRemove>();
+                mutable_bitField0_ |= 0x00000400;
+              }
+              childRemoveRequest_.add(input.readMessage(com.cdptech.cdpclient.proto.StudioAPI.ChildRemove.PARSER, extensionRegistry));
+              break;
+            }
           }
         }
       } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -2327,6 +5363,12 @@ public final class StudioAPI {
         }
         if (((mutable_bitField0_ & 0x00000080) == 0x00000080)) {
           structureChangeResponse_ = java.util.Collections.unmodifiableList(structureChangeResponse_);
+        }
+        if (((mutable_bitField0_ & 0x00000200) == 0x00000200)) {
+          childAddRequest_ = java.util.Collections.unmodifiableList(childAddRequest_);
+        }
+        if (((mutable_bitField0_ & 0x00000400) == 0x00000400)) {
+          childRemoveRequest_ = java.util.Collections.unmodifiableList(childRemoveRequest_);
         }
         makeExtensionsImmutable();
       }
@@ -2387,6 +5429,14 @@ public final class StudioAPI {
        * <code>eCurrentTimeResponse = 8;</code>
        */
       eCurrentTimeResponse(8, 8),
+      /**
+       * <code>eChildAddRequest = 9;</code>
+       */
+      eChildAddRequest(9, 9),
+      /**
+       * <code>eChildRemoveRequest = 10;</code>
+       */
+      eChildRemoveRequest(10, 10),
       ;
 
       /**
@@ -2425,6 +5475,14 @@ public final class StudioAPI {
        * <code>eCurrentTimeResponse = 8;</code>
        */
       public static final int eCurrentTimeResponse_VALUE = 8;
+      /**
+       * <code>eChildAddRequest = 9;</code>
+       */
+      public static final int eChildAddRequest_VALUE = 9;
+      /**
+       * <code>eChildRemoveRequest = 10;</code>
+       */
+      public static final int eChildRemoveRequest_VALUE = 10;
 
 
       public final int getNumber() { return value; }
@@ -2440,6 +5498,8 @@ public final class StudioAPI {
           case 6: return eStructureChangeResponse;
           case 7: return eCurrentTimeRequest;
           case 8: return eCurrentTimeResponse;
+          case 9: return eChildAddRequest;
+          case 10: return eChildRemoveRequest;
           default: return null;
         }
       }
@@ -2468,7 +5528,7 @@ public final class StudioAPI {
     private int bitField0_;
     // optional .StudioAPI.Proto.Container.Type message_type = 1;
     public static final int MESSAGE_TYPE_FIELD_NUMBER = 1;
-    private StudioAPI.Container.Type messageType_;
+    private com.cdptech.cdpclient.proto.StudioAPI.Container.Type messageType_;
     /**
      * <code>optional .StudioAPI.Proto.Container.Type message_type = 1;</code>
      */
@@ -2478,13 +5538,13 @@ public final class StudioAPI {
     /**
      * <code>optional .StudioAPI.Proto.Container.Type message_type = 1;</code>
      */
-    public StudioAPI.Container.Type getMessageType() {
+    public com.cdptech.cdpclient.proto.StudioAPI.Container.Type getMessageType() {
       return messageType_;
     }
 
     // optional .StudioAPI.Proto.Error error = 2;
     public static final int ERROR_FIELD_NUMBER = 2;
-    private StudioAPI.Error error_;
+    private com.cdptech.cdpclient.proto.StudioAPI.Error error_;
     /**
      * <code>optional .StudioAPI.Proto.Error error = 2;</code>
      */
@@ -2494,7 +5554,7 @@ public final class StudioAPI {
     /**
      * <code>optional .StudioAPI.Proto.Error error = 2;</code>
      */
-    public StudioAPI.Error getError() {
+    public com.cdptech.cdpclient.proto.StudioAPI.Error getError() {
       return error_;
     }
 
@@ -2523,17 +5583,17 @@ public final class StudioAPI {
 
     // repeated .StudioAPI.Proto.Node structure_response = 4;
     public static final int STRUCTURE_RESPONSE_FIELD_NUMBER = 4;
-    private java.util.List<StudioAPI.Node> structureResponse_;
+    private java.util.List<com.cdptech.cdpclient.proto.StudioAPI.Node> structureResponse_;
     /**
      * <code>repeated .StudioAPI.Proto.Node structure_response = 4;</code>
      */
-    public java.util.List<StudioAPI.Node> getStructureResponseList() {
+    public java.util.List<com.cdptech.cdpclient.proto.StudioAPI.Node> getStructureResponseList() {
       return structureResponse_;
     }
     /**
      * <code>repeated .StudioAPI.Proto.Node structure_response = 4;</code>
      */
-    public java.util.List<? extends StudioAPI.NodeOrBuilder>
+    public java.util.List<? extends com.cdptech.cdpclient.proto.StudioAPI.NodeOrBuilder> 
         getStructureResponseOrBuilderList() {
       return structureResponse_;
     }
@@ -2546,30 +5606,30 @@ public final class StudioAPI {
     /**
      * <code>repeated .StudioAPI.Proto.Node structure_response = 4;</code>
      */
-    public StudioAPI.Node getStructureResponse(int index) {
+    public com.cdptech.cdpclient.proto.StudioAPI.Node getStructureResponse(int index) {
       return structureResponse_.get(index);
     }
     /**
      * <code>repeated .StudioAPI.Proto.Node structure_response = 4;</code>
      */
-    public StudioAPI.NodeOrBuilder getStructureResponseOrBuilder(
+    public com.cdptech.cdpclient.proto.StudioAPI.NodeOrBuilder getStructureResponseOrBuilder(
         int index) {
       return structureResponse_.get(index);
     }
 
     // repeated .StudioAPI.Proto.ValueRequest getter_request = 5;
     public static final int GETTER_REQUEST_FIELD_NUMBER = 5;
-    private java.util.List<StudioAPI.ValueRequest> getterRequest_;
+    private java.util.List<com.cdptech.cdpclient.proto.StudioAPI.ValueRequest> getterRequest_;
     /**
      * <code>repeated .StudioAPI.Proto.ValueRequest getter_request = 5;</code>
      */
-    public java.util.List<StudioAPI.ValueRequest> getGetterRequestList() {
+    public java.util.List<com.cdptech.cdpclient.proto.StudioAPI.ValueRequest> getGetterRequestList() {
       return getterRequest_;
     }
     /**
      * <code>repeated .StudioAPI.Proto.ValueRequest getter_request = 5;</code>
      */
-    public java.util.List<? extends StudioAPI.ValueRequestOrBuilder>
+    public java.util.List<? extends com.cdptech.cdpclient.proto.StudioAPI.ValueRequestOrBuilder> 
         getGetterRequestOrBuilderList() {
       return getterRequest_;
     }
@@ -2582,30 +5642,30 @@ public final class StudioAPI {
     /**
      * <code>repeated .StudioAPI.Proto.ValueRequest getter_request = 5;</code>
      */
-    public StudioAPI.ValueRequest getGetterRequest(int index) {
+    public com.cdptech.cdpclient.proto.StudioAPI.ValueRequest getGetterRequest(int index) {
       return getterRequest_.get(index);
     }
     /**
      * <code>repeated .StudioAPI.Proto.ValueRequest getter_request = 5;</code>
      */
-    public StudioAPI.ValueRequestOrBuilder getGetterRequestOrBuilder(
+    public com.cdptech.cdpclient.proto.StudioAPI.ValueRequestOrBuilder getGetterRequestOrBuilder(
         int index) {
       return getterRequest_.get(index);
     }
 
     // repeated .StudioAPI.Proto.VariantValue getter_response = 6;
     public static final int GETTER_RESPONSE_FIELD_NUMBER = 6;
-    private java.util.List<StudioAPI.VariantValue> getterResponse_;
+    private java.util.List<com.cdptech.cdpclient.proto.StudioAPI.VariantValue> getterResponse_;
     /**
      * <code>repeated .StudioAPI.Proto.VariantValue getter_response = 6;</code>
      */
-    public java.util.List<StudioAPI.VariantValue> getGetterResponseList() {
+    public java.util.List<com.cdptech.cdpclient.proto.StudioAPI.VariantValue> getGetterResponseList() {
       return getterResponse_;
     }
     /**
      * <code>repeated .StudioAPI.Proto.VariantValue getter_response = 6;</code>
      */
-    public java.util.List<? extends StudioAPI.VariantValueOrBuilder>
+    public java.util.List<? extends com.cdptech.cdpclient.proto.StudioAPI.VariantValueOrBuilder> 
         getGetterResponseOrBuilderList() {
       return getterResponse_;
     }
@@ -2618,30 +5678,30 @@ public final class StudioAPI {
     /**
      * <code>repeated .StudioAPI.Proto.VariantValue getter_response = 6;</code>
      */
-    public StudioAPI.VariantValue getGetterResponse(int index) {
+    public com.cdptech.cdpclient.proto.StudioAPI.VariantValue getGetterResponse(int index) {
       return getterResponse_.get(index);
     }
     /**
      * <code>repeated .StudioAPI.Proto.VariantValue getter_response = 6;</code>
      */
-    public StudioAPI.VariantValueOrBuilder getGetterResponseOrBuilder(
+    public com.cdptech.cdpclient.proto.StudioAPI.VariantValueOrBuilder getGetterResponseOrBuilder(
         int index) {
       return getterResponse_.get(index);
     }
 
     // repeated .StudioAPI.Proto.VariantValue setter_request = 7;
     public static final int SETTER_REQUEST_FIELD_NUMBER = 7;
-    private java.util.List<StudioAPI.VariantValue> setterRequest_;
+    private java.util.List<com.cdptech.cdpclient.proto.StudioAPI.VariantValue> setterRequest_;
     /**
      * <code>repeated .StudioAPI.Proto.VariantValue setter_request = 7;</code>
      */
-    public java.util.List<StudioAPI.VariantValue> getSetterRequestList() {
+    public java.util.List<com.cdptech.cdpclient.proto.StudioAPI.VariantValue> getSetterRequestList() {
       return setterRequest_;
     }
     /**
      * <code>repeated .StudioAPI.Proto.VariantValue setter_request = 7;</code>
      */
-    public java.util.List<? extends StudioAPI.VariantValueOrBuilder>
+    public java.util.List<? extends com.cdptech.cdpclient.proto.StudioAPI.VariantValueOrBuilder> 
         getSetterRequestOrBuilderList() {
       return setterRequest_;
     }
@@ -2654,13 +5714,13 @@ public final class StudioAPI {
     /**
      * <code>repeated .StudioAPI.Proto.VariantValue setter_request = 7;</code>
      */
-    public StudioAPI.VariantValue getSetterRequest(int index) {
+    public com.cdptech.cdpclient.proto.StudioAPI.VariantValue getSetterRequest(int index) {
       return setterRequest_.get(index);
     }
     /**
      * <code>repeated .StudioAPI.Proto.VariantValue setter_request = 7;</code>
      */
-    public StudioAPI.VariantValueOrBuilder getSetterRequestOrBuilder(
+    public com.cdptech.cdpclient.proto.StudioAPI.VariantValueOrBuilder getSetterRequestOrBuilder(
         int index) {
       return setterRequest_.get(index);
     }
@@ -2716,9 +5776,81 @@ public final class StudioAPI {
       return currentTimeResponse_;
     }
 
+    // repeated .StudioAPI.Proto.ChildAdd child_add_request = 10;
+    public static final int CHILD_ADD_REQUEST_FIELD_NUMBER = 10;
+    private java.util.List<com.cdptech.cdpclient.proto.StudioAPI.ChildAdd> childAddRequest_;
+    /**
+     * <code>repeated .StudioAPI.Proto.ChildAdd child_add_request = 10;</code>
+     */
+    public java.util.List<com.cdptech.cdpclient.proto.StudioAPI.ChildAdd> getChildAddRequestList() {
+      return childAddRequest_;
+    }
+    /**
+     * <code>repeated .StudioAPI.Proto.ChildAdd child_add_request = 10;</code>
+     */
+    public java.util.List<? extends com.cdptech.cdpclient.proto.StudioAPI.ChildAddOrBuilder> 
+        getChildAddRequestOrBuilderList() {
+      return childAddRequest_;
+    }
+    /**
+     * <code>repeated .StudioAPI.Proto.ChildAdd child_add_request = 10;</code>
+     */
+    public int getChildAddRequestCount() {
+      return childAddRequest_.size();
+    }
+    /**
+     * <code>repeated .StudioAPI.Proto.ChildAdd child_add_request = 10;</code>
+     */
+    public com.cdptech.cdpclient.proto.StudioAPI.ChildAdd getChildAddRequest(int index) {
+      return childAddRequest_.get(index);
+    }
+    /**
+     * <code>repeated .StudioAPI.Proto.ChildAdd child_add_request = 10;</code>
+     */
+    public com.cdptech.cdpclient.proto.StudioAPI.ChildAddOrBuilder getChildAddRequestOrBuilder(
+        int index) {
+      return childAddRequest_.get(index);
+    }
+
+    // repeated .StudioAPI.Proto.ChildRemove child_remove_request = 11;
+    public static final int CHILD_REMOVE_REQUEST_FIELD_NUMBER = 11;
+    private java.util.List<com.cdptech.cdpclient.proto.StudioAPI.ChildRemove> childRemoveRequest_;
+    /**
+     * <code>repeated .StudioAPI.Proto.ChildRemove child_remove_request = 11;</code>
+     */
+    public java.util.List<com.cdptech.cdpclient.proto.StudioAPI.ChildRemove> getChildRemoveRequestList() {
+      return childRemoveRequest_;
+    }
+    /**
+     * <code>repeated .StudioAPI.Proto.ChildRemove child_remove_request = 11;</code>
+     */
+    public java.util.List<? extends com.cdptech.cdpclient.proto.StudioAPI.ChildRemoveOrBuilder> 
+        getChildRemoveRequestOrBuilderList() {
+      return childRemoveRequest_;
+    }
+    /**
+     * <code>repeated .StudioAPI.Proto.ChildRemove child_remove_request = 11;</code>
+     */
+    public int getChildRemoveRequestCount() {
+      return childRemoveRequest_.size();
+    }
+    /**
+     * <code>repeated .StudioAPI.Proto.ChildRemove child_remove_request = 11;</code>
+     */
+    public com.cdptech.cdpclient.proto.StudioAPI.ChildRemove getChildRemoveRequest(int index) {
+      return childRemoveRequest_.get(index);
+    }
+    /**
+     * <code>repeated .StudioAPI.Proto.ChildRemove child_remove_request = 11;</code>
+     */
+    public com.cdptech.cdpclient.proto.StudioAPI.ChildRemoveOrBuilder getChildRemoveRequestOrBuilder(
+        int index) {
+      return childRemoveRequest_.get(index);
+    }
+
     private void initFields() {
-      messageType_ = StudioAPI.Container.Type.eRemoteError;
-      error_ = StudioAPI.Error.getDefaultInstance();
+      messageType_ = com.cdptech.cdpclient.proto.StudioAPI.Container.Type.eRemoteError;
+      error_ = com.cdptech.cdpclient.proto.StudioAPI.Error.getDefaultInstance();
       structureRequest_ = java.util.Collections.emptyList();
       structureResponse_ = java.util.Collections.emptyList();
       getterRequest_ = java.util.Collections.emptyList();
@@ -2726,6 +5858,8 @@ public final class StudioAPI {
       setterRequest_ = java.util.Collections.emptyList();
       structureChangeResponse_ = java.util.Collections.emptyList();
       currentTimeResponse_ = 0L;
+      childAddRequest_ = java.util.Collections.emptyList();
+      childRemoveRequest_ = java.util.Collections.emptyList();
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -2762,6 +5896,18 @@ public final class StudioAPI {
           return false;
         }
       }
+      for (int i = 0; i < getChildAddRequestCount(); i++) {
+        if (!getChildAddRequest(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
+      for (int i = 0; i < getChildRemoveRequestCount(); i++) {
+        if (!getChildRemoveRequest(i).isInitialized()) {
+          memoizedIsInitialized = 0;
+          return false;
+        }
+      }
       if (!extensionsAreInitialized()) {
         memoizedIsInitialized = 0;
         return false;
@@ -2774,7 +5920,7 @@ public final class StudioAPI {
                         throws java.io.IOException {
       getSerializedSize();
       com.google.protobuf.GeneratedMessageLite
-        .ExtendableMessage<StudioAPI.Container>.ExtensionWriter extensionWriter =
+        .ExtendableMessage<com.cdptech.cdpclient.proto.StudioAPI.Container>.ExtensionWriter extensionWriter =
           newExtensionWriter();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeEnum(1, messageType_.getNumber());
@@ -2802,6 +5948,12 @@ public final class StudioAPI {
       }
       if (((bitField0_ & 0x00000004) == 0x00000004)) {
         output.writeUInt64(9, currentTimeResponse_);
+      }
+      for (int i = 0; i < childAddRequest_.size(); i++) {
+        output.writeMessage(10, childAddRequest_.get(i));
+      }
+      for (int i = 0; i < childRemoveRequest_.size(); i++) {
+        output.writeMessage(11, childRemoveRequest_.get(i));
       }
       extensionWriter.writeUntil(536870912, output);
     }
@@ -2858,6 +6010,14 @@ public final class StudioAPI {
         size += com.google.protobuf.CodedOutputStream
           .computeUInt64Size(9, currentTimeResponse_);
       }
+      for (int i = 0; i < childAddRequest_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(10, childAddRequest_.get(i));
+      }
+      for (int i = 0; i < childRemoveRequest_.size(); i++) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeMessageSize(11, childRemoveRequest_.get(i));
+      }
       size += extensionsSerializedSize();
       memoizedSerializedSize = size;
       return size;
@@ -2870,53 +6030,53 @@ public final class StudioAPI {
       return super.writeReplace();
     }
 
-    public static StudioAPI.Container parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Container parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StudioAPI.Container parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Container parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StudioAPI.Container parseFrom(byte[] data)
+    public static com.cdptech.cdpclient.proto.StudioAPI.Container parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StudioAPI.Container parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Container parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StudioAPI.Container parseFrom(java.io.InputStream input)
+    public static com.cdptech.cdpclient.proto.StudioAPI.Container parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static StudioAPI.Container parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Container parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static StudioAPI.Container parseDelimitedFrom(java.io.InputStream input)
+    public static com.cdptech.cdpclient.proto.StudioAPI.Container parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static StudioAPI.Container parseDelimitedFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Container parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static StudioAPI.Container parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Container parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static StudioAPI.Container parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Container parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -2925,7 +6085,7 @@ public final class StudioAPI {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(StudioAPI.Container prototype) {
+    public static Builder newBuilder(com.cdptech.cdpclient.proto.StudioAPI.Container prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -2934,13 +6094,13 @@ public final class StudioAPI {
      * Protobuf type {@code StudioAPI.Proto.Container}
      *
      * <pre>
-     ** Common union-style base type for all Protobuf messages in StudioAPI.
+     ** Common union-style base type for all Protobuf messages in StudioAPI. 
      * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<
-          StudioAPI.Container, Builder> implements StudioAPI.ContainerOrBuilder {
-      // Construct using StudioAPI.Container.newBuilder()
+          com.cdptech.cdpclient.proto.StudioAPI.Container, Builder> implements com.cdptech.cdpclient.proto.StudioAPI.ContainerOrBuilder {
+      // Construct using com.cdptech.cdpclient.proto.StudioAPI.Container.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -2953,9 +6113,9 @@ public final class StudioAPI {
 
       public Builder clear() {
         super.clear();
-        messageType_ = StudioAPI.Container.Type.eRemoteError;
+        messageType_ = com.cdptech.cdpclient.proto.StudioAPI.Container.Type.eRemoteError;
         bitField0_ = (bitField0_ & ~0x00000001);
-        error_ = StudioAPI.Error.getDefaultInstance();
+        error_ = com.cdptech.cdpclient.proto.StudioAPI.Error.getDefaultInstance();
         bitField0_ = (bitField0_ & ~0x00000002);
         structureRequest_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000004);
@@ -2971,6 +6131,10 @@ public final class StudioAPI {
         bitField0_ = (bitField0_ & ~0x00000080);
         currentTimeResponse_ = 0L;
         bitField0_ = (bitField0_ & ~0x00000100);
+        childAddRequest_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000200);
+        childRemoveRequest_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000400);
         return this;
       }
 
@@ -2978,20 +6142,20 @@ public final class StudioAPI {
         return create().mergeFrom(buildPartial());
       }
 
-      public StudioAPI.Container getDefaultInstanceForType() {
-        return StudioAPI.Container.getDefaultInstance();
+      public com.cdptech.cdpclient.proto.StudioAPI.Container getDefaultInstanceForType() {
+        return com.cdptech.cdpclient.proto.StudioAPI.Container.getDefaultInstance();
       }
 
-      public StudioAPI.Container build() {
-        StudioAPI.Container result = buildPartial();
+      public com.cdptech.cdpclient.proto.StudioAPI.Container build() {
+        com.cdptech.cdpclient.proto.StudioAPI.Container result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public StudioAPI.Container buildPartial() {
-        StudioAPI.Container result = new StudioAPI.Container(this);
+      public com.cdptech.cdpclient.proto.StudioAPI.Container buildPartial() {
+        com.cdptech.cdpclient.proto.StudioAPI.Container result = new com.cdptech.cdpclient.proto.StudioAPI.Container(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -3036,12 +6200,22 @@ public final class StudioAPI {
           to_bitField0_ |= 0x00000004;
         }
         result.currentTimeResponse_ = currentTimeResponse_;
+        if (((bitField0_ & 0x00000200) == 0x00000200)) {
+          childAddRequest_ = java.util.Collections.unmodifiableList(childAddRequest_);
+          bitField0_ = (bitField0_ & ~0x00000200);
+        }
+        result.childAddRequest_ = childAddRequest_;
+        if (((bitField0_ & 0x00000400) == 0x00000400)) {
+          childRemoveRequest_ = java.util.Collections.unmodifiableList(childRemoveRequest_);
+          bitField0_ = (bitField0_ & ~0x00000400);
+        }
+        result.childRemoveRequest_ = childRemoveRequest_;
         result.bitField0_ = to_bitField0_;
         return result;
       }
 
-      public Builder mergeFrom(StudioAPI.Container other) {
-        if (other == StudioAPI.Container.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.cdptech.cdpclient.proto.StudioAPI.Container other) {
+        if (other == com.cdptech.cdpclient.proto.StudioAPI.Container.getDefaultInstance()) return this;
         if (other.hasMessageType()) {
           setMessageType(other.getMessageType());
         }
@@ -3056,7 +6230,7 @@ public final class StudioAPI {
             ensureStructureRequestIsMutable();
             structureRequest_.addAll(other.structureRequest_);
           }
-
+          
         }
         if (!other.structureResponse_.isEmpty()) {
           if (structureResponse_.isEmpty()) {
@@ -3066,7 +6240,7 @@ public final class StudioAPI {
             ensureStructureResponseIsMutable();
             structureResponse_.addAll(other.structureResponse_);
           }
-
+          
         }
         if (!other.getterRequest_.isEmpty()) {
           if (getterRequest_.isEmpty()) {
@@ -3076,7 +6250,7 @@ public final class StudioAPI {
             ensureGetterRequestIsMutable();
             getterRequest_.addAll(other.getterRequest_);
           }
-
+          
         }
         if (!other.getterResponse_.isEmpty()) {
           if (getterResponse_.isEmpty()) {
@@ -3086,7 +6260,7 @@ public final class StudioAPI {
             ensureGetterResponseIsMutable();
             getterResponse_.addAll(other.getterResponse_);
           }
-
+          
         }
         if (!other.setterRequest_.isEmpty()) {
           if (setterRequest_.isEmpty()) {
@@ -3096,7 +6270,7 @@ public final class StudioAPI {
             ensureSetterRequestIsMutable();
             setterRequest_.addAll(other.setterRequest_);
           }
-
+          
         }
         if (!other.structureChangeResponse_.isEmpty()) {
           if (structureChangeResponse_.isEmpty()) {
@@ -3106,10 +6280,30 @@ public final class StudioAPI {
             ensureStructureChangeResponseIsMutable();
             structureChangeResponse_.addAll(other.structureChangeResponse_);
           }
-
+          
         }
         if (other.hasCurrentTimeResponse()) {
           setCurrentTimeResponse(other.getCurrentTimeResponse());
+        }
+        if (!other.childAddRequest_.isEmpty()) {
+          if (childAddRequest_.isEmpty()) {
+            childAddRequest_ = other.childAddRequest_;
+            bitField0_ = (bitField0_ & ~0x00000200);
+          } else {
+            ensureChildAddRequestIsMutable();
+            childAddRequest_.addAll(other.childAddRequest_);
+          }
+          
+        }
+        if (!other.childRemoveRequest_.isEmpty()) {
+          if (childRemoveRequest_.isEmpty()) {
+            childRemoveRequest_ = other.childRemoveRequest_;
+            bitField0_ = (bitField0_ & ~0x00000400);
+          } else {
+            ensureChildRemoveRequestIsMutable();
+            childRemoveRequest_.addAll(other.childRemoveRequest_);
+          }
+          
         }
         this.mergeExtensionFields(other);
         return this;
@@ -3118,36 +6312,48 @@ public final class StudioAPI {
       public final boolean isInitialized() {
         if (hasError()) {
           if (!getError().isInitialized()) {
-
+            
             return false;
           }
         }
         for (int i = 0; i < getStructureResponseCount(); i++) {
           if (!getStructureResponse(i).isInitialized()) {
-
+            
             return false;
           }
         }
         for (int i = 0; i < getGetterRequestCount(); i++) {
           if (!getGetterRequest(i).isInitialized()) {
-
+            
             return false;
           }
         }
         for (int i = 0; i < getGetterResponseCount(); i++) {
           if (!getGetterResponse(i).isInitialized()) {
-
+            
             return false;
           }
         }
         for (int i = 0; i < getSetterRequestCount(); i++) {
           if (!getSetterRequest(i).isInitialized()) {
-
+            
+            return false;
+          }
+        }
+        for (int i = 0; i < getChildAddRequestCount(); i++) {
+          if (!getChildAddRequest(i).isInitialized()) {
+            
+            return false;
+          }
+        }
+        for (int i = 0; i < getChildRemoveRequestCount(); i++) {
+          if (!getChildRemoveRequest(i).isInitialized()) {
+            
             return false;
           }
         }
         if (!extensionsAreInitialized()) {
-
+          
           return false;
         }
         return true;
@@ -3157,11 +6363,11 @@ public final class StudioAPI {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        StudioAPI.Container parsedMessage = null;
+        com.cdptech.cdpclient.proto.StudioAPI.Container parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (StudioAPI.Container) e.getUnfinishedMessage();
+          parsedMessage = (com.cdptech.cdpclient.proto.StudioAPI.Container) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -3173,7 +6379,7 @@ public final class StudioAPI {
       private int bitField0_;
 
       // optional .StudioAPI.Proto.Container.Type message_type = 1;
-      private StudioAPI.Container.Type messageType_ = StudioAPI.Container.Type.eRemoteError;
+      private com.cdptech.cdpclient.proto.StudioAPI.Container.Type messageType_ = com.cdptech.cdpclient.proto.StudioAPI.Container.Type.eRemoteError;
       /**
        * <code>optional .StudioAPI.Proto.Container.Type message_type = 1;</code>
        */
@@ -3183,19 +6389,19 @@ public final class StudioAPI {
       /**
        * <code>optional .StudioAPI.Proto.Container.Type message_type = 1;</code>
        */
-      public StudioAPI.Container.Type getMessageType() {
+      public com.cdptech.cdpclient.proto.StudioAPI.Container.Type getMessageType() {
         return messageType_;
       }
       /**
        * <code>optional .StudioAPI.Proto.Container.Type message_type = 1;</code>
        */
-      public Builder setMessageType(StudioAPI.Container.Type value) {
+      public Builder setMessageType(com.cdptech.cdpclient.proto.StudioAPI.Container.Type value) {
         if (value == null) {
           throw new NullPointerException();
         }
         bitField0_ |= 0x00000001;
         messageType_ = value;
-
+        
         return this;
       }
       /**
@@ -3203,13 +6409,13 @@ public final class StudioAPI {
        */
       public Builder clearMessageType() {
         bitField0_ = (bitField0_ & ~0x00000001);
-        messageType_ = StudioAPI.Container.Type.eRemoteError;
-
+        messageType_ = com.cdptech.cdpclient.proto.StudioAPI.Container.Type.eRemoteError;
+        
         return this;
       }
 
       // optional .StudioAPI.Proto.Error error = 2;
-      private StudioAPI.Error error_ = StudioAPI.Error.getDefaultInstance();
+      private com.cdptech.cdpclient.proto.StudioAPI.Error error_ = com.cdptech.cdpclient.proto.StudioAPI.Error.getDefaultInstance();
       /**
        * <code>optional .StudioAPI.Proto.Error error = 2;</code>
        */
@@ -3219,13 +6425,13 @@ public final class StudioAPI {
       /**
        * <code>optional .StudioAPI.Proto.Error error = 2;</code>
        */
-      public StudioAPI.Error getError() {
+      public com.cdptech.cdpclient.proto.StudioAPI.Error getError() {
         return error_;
       }
       /**
        * <code>optional .StudioAPI.Proto.Error error = 2;</code>
        */
-      public Builder setError(StudioAPI.Error value) {
+      public Builder setError(com.cdptech.cdpclient.proto.StudioAPI.Error value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -3238,7 +6444,7 @@ public final class StudioAPI {
        * <code>optional .StudioAPI.Proto.Error error = 2;</code>
        */
       public Builder setError(
-          StudioAPI.Error.Builder builderForValue) {
+          com.cdptech.cdpclient.proto.StudioAPI.Error.Builder builderForValue) {
         error_ = builderForValue.build();
 
         bitField0_ |= 0x00000002;
@@ -3247,11 +6453,11 @@ public final class StudioAPI {
       /**
        * <code>optional .StudioAPI.Proto.Error error = 2;</code>
        */
-      public Builder mergeError(StudioAPI.Error value) {
+      public Builder mergeError(com.cdptech.cdpclient.proto.StudioAPI.Error value) {
         if (((bitField0_ & 0x00000002) == 0x00000002) &&
-            error_ != StudioAPI.Error.getDefaultInstance()) {
+            error_ != com.cdptech.cdpclient.proto.StudioAPI.Error.getDefaultInstance()) {
           error_ =
-            StudioAPI.Error.newBuilder(error_).mergeFrom(value).buildPartial();
+            com.cdptech.cdpclient.proto.StudioAPI.Error.newBuilder(error_).mergeFrom(value).buildPartial();
         } else {
           error_ = value;
         }
@@ -3263,7 +6469,7 @@ public final class StudioAPI {
        * <code>optional .StudioAPI.Proto.Error error = 2;</code>
        */
       public Builder clearError() {
-        error_ = StudioAPI.Error.getDefaultInstance();
+        error_ = com.cdptech.cdpclient.proto.StudioAPI.Error.getDefaultInstance();
 
         bitField0_ = (bitField0_ & ~0x00000002);
         return this;
@@ -3303,7 +6509,7 @@ public final class StudioAPI {
           int index, int value) {
         ensureStructureRequestIsMutable();
         structureRequest_.set(index, value);
-
+        
         return this;
       }
       /**
@@ -3312,7 +6518,7 @@ public final class StudioAPI {
       public Builder addStructureRequest(int value) {
         ensureStructureRequestIsMutable();
         structureRequest_.add(value);
-
+        
         return this;
       }
       /**
@@ -3322,7 +6528,7 @@ public final class StudioAPI {
           java.lang.Iterable<? extends java.lang.Integer> values) {
         ensureStructureRequestIsMutable();
         super.addAll(values, structureRequest_);
-
+        
         return this;
       }
       /**
@@ -3331,16 +6537,16 @@ public final class StudioAPI {
       public Builder clearStructureRequest() {
         structureRequest_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000004);
-
+        
         return this;
       }
 
       // repeated .StudioAPI.Proto.Node structure_response = 4;
-      private java.util.List<StudioAPI.Node> structureResponse_ =
+      private java.util.List<com.cdptech.cdpclient.proto.StudioAPI.Node> structureResponse_ =
         java.util.Collections.emptyList();
       private void ensureStructureResponseIsMutable() {
         if (!((bitField0_ & 0x00000008) == 0x00000008)) {
-          structureResponse_ = new java.util.ArrayList<StudioAPI.Node>(structureResponse_);
+          structureResponse_ = new java.util.ArrayList<com.cdptech.cdpclient.proto.StudioAPI.Node>(structureResponse_);
           bitField0_ |= 0x00000008;
          }
       }
@@ -3348,7 +6554,7 @@ public final class StudioAPI {
       /**
        * <code>repeated .StudioAPI.Proto.Node structure_response = 4;</code>
        */
-      public java.util.List<StudioAPI.Node> getStructureResponseList() {
+      public java.util.List<com.cdptech.cdpclient.proto.StudioAPI.Node> getStructureResponseList() {
         return java.util.Collections.unmodifiableList(structureResponse_);
       }
       /**
@@ -3360,14 +6566,14 @@ public final class StudioAPI {
       /**
        * <code>repeated .StudioAPI.Proto.Node structure_response = 4;</code>
        */
-      public StudioAPI.Node getStructureResponse(int index) {
+      public com.cdptech.cdpclient.proto.StudioAPI.Node getStructureResponse(int index) {
         return structureResponse_.get(index);
       }
       /**
        * <code>repeated .StudioAPI.Proto.Node structure_response = 4;</code>
        */
       public Builder setStructureResponse(
-          int index, StudioAPI.Node value) {
+          int index, com.cdptech.cdpclient.proto.StudioAPI.Node value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -3380,7 +6586,7 @@ public final class StudioAPI {
        * <code>repeated .StudioAPI.Proto.Node structure_response = 4;</code>
        */
       public Builder setStructureResponse(
-          int index, StudioAPI.Node.Builder builderForValue) {
+          int index, com.cdptech.cdpclient.proto.StudioAPI.Node.Builder builderForValue) {
         ensureStructureResponseIsMutable();
         structureResponse_.set(index, builderForValue.build());
 
@@ -3389,7 +6595,7 @@ public final class StudioAPI {
       /**
        * <code>repeated .StudioAPI.Proto.Node structure_response = 4;</code>
        */
-      public Builder addStructureResponse(StudioAPI.Node value) {
+      public Builder addStructureResponse(com.cdptech.cdpclient.proto.StudioAPI.Node value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -3402,7 +6608,7 @@ public final class StudioAPI {
        * <code>repeated .StudioAPI.Proto.Node structure_response = 4;</code>
        */
       public Builder addStructureResponse(
-          int index, StudioAPI.Node value) {
+          int index, com.cdptech.cdpclient.proto.StudioAPI.Node value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -3415,7 +6621,7 @@ public final class StudioAPI {
        * <code>repeated .StudioAPI.Proto.Node structure_response = 4;</code>
        */
       public Builder addStructureResponse(
-          StudioAPI.Node.Builder builderForValue) {
+          com.cdptech.cdpclient.proto.StudioAPI.Node.Builder builderForValue) {
         ensureStructureResponseIsMutable();
         structureResponse_.add(builderForValue.build());
 
@@ -3425,7 +6631,7 @@ public final class StudioAPI {
        * <code>repeated .StudioAPI.Proto.Node structure_response = 4;</code>
        */
       public Builder addStructureResponse(
-          int index, StudioAPI.Node.Builder builderForValue) {
+          int index, com.cdptech.cdpclient.proto.StudioAPI.Node.Builder builderForValue) {
         ensureStructureResponseIsMutable();
         structureResponse_.add(index, builderForValue.build());
 
@@ -3435,7 +6641,7 @@ public final class StudioAPI {
        * <code>repeated .StudioAPI.Proto.Node structure_response = 4;</code>
        */
       public Builder addAllStructureResponse(
-          java.lang.Iterable<? extends StudioAPI.Node> values) {
+          java.lang.Iterable<? extends com.cdptech.cdpclient.proto.StudioAPI.Node> values) {
         ensureStructureResponseIsMutable();
         super.addAll(values, structureResponse_);
 
@@ -3461,11 +6667,11 @@ public final class StudioAPI {
       }
 
       // repeated .StudioAPI.Proto.ValueRequest getter_request = 5;
-      private java.util.List<StudioAPI.ValueRequest> getterRequest_ =
+      private java.util.List<com.cdptech.cdpclient.proto.StudioAPI.ValueRequest> getterRequest_ =
         java.util.Collections.emptyList();
       private void ensureGetterRequestIsMutable() {
         if (!((bitField0_ & 0x00000010) == 0x00000010)) {
-          getterRequest_ = new java.util.ArrayList<StudioAPI.ValueRequest>(getterRequest_);
+          getterRequest_ = new java.util.ArrayList<com.cdptech.cdpclient.proto.StudioAPI.ValueRequest>(getterRequest_);
           bitField0_ |= 0x00000010;
          }
       }
@@ -3473,7 +6679,7 @@ public final class StudioAPI {
       /**
        * <code>repeated .StudioAPI.Proto.ValueRequest getter_request = 5;</code>
        */
-      public java.util.List<StudioAPI.ValueRequest> getGetterRequestList() {
+      public java.util.List<com.cdptech.cdpclient.proto.StudioAPI.ValueRequest> getGetterRequestList() {
         return java.util.Collections.unmodifiableList(getterRequest_);
       }
       /**
@@ -3485,14 +6691,14 @@ public final class StudioAPI {
       /**
        * <code>repeated .StudioAPI.Proto.ValueRequest getter_request = 5;</code>
        */
-      public StudioAPI.ValueRequest getGetterRequest(int index) {
+      public com.cdptech.cdpclient.proto.StudioAPI.ValueRequest getGetterRequest(int index) {
         return getterRequest_.get(index);
       }
       /**
        * <code>repeated .StudioAPI.Proto.ValueRequest getter_request = 5;</code>
        */
       public Builder setGetterRequest(
-          int index, StudioAPI.ValueRequest value) {
+          int index, com.cdptech.cdpclient.proto.StudioAPI.ValueRequest value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -3505,7 +6711,7 @@ public final class StudioAPI {
        * <code>repeated .StudioAPI.Proto.ValueRequest getter_request = 5;</code>
        */
       public Builder setGetterRequest(
-          int index, StudioAPI.ValueRequest.Builder builderForValue) {
+          int index, com.cdptech.cdpclient.proto.StudioAPI.ValueRequest.Builder builderForValue) {
         ensureGetterRequestIsMutable();
         getterRequest_.set(index, builderForValue.build());
 
@@ -3514,7 +6720,7 @@ public final class StudioAPI {
       /**
        * <code>repeated .StudioAPI.Proto.ValueRequest getter_request = 5;</code>
        */
-      public Builder addGetterRequest(StudioAPI.ValueRequest value) {
+      public Builder addGetterRequest(com.cdptech.cdpclient.proto.StudioAPI.ValueRequest value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -3527,7 +6733,7 @@ public final class StudioAPI {
        * <code>repeated .StudioAPI.Proto.ValueRequest getter_request = 5;</code>
        */
       public Builder addGetterRequest(
-          int index, StudioAPI.ValueRequest value) {
+          int index, com.cdptech.cdpclient.proto.StudioAPI.ValueRequest value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -3540,7 +6746,7 @@ public final class StudioAPI {
        * <code>repeated .StudioAPI.Proto.ValueRequest getter_request = 5;</code>
        */
       public Builder addGetterRequest(
-          StudioAPI.ValueRequest.Builder builderForValue) {
+          com.cdptech.cdpclient.proto.StudioAPI.ValueRequest.Builder builderForValue) {
         ensureGetterRequestIsMutable();
         getterRequest_.add(builderForValue.build());
 
@@ -3550,7 +6756,7 @@ public final class StudioAPI {
        * <code>repeated .StudioAPI.Proto.ValueRequest getter_request = 5;</code>
        */
       public Builder addGetterRequest(
-          int index, StudioAPI.ValueRequest.Builder builderForValue) {
+          int index, com.cdptech.cdpclient.proto.StudioAPI.ValueRequest.Builder builderForValue) {
         ensureGetterRequestIsMutable();
         getterRequest_.add(index, builderForValue.build());
 
@@ -3560,7 +6766,7 @@ public final class StudioAPI {
        * <code>repeated .StudioAPI.Proto.ValueRequest getter_request = 5;</code>
        */
       public Builder addAllGetterRequest(
-          java.lang.Iterable<? extends StudioAPI.ValueRequest> values) {
+          java.lang.Iterable<? extends com.cdptech.cdpclient.proto.StudioAPI.ValueRequest> values) {
         ensureGetterRequestIsMutable();
         super.addAll(values, getterRequest_);
 
@@ -3586,11 +6792,11 @@ public final class StudioAPI {
       }
 
       // repeated .StudioAPI.Proto.VariantValue getter_response = 6;
-      private java.util.List<StudioAPI.VariantValue> getterResponse_ =
+      private java.util.List<com.cdptech.cdpclient.proto.StudioAPI.VariantValue> getterResponse_ =
         java.util.Collections.emptyList();
       private void ensureGetterResponseIsMutable() {
         if (!((bitField0_ & 0x00000020) == 0x00000020)) {
-          getterResponse_ = new java.util.ArrayList<StudioAPI.VariantValue>(getterResponse_);
+          getterResponse_ = new java.util.ArrayList<com.cdptech.cdpclient.proto.StudioAPI.VariantValue>(getterResponse_);
           bitField0_ |= 0x00000020;
          }
       }
@@ -3598,7 +6804,7 @@ public final class StudioAPI {
       /**
        * <code>repeated .StudioAPI.Proto.VariantValue getter_response = 6;</code>
        */
-      public java.util.List<StudioAPI.VariantValue> getGetterResponseList() {
+      public java.util.List<com.cdptech.cdpclient.proto.StudioAPI.VariantValue> getGetterResponseList() {
         return java.util.Collections.unmodifiableList(getterResponse_);
       }
       /**
@@ -3610,14 +6816,14 @@ public final class StudioAPI {
       /**
        * <code>repeated .StudioAPI.Proto.VariantValue getter_response = 6;</code>
        */
-      public StudioAPI.VariantValue getGetterResponse(int index) {
+      public com.cdptech.cdpclient.proto.StudioAPI.VariantValue getGetterResponse(int index) {
         return getterResponse_.get(index);
       }
       /**
        * <code>repeated .StudioAPI.Proto.VariantValue getter_response = 6;</code>
        */
       public Builder setGetterResponse(
-          int index, StudioAPI.VariantValue value) {
+          int index, com.cdptech.cdpclient.proto.StudioAPI.VariantValue value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -3630,7 +6836,7 @@ public final class StudioAPI {
        * <code>repeated .StudioAPI.Proto.VariantValue getter_response = 6;</code>
        */
       public Builder setGetterResponse(
-          int index, StudioAPI.VariantValue.Builder builderForValue) {
+          int index, com.cdptech.cdpclient.proto.StudioAPI.VariantValue.Builder builderForValue) {
         ensureGetterResponseIsMutable();
         getterResponse_.set(index, builderForValue.build());
 
@@ -3639,7 +6845,7 @@ public final class StudioAPI {
       /**
        * <code>repeated .StudioAPI.Proto.VariantValue getter_response = 6;</code>
        */
-      public Builder addGetterResponse(StudioAPI.VariantValue value) {
+      public Builder addGetterResponse(com.cdptech.cdpclient.proto.StudioAPI.VariantValue value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -3652,7 +6858,7 @@ public final class StudioAPI {
        * <code>repeated .StudioAPI.Proto.VariantValue getter_response = 6;</code>
        */
       public Builder addGetterResponse(
-          int index, StudioAPI.VariantValue value) {
+          int index, com.cdptech.cdpclient.proto.StudioAPI.VariantValue value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -3665,7 +6871,7 @@ public final class StudioAPI {
        * <code>repeated .StudioAPI.Proto.VariantValue getter_response = 6;</code>
        */
       public Builder addGetterResponse(
-          StudioAPI.VariantValue.Builder builderForValue) {
+          com.cdptech.cdpclient.proto.StudioAPI.VariantValue.Builder builderForValue) {
         ensureGetterResponseIsMutable();
         getterResponse_.add(builderForValue.build());
 
@@ -3675,7 +6881,7 @@ public final class StudioAPI {
        * <code>repeated .StudioAPI.Proto.VariantValue getter_response = 6;</code>
        */
       public Builder addGetterResponse(
-          int index, StudioAPI.VariantValue.Builder builderForValue) {
+          int index, com.cdptech.cdpclient.proto.StudioAPI.VariantValue.Builder builderForValue) {
         ensureGetterResponseIsMutable();
         getterResponse_.add(index, builderForValue.build());
 
@@ -3685,7 +6891,7 @@ public final class StudioAPI {
        * <code>repeated .StudioAPI.Proto.VariantValue getter_response = 6;</code>
        */
       public Builder addAllGetterResponse(
-          java.lang.Iterable<? extends StudioAPI.VariantValue> values) {
+          java.lang.Iterable<? extends com.cdptech.cdpclient.proto.StudioAPI.VariantValue> values) {
         ensureGetterResponseIsMutable();
         super.addAll(values, getterResponse_);
 
@@ -3711,11 +6917,11 @@ public final class StudioAPI {
       }
 
       // repeated .StudioAPI.Proto.VariantValue setter_request = 7;
-      private java.util.List<StudioAPI.VariantValue> setterRequest_ =
+      private java.util.List<com.cdptech.cdpclient.proto.StudioAPI.VariantValue> setterRequest_ =
         java.util.Collections.emptyList();
       private void ensureSetterRequestIsMutable() {
         if (!((bitField0_ & 0x00000040) == 0x00000040)) {
-          setterRequest_ = new java.util.ArrayList<StudioAPI.VariantValue>(setterRequest_);
+          setterRequest_ = new java.util.ArrayList<com.cdptech.cdpclient.proto.StudioAPI.VariantValue>(setterRequest_);
           bitField0_ |= 0x00000040;
          }
       }
@@ -3723,7 +6929,7 @@ public final class StudioAPI {
       /**
        * <code>repeated .StudioAPI.Proto.VariantValue setter_request = 7;</code>
        */
-      public java.util.List<StudioAPI.VariantValue> getSetterRequestList() {
+      public java.util.List<com.cdptech.cdpclient.proto.StudioAPI.VariantValue> getSetterRequestList() {
         return java.util.Collections.unmodifiableList(setterRequest_);
       }
       /**
@@ -3735,14 +6941,14 @@ public final class StudioAPI {
       /**
        * <code>repeated .StudioAPI.Proto.VariantValue setter_request = 7;</code>
        */
-      public StudioAPI.VariantValue getSetterRequest(int index) {
+      public com.cdptech.cdpclient.proto.StudioAPI.VariantValue getSetterRequest(int index) {
         return setterRequest_.get(index);
       }
       /**
        * <code>repeated .StudioAPI.Proto.VariantValue setter_request = 7;</code>
        */
       public Builder setSetterRequest(
-          int index, StudioAPI.VariantValue value) {
+          int index, com.cdptech.cdpclient.proto.StudioAPI.VariantValue value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -3755,7 +6961,7 @@ public final class StudioAPI {
        * <code>repeated .StudioAPI.Proto.VariantValue setter_request = 7;</code>
        */
       public Builder setSetterRequest(
-          int index, StudioAPI.VariantValue.Builder builderForValue) {
+          int index, com.cdptech.cdpclient.proto.StudioAPI.VariantValue.Builder builderForValue) {
         ensureSetterRequestIsMutable();
         setterRequest_.set(index, builderForValue.build());
 
@@ -3764,7 +6970,7 @@ public final class StudioAPI {
       /**
        * <code>repeated .StudioAPI.Proto.VariantValue setter_request = 7;</code>
        */
-      public Builder addSetterRequest(StudioAPI.VariantValue value) {
+      public Builder addSetterRequest(com.cdptech.cdpclient.proto.StudioAPI.VariantValue value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -3777,7 +6983,7 @@ public final class StudioAPI {
        * <code>repeated .StudioAPI.Proto.VariantValue setter_request = 7;</code>
        */
       public Builder addSetterRequest(
-          int index, StudioAPI.VariantValue value) {
+          int index, com.cdptech.cdpclient.proto.StudioAPI.VariantValue value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -3790,7 +6996,7 @@ public final class StudioAPI {
        * <code>repeated .StudioAPI.Proto.VariantValue setter_request = 7;</code>
        */
       public Builder addSetterRequest(
-          StudioAPI.VariantValue.Builder builderForValue) {
+          com.cdptech.cdpclient.proto.StudioAPI.VariantValue.Builder builderForValue) {
         ensureSetterRequestIsMutable();
         setterRequest_.add(builderForValue.build());
 
@@ -3800,7 +7006,7 @@ public final class StudioAPI {
        * <code>repeated .StudioAPI.Proto.VariantValue setter_request = 7;</code>
        */
       public Builder addSetterRequest(
-          int index, StudioAPI.VariantValue.Builder builderForValue) {
+          int index, com.cdptech.cdpclient.proto.StudioAPI.VariantValue.Builder builderForValue) {
         ensureSetterRequestIsMutable();
         setterRequest_.add(index, builderForValue.build());
 
@@ -3810,7 +7016,7 @@ public final class StudioAPI {
        * <code>repeated .StudioAPI.Proto.VariantValue setter_request = 7;</code>
        */
       public Builder addAllSetterRequest(
-          java.lang.Iterable<? extends StudioAPI.VariantValue> values) {
+          java.lang.Iterable<? extends com.cdptech.cdpclient.proto.StudioAPI.VariantValue> values) {
         ensureSetterRequestIsMutable();
         super.addAll(values, setterRequest_);
 
@@ -3885,7 +7091,7 @@ public final class StudioAPI {
           int index, int value) {
         ensureStructureChangeResponseIsMutable();
         structureChangeResponse_.set(index, value);
-
+        
         return this;
       }
       /**
@@ -3898,7 +7104,7 @@ public final class StudioAPI {
       public Builder addStructureChangeResponse(int value) {
         ensureStructureChangeResponseIsMutable();
         structureChangeResponse_.add(value);
-
+        
         return this;
       }
       /**
@@ -3912,7 +7118,7 @@ public final class StudioAPI {
           java.lang.Iterable<? extends java.lang.Integer> values) {
         ensureStructureChangeResponseIsMutable();
         super.addAll(values, structureChangeResponse_);
-
+        
         return this;
       }
       /**
@@ -3925,7 +7131,7 @@ public final class StudioAPI {
       public Builder clearStructureChangeResponse() {
         structureChangeResponse_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000080);
-
+        
         return this;
       }
 
@@ -3949,7 +7155,7 @@ public final class StudioAPI {
       public Builder setCurrentTimeResponse(long value) {
         bitField0_ |= 0x00000100;
         currentTimeResponse_ = value;
-
+        
         return this;
       }
       /**
@@ -3958,6 +7164,256 @@ public final class StudioAPI {
       public Builder clearCurrentTimeResponse() {
         bitField0_ = (bitField0_ & ~0x00000100);
         currentTimeResponse_ = 0L;
+        
+        return this;
+      }
+
+      // repeated .StudioAPI.Proto.ChildAdd child_add_request = 10;
+      private java.util.List<com.cdptech.cdpclient.proto.StudioAPI.ChildAdd> childAddRequest_ =
+        java.util.Collections.emptyList();
+      private void ensureChildAddRequestIsMutable() {
+        if (!((bitField0_ & 0x00000200) == 0x00000200)) {
+          childAddRequest_ = new java.util.ArrayList<com.cdptech.cdpclient.proto.StudioAPI.ChildAdd>(childAddRequest_);
+          bitField0_ |= 0x00000200;
+         }
+      }
+
+      /**
+       * <code>repeated .StudioAPI.Proto.ChildAdd child_add_request = 10;</code>
+       */
+      public java.util.List<com.cdptech.cdpclient.proto.StudioAPI.ChildAdd> getChildAddRequestList() {
+        return java.util.Collections.unmodifiableList(childAddRequest_);
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.ChildAdd child_add_request = 10;</code>
+       */
+      public int getChildAddRequestCount() {
+        return childAddRequest_.size();
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.ChildAdd child_add_request = 10;</code>
+       */
+      public com.cdptech.cdpclient.proto.StudioAPI.ChildAdd getChildAddRequest(int index) {
+        return childAddRequest_.get(index);
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.ChildAdd child_add_request = 10;</code>
+       */
+      public Builder setChildAddRequest(
+          int index, com.cdptech.cdpclient.proto.StudioAPI.ChildAdd value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureChildAddRequestIsMutable();
+        childAddRequest_.set(index, value);
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.ChildAdd child_add_request = 10;</code>
+       */
+      public Builder setChildAddRequest(
+          int index, com.cdptech.cdpclient.proto.StudioAPI.ChildAdd.Builder builderForValue) {
+        ensureChildAddRequestIsMutable();
+        childAddRequest_.set(index, builderForValue.build());
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.ChildAdd child_add_request = 10;</code>
+       */
+      public Builder addChildAddRequest(com.cdptech.cdpclient.proto.StudioAPI.ChildAdd value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureChildAddRequestIsMutable();
+        childAddRequest_.add(value);
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.ChildAdd child_add_request = 10;</code>
+       */
+      public Builder addChildAddRequest(
+          int index, com.cdptech.cdpclient.proto.StudioAPI.ChildAdd value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureChildAddRequestIsMutable();
+        childAddRequest_.add(index, value);
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.ChildAdd child_add_request = 10;</code>
+       */
+      public Builder addChildAddRequest(
+          com.cdptech.cdpclient.proto.StudioAPI.ChildAdd.Builder builderForValue) {
+        ensureChildAddRequestIsMutable();
+        childAddRequest_.add(builderForValue.build());
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.ChildAdd child_add_request = 10;</code>
+       */
+      public Builder addChildAddRequest(
+          int index, com.cdptech.cdpclient.proto.StudioAPI.ChildAdd.Builder builderForValue) {
+        ensureChildAddRequestIsMutable();
+        childAddRequest_.add(index, builderForValue.build());
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.ChildAdd child_add_request = 10;</code>
+       */
+      public Builder addAllChildAddRequest(
+          java.lang.Iterable<? extends com.cdptech.cdpclient.proto.StudioAPI.ChildAdd> values) {
+        ensureChildAddRequestIsMutable();
+        super.addAll(values, childAddRequest_);
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.ChildAdd child_add_request = 10;</code>
+       */
+      public Builder clearChildAddRequest() {
+        childAddRequest_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000200);
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.ChildAdd child_add_request = 10;</code>
+       */
+      public Builder removeChildAddRequest(int index) {
+        ensureChildAddRequestIsMutable();
+        childAddRequest_.remove(index);
+
+        return this;
+      }
+
+      // repeated .StudioAPI.Proto.ChildRemove child_remove_request = 11;
+      private java.util.List<com.cdptech.cdpclient.proto.StudioAPI.ChildRemove> childRemoveRequest_ =
+        java.util.Collections.emptyList();
+      private void ensureChildRemoveRequestIsMutable() {
+        if (!((bitField0_ & 0x00000400) == 0x00000400)) {
+          childRemoveRequest_ = new java.util.ArrayList<com.cdptech.cdpclient.proto.StudioAPI.ChildRemove>(childRemoveRequest_);
+          bitField0_ |= 0x00000400;
+         }
+      }
+
+      /**
+       * <code>repeated .StudioAPI.Proto.ChildRemove child_remove_request = 11;</code>
+       */
+      public java.util.List<com.cdptech.cdpclient.proto.StudioAPI.ChildRemove> getChildRemoveRequestList() {
+        return java.util.Collections.unmodifiableList(childRemoveRequest_);
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.ChildRemove child_remove_request = 11;</code>
+       */
+      public int getChildRemoveRequestCount() {
+        return childRemoveRequest_.size();
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.ChildRemove child_remove_request = 11;</code>
+       */
+      public com.cdptech.cdpclient.proto.StudioAPI.ChildRemove getChildRemoveRequest(int index) {
+        return childRemoveRequest_.get(index);
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.ChildRemove child_remove_request = 11;</code>
+       */
+      public Builder setChildRemoveRequest(
+          int index, com.cdptech.cdpclient.proto.StudioAPI.ChildRemove value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureChildRemoveRequestIsMutable();
+        childRemoveRequest_.set(index, value);
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.ChildRemove child_remove_request = 11;</code>
+       */
+      public Builder setChildRemoveRequest(
+          int index, com.cdptech.cdpclient.proto.StudioAPI.ChildRemove.Builder builderForValue) {
+        ensureChildRemoveRequestIsMutable();
+        childRemoveRequest_.set(index, builderForValue.build());
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.ChildRemove child_remove_request = 11;</code>
+       */
+      public Builder addChildRemoveRequest(com.cdptech.cdpclient.proto.StudioAPI.ChildRemove value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureChildRemoveRequestIsMutable();
+        childRemoveRequest_.add(value);
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.ChildRemove child_remove_request = 11;</code>
+       */
+      public Builder addChildRemoveRequest(
+          int index, com.cdptech.cdpclient.proto.StudioAPI.ChildRemove value) {
+        if (value == null) {
+          throw new NullPointerException();
+        }
+        ensureChildRemoveRequestIsMutable();
+        childRemoveRequest_.add(index, value);
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.ChildRemove child_remove_request = 11;</code>
+       */
+      public Builder addChildRemoveRequest(
+          com.cdptech.cdpclient.proto.StudioAPI.ChildRemove.Builder builderForValue) {
+        ensureChildRemoveRequestIsMutable();
+        childRemoveRequest_.add(builderForValue.build());
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.ChildRemove child_remove_request = 11;</code>
+       */
+      public Builder addChildRemoveRequest(
+          int index, com.cdptech.cdpclient.proto.StudioAPI.ChildRemove.Builder builderForValue) {
+        ensureChildRemoveRequestIsMutable();
+        childRemoveRequest_.add(index, builderForValue.build());
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.ChildRemove child_remove_request = 11;</code>
+       */
+      public Builder addAllChildRemoveRequest(
+          java.lang.Iterable<? extends com.cdptech.cdpclient.proto.StudioAPI.ChildRemove> values) {
+        ensureChildRemoveRequestIsMutable();
+        super.addAll(values, childRemoveRequest_);
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.ChildRemove child_remove_request = 11;</code>
+       */
+      public Builder clearChildRemoveRequest() {
+        childRemoveRequest_ = java.util.Collections.emptyList();
+        bitField0_ = (bitField0_ & ~0x00000400);
+
+        return this;
+      }
+      /**
+       * <code>repeated .StudioAPI.Proto.ChildRemove child_remove_request = 11;</code>
+       */
+      public Builder removeChildRemoveRequest(int index) {
+        ensureChildRemoveRequestIsMutable();
+        childRemoveRequest_.remove(index);
 
         return this;
       }
@@ -3973,7 +7429,7 @@ public final class StudioAPI {
     // @@protoc_insertion_point(class_scope:StudioAPI.Proto.Container)
   }
 
-  public interface ErrorOrBuilder extends
+  public interface ErrorOrBuilder extends 
        com.google.protobuf.GeneratedMessageLite.
             ExtendableMessageOrBuilder<Error> {
 
@@ -4001,19 +7457,44 @@ public final class StudioAPI {
      */
     com.google.protobuf.ByteString
         getTextBytes();
+
+    // optional uint32 node_id = 3;
+    /**
+     * <code>optional uint32 node_id = 3;</code>
+     */
+    boolean hasNodeId();
+    /**
+     * <code>optional uint32 node_id = 3;</code>
+     */
+    int getNodeId();
+
+    // optional string parameter = 4;
+    /**
+     * <code>optional string parameter = 4;</code>
+     */
+    boolean hasParameter();
+    /**
+     * <code>optional string parameter = 4;</code>
+     */
+    java.lang.String getParameter();
+    /**
+     * <code>optional string parameter = 4;</code>
+     */
+    com.google.protobuf.ByteString
+        getParameterBytes();
   }
   /**
    * Protobuf type {@code StudioAPI.Proto.Error}
    *
    * <pre>
-   ** Error message type.
+   ** Error message type. 
    * </pre>
    */
   public static final class Error extends
       com.google.protobuf.GeneratedMessageLite.ExtendableMessage<
         Error> implements ErrorOrBuilder {
     // Use Error.newBuilder() to construct.
-    private Error(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<StudioAPI.Error, ?> builder) {
+    private Error(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<com.cdptech.cdpclient.proto.StudioAPI.Error, ?> builder) {
       super(builder);
 
     }
@@ -4057,6 +7538,16 @@ public final class StudioAPI {
             case 18: {
               bitField0_ |= 0x00000002;
               text_ = input.readBytes();
+              break;
+            }
+            case 24: {
+              bitField0_ |= 0x00000004;
+              nodeId_ = input.readUInt32();
+              break;
+            }
+            case 34: {
+              bitField0_ |= 0x00000008;
+              parameter_ = input.readBytes();
               break;
             }
           }
@@ -4119,7 +7610,7 @@ public final class StudioAPI {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
@@ -4135,7 +7626,7 @@ public final class StudioAPI {
         getTextBytes() {
       java.lang.Object ref = text_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         text_ = b;
@@ -4145,9 +7636,70 @@ public final class StudioAPI {
       }
     }
 
+    // optional uint32 node_id = 3;
+    public static final int NODE_ID_FIELD_NUMBER = 3;
+    private int nodeId_;
+    /**
+     * <code>optional uint32 node_id = 3;</code>
+     */
+    public boolean hasNodeId() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>optional uint32 node_id = 3;</code>
+     */
+    public int getNodeId() {
+      return nodeId_;
+    }
+
+    // optional string parameter = 4;
+    public static final int PARAMETER_FIELD_NUMBER = 4;
+    private java.lang.Object parameter_;
+    /**
+     * <code>optional string parameter = 4;</code>
+     */
+    public boolean hasParameter() {
+      return ((bitField0_ & 0x00000008) == 0x00000008);
+    }
+    /**
+     * <code>optional string parameter = 4;</code>
+     */
+    public java.lang.String getParameter() {
+      java.lang.Object ref = parameter_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          parameter_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>optional string parameter = 4;</code>
+     */
+    public com.google.protobuf.ByteString
+        getParameterBytes() {
+      java.lang.Object ref = parameter_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        parameter_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
     private void initFields() {
       code_ = 0;
       text_ = "";
+      nodeId_ = 0;
+      parameter_ = "";
     }
     private byte memoizedIsInitialized = -1;
     public final boolean isInitialized() {
@@ -4170,13 +7722,19 @@ public final class StudioAPI {
                         throws java.io.IOException {
       getSerializedSize();
       com.google.protobuf.GeneratedMessageLite
-        .ExtendableMessage<StudioAPI.Error>.ExtensionWriter extensionWriter =
+        .ExtendableMessage<com.cdptech.cdpclient.proto.StudioAPI.Error>.ExtensionWriter extensionWriter =
           newExtensionWriter();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeUInt32(1, code_);
       }
       if (((bitField0_ & 0x00000002) == 0x00000002)) {
         output.writeBytes(2, getTextBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeUInt32(3, nodeId_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        output.writeBytes(4, getParameterBytes());
       }
       extensionWriter.writeUntil(536870912, output);
     }
@@ -4195,6 +7753,14 @@ public final class StudioAPI {
         size += com.google.protobuf.CodedOutputStream
           .computeBytesSize(2, getTextBytes());
       }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(3, nodeId_);
+      }
+      if (((bitField0_ & 0x00000008) == 0x00000008)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(4, getParameterBytes());
+      }
       size += extensionsSerializedSize();
       memoizedSerializedSize = size;
       return size;
@@ -4207,53 +7773,53 @@ public final class StudioAPI {
       return super.writeReplace();
     }
 
-    public static StudioAPI.Error parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Error parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StudioAPI.Error parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Error parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StudioAPI.Error parseFrom(byte[] data)
+    public static com.cdptech.cdpclient.proto.StudioAPI.Error parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StudioAPI.Error parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Error parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StudioAPI.Error parseFrom(java.io.InputStream input)
+    public static com.cdptech.cdpclient.proto.StudioAPI.Error parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static StudioAPI.Error parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Error parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static StudioAPI.Error parseDelimitedFrom(java.io.InputStream input)
+    public static com.cdptech.cdpclient.proto.StudioAPI.Error parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static StudioAPI.Error parseDelimitedFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Error parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static StudioAPI.Error parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Error parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static StudioAPI.Error parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Error parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -4262,7 +7828,7 @@ public final class StudioAPI {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(StudioAPI.Error prototype) {
+    public static Builder newBuilder(com.cdptech.cdpclient.proto.StudioAPI.Error prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -4271,13 +7837,13 @@ public final class StudioAPI {
      * Protobuf type {@code StudioAPI.Proto.Error}
      *
      * <pre>
-     ** Error message type.
+     ** Error message type. 
      * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<
-          StudioAPI.Error, Builder> implements StudioAPI.ErrorOrBuilder {
-      // Construct using StudioAPI.Error.newBuilder()
+          com.cdptech.cdpclient.proto.StudioAPI.Error, Builder> implements com.cdptech.cdpclient.proto.StudioAPI.ErrorOrBuilder {
+      // Construct using com.cdptech.cdpclient.proto.StudioAPI.Error.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -4294,6 +7860,10 @@ public final class StudioAPI {
         bitField0_ = (bitField0_ & ~0x00000001);
         text_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
+        nodeId_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000004);
+        parameter_ = "";
+        bitField0_ = (bitField0_ & ~0x00000008);
         return this;
       }
 
@@ -4301,20 +7871,20 @@ public final class StudioAPI {
         return create().mergeFrom(buildPartial());
       }
 
-      public StudioAPI.Error getDefaultInstanceForType() {
-        return StudioAPI.Error.getDefaultInstance();
+      public com.cdptech.cdpclient.proto.StudioAPI.Error getDefaultInstanceForType() {
+        return com.cdptech.cdpclient.proto.StudioAPI.Error.getDefaultInstance();
       }
 
-      public StudioAPI.Error build() {
-        StudioAPI.Error result = buildPartial();
+      public com.cdptech.cdpclient.proto.StudioAPI.Error build() {
+        com.cdptech.cdpclient.proto.StudioAPI.Error result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public StudioAPI.Error buildPartial() {
-        StudioAPI.Error result = new StudioAPI.Error(this);
+      public com.cdptech.cdpclient.proto.StudioAPI.Error buildPartial() {
+        com.cdptech.cdpclient.proto.StudioAPI.Error result = new com.cdptech.cdpclient.proto.StudioAPI.Error(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -4325,19 +7895,35 @@ public final class StudioAPI {
           to_bitField0_ |= 0x00000002;
         }
         result.text_ = text_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.nodeId_ = nodeId_;
+        if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+          to_bitField0_ |= 0x00000008;
+        }
+        result.parameter_ = parameter_;
         result.bitField0_ = to_bitField0_;
         return result;
       }
 
-      public Builder mergeFrom(StudioAPI.Error other) {
-        if (other == StudioAPI.Error.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.cdptech.cdpclient.proto.StudioAPI.Error other) {
+        if (other == com.cdptech.cdpclient.proto.StudioAPI.Error.getDefaultInstance()) return this;
         if (other.hasCode()) {
           setCode(other.getCode());
         }
         if (other.hasText()) {
           bitField0_ |= 0x00000002;
           text_ = other.text_;
-
+          
+        }
+        if (other.hasNodeId()) {
+          setNodeId(other.getNodeId());
+        }
+        if (other.hasParameter()) {
+          bitField0_ |= 0x00000008;
+          parameter_ = other.parameter_;
+          
         }
         this.mergeExtensionFields(other);
         return this;
@@ -4345,11 +7931,11 @@ public final class StudioAPI {
 
       public final boolean isInitialized() {
         if (!hasCode()) {
-
+          
           return false;
         }
         if (!extensionsAreInitialized()) {
-
+          
           return false;
         }
         return true;
@@ -4359,11 +7945,11 @@ public final class StudioAPI {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        StudioAPI.Error parsedMessage = null;
+        com.cdptech.cdpclient.proto.StudioAPI.Error parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (StudioAPI.Error) e.getUnfinishedMessage();
+          parsedMessage = (com.cdptech.cdpclient.proto.StudioAPI.Error) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -4394,7 +7980,7 @@ public final class StudioAPI {
       public Builder setCode(int value) {
         bitField0_ |= 0x00000001;
         code_ = value;
-
+        
         return this;
       }
       /**
@@ -4403,7 +7989,7 @@ public final class StudioAPI {
       public Builder clearCode() {
         bitField0_ = (bitField0_ & ~0x00000001);
         code_ = 0;
-
+        
         return this;
       }
 
@@ -4436,7 +8022,7 @@ public final class StudioAPI {
           getTextBytes() {
         java.lang.Object ref = text_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           text_ = b;
@@ -4455,7 +8041,7 @@ public final class StudioAPI {
   }
   bitField0_ |= 0x00000002;
         text_ = value;
-
+        
         return this;
       }
       /**
@@ -4464,7 +8050,7 @@ public final class StudioAPI {
       public Builder clearText() {
         bitField0_ = (bitField0_ & ~0x00000002);
         text_ = getDefaultInstance().getText();
-
+        
         return this;
       }
       /**
@@ -4477,7 +8063,114 @@ public final class StudioAPI {
   }
   bitField0_ |= 0x00000002;
         text_ = value;
+        
+        return this;
+      }
 
+      // optional uint32 node_id = 3;
+      private int nodeId_ ;
+      /**
+       * <code>optional uint32 node_id = 3;</code>
+       */
+      public boolean hasNodeId() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>optional uint32 node_id = 3;</code>
+       */
+      public int getNodeId() {
+        return nodeId_;
+      }
+      /**
+       * <code>optional uint32 node_id = 3;</code>
+       */
+      public Builder setNodeId(int value) {
+        bitField0_ |= 0x00000004;
+        nodeId_ = value;
+        
+        return this;
+      }
+      /**
+       * <code>optional uint32 node_id = 3;</code>
+       */
+      public Builder clearNodeId() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        nodeId_ = 0;
+        
+        return this;
+      }
+
+      // optional string parameter = 4;
+      private java.lang.Object parameter_ = "";
+      /**
+       * <code>optional string parameter = 4;</code>
+       */
+      public boolean hasParameter() {
+        return ((bitField0_ & 0x00000008) == 0x00000008);
+      }
+      /**
+       * <code>optional string parameter = 4;</code>
+       */
+      public java.lang.String getParameter() {
+        java.lang.Object ref = parameter_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          parameter_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>optional string parameter = 4;</code>
+       */
+      public com.google.protobuf.ByteString
+          getParameterBytes() {
+        java.lang.Object ref = parameter_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          parameter_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>optional string parameter = 4;</code>
+       */
+      public Builder setParameter(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
+        parameter_ = value;
+        
+        return this;
+      }
+      /**
+       * <code>optional string parameter = 4;</code>
+       */
+      public Builder clearParameter() {
+        bitField0_ = (bitField0_ & ~0x00000008);
+        parameter_ = getDefaultInstance().getParameter();
+        
+        return this;
+      }
+      /**
+       * <code>optional string parameter = 4;</code>
+       */
+      public Builder setParameterBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000008;
+        parameter_ = value;
+        
         return this;
       }
 
@@ -4492,7 +8185,7 @@ public final class StudioAPI {
     // @@protoc_insertion_point(class_scope:StudioAPI.Proto.Error)
   }
 
-  public interface InfoOrBuilder extends
+  public interface InfoOrBuilder extends 
        com.google.protobuf.GeneratedMessageLite.
             ExtendableMessageOrBuilder<Info> {
 
@@ -4557,7 +8250,7 @@ public final class StudioAPI {
      * Direct base type, type of the class
      * </pre>
      */
-    StudioAPI.CDPNodeType getNodeType();
+    com.cdptech.cdpclient.proto.StudioAPI.CDPNodeType getNodeType();
 
     // optional .StudioAPI.Proto.CDPValueType value_type = 4;
     /**
@@ -4575,7 +8268,7 @@ public final class StudioAPI {
      * Value primitive type the node holds if node may hold a value
      * </pre>
      */
-    StudioAPI.CDPValueType getValueType();
+    com.cdptech.cdpclient.proto.StudioAPI.CDPValueType getValueType();
 
     // optional string type_name = 5;
     /**
@@ -4689,14 +8382,14 @@ public final class StudioAPI {
    * Protobuf type {@code StudioAPI.Proto.Info}
    *
    * <pre>
-   ** A single CDPNode property container.
+   ** A single CDPNode property container. 
    * </pre>
    */
   public static final class Info extends
       com.google.protobuf.GeneratedMessageLite.ExtendableMessage<
         Info> implements InfoOrBuilder {
     // Use Info.newBuilder() to construct.
-    private Info(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<StudioAPI.Info, ?> builder) {
+    private Info(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<com.cdptech.cdpclient.proto.StudioAPI.Info, ?> builder) {
       super(builder);
 
     }
@@ -4744,7 +8437,7 @@ public final class StudioAPI {
             }
             case 24: {
               int rawValue = input.readEnum();
-              StudioAPI.CDPNodeType value = StudioAPI.CDPNodeType.valueOf(rawValue);
+              com.cdptech.cdpclient.proto.StudioAPI.CDPNodeType value = com.cdptech.cdpclient.proto.StudioAPI.CDPNodeType.valueOf(rawValue);
               if (value != null) {
                 bitField0_ |= 0x00000004;
                 nodeType_ = value;
@@ -4753,7 +8446,7 @@ public final class StudioAPI {
             }
             case 32: {
               int rawValue = input.readEnum();
-              StudioAPI.CDPValueType value = StudioAPI.CDPValueType.valueOf(rawValue);
+              com.cdptech.cdpclient.proto.StudioAPI.CDPValueType value = com.cdptech.cdpclient.proto.StudioAPI.CDPValueType.valueOf(rawValue);
               if (value != null) {
                 bitField0_ |= 0x00000008;
                 valueType_ = value;
@@ -4980,7 +8673,7 @@ public final class StudioAPI {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
@@ -5000,7 +8693,7 @@ public final class StudioAPI {
         getNameBytes() {
       java.lang.Object ref = name_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         name_ = b;
@@ -5012,7 +8705,7 @@ public final class StudioAPI {
 
     // required .StudioAPI.Proto.CDPNodeType node_type = 3;
     public static final int NODE_TYPE_FIELD_NUMBER = 3;
-    private StudioAPI.CDPNodeType nodeType_;
+    private com.cdptech.cdpclient.proto.StudioAPI.CDPNodeType nodeType_;
     /**
      * <code>required .StudioAPI.Proto.CDPNodeType node_type = 3;</code>
      *
@@ -5030,13 +8723,13 @@ public final class StudioAPI {
      * Direct base type, type of the class
      * </pre>
      */
-    public StudioAPI.CDPNodeType getNodeType() {
+    public com.cdptech.cdpclient.proto.StudioAPI.CDPNodeType getNodeType() {
       return nodeType_;
     }
 
     // optional .StudioAPI.Proto.CDPValueType value_type = 4;
     public static final int VALUE_TYPE_FIELD_NUMBER = 4;
-    private StudioAPI.CDPValueType valueType_;
+    private com.cdptech.cdpclient.proto.StudioAPI.CDPValueType valueType_;
     /**
      * <code>optional .StudioAPI.Proto.CDPValueType value_type = 4;</code>
      *
@@ -5054,7 +8747,7 @@ public final class StudioAPI {
      * Value primitive type the node holds if node may hold a value
      * </pre>
      */
-    public StudioAPI.CDPValueType getValueType() {
+    public com.cdptech.cdpclient.proto.StudioAPI.CDPValueType getValueType() {
       return valueType_;
     }
 
@@ -5083,7 +8776,7 @@ public final class StudioAPI {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
@@ -5103,7 +8796,7 @@ public final class StudioAPI {
         getTypeNameBytes() {
       java.lang.Object ref = typeName_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         typeName_ = b;
@@ -5138,7 +8831,7 @@ public final class StudioAPI {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
@@ -5158,7 +8851,7 @@ public final class StudioAPI {
         getServerAddrBytes() {
       java.lang.Object ref = serverAddr_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         serverAddr_ = b;
@@ -5243,8 +8936,8 @@ public final class StudioAPI {
     private void initFields() {
       nodeId_ = 0;
       name_ = "";
-      nodeType_ = StudioAPI.CDPNodeType.CDP_UNDEFINED;
-      valueType_ = StudioAPI.CDPValueType.eUNDEFINED;
+      nodeType_ = com.cdptech.cdpclient.proto.StudioAPI.CDPNodeType.CDP_UNDEFINED;
+      valueType_ = com.cdptech.cdpclient.proto.StudioAPI.CDPValueType.eUNDEFINED;
       typeName_ = "";
       serverAddr_ = "";
       serverPort_ = 0;
@@ -5280,7 +8973,7 @@ public final class StudioAPI {
                         throws java.io.IOException {
       getSerializedSize();
       com.google.protobuf.GeneratedMessageLite
-        .ExtendableMessage<StudioAPI.Info>.ExtensionWriter extensionWriter =
+        .ExtendableMessage<com.cdptech.cdpclient.proto.StudioAPI.Info>.ExtensionWriter extensionWriter =
           newExtensionWriter();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeUInt32(1, nodeId_);
@@ -5366,53 +9059,53 @@ public final class StudioAPI {
       return super.writeReplace();
     }
 
-    public static StudioAPI.Info parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Info parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StudioAPI.Info parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Info parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StudioAPI.Info parseFrom(byte[] data)
+    public static com.cdptech.cdpclient.proto.StudioAPI.Info parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StudioAPI.Info parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Info parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StudioAPI.Info parseFrom(java.io.InputStream input)
+    public static com.cdptech.cdpclient.proto.StudioAPI.Info parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static StudioAPI.Info parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Info parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static StudioAPI.Info parseDelimitedFrom(java.io.InputStream input)
+    public static com.cdptech.cdpclient.proto.StudioAPI.Info parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static StudioAPI.Info parseDelimitedFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Info parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static StudioAPI.Info parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Info parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static StudioAPI.Info parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Info parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -5421,7 +9114,7 @@ public final class StudioAPI {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(StudioAPI.Info prototype) {
+    public static Builder newBuilder(com.cdptech.cdpclient.proto.StudioAPI.Info prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -5430,13 +9123,13 @@ public final class StudioAPI {
      * Protobuf type {@code StudioAPI.Proto.Info}
      *
      * <pre>
-     ** A single CDPNode property container.
+     ** A single CDPNode property container. 
      * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<
-          StudioAPI.Info, Builder> implements StudioAPI.InfoOrBuilder {
-      // Construct using StudioAPI.Info.newBuilder()
+          com.cdptech.cdpclient.proto.StudioAPI.Info, Builder> implements com.cdptech.cdpclient.proto.StudioAPI.InfoOrBuilder {
+      // Construct using com.cdptech.cdpclient.proto.StudioAPI.Info.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -5453,9 +9146,9 @@ public final class StudioAPI {
         bitField0_ = (bitField0_ & ~0x00000001);
         name_ = "";
         bitField0_ = (bitField0_ & ~0x00000002);
-        nodeType_ = StudioAPI.CDPNodeType.CDP_UNDEFINED;
+        nodeType_ = com.cdptech.cdpclient.proto.StudioAPI.CDPNodeType.CDP_UNDEFINED;
         bitField0_ = (bitField0_ & ~0x00000004);
-        valueType_ = StudioAPI.CDPValueType.eUNDEFINED;
+        valueType_ = com.cdptech.cdpclient.proto.StudioAPI.CDPValueType.eUNDEFINED;
         bitField0_ = (bitField0_ & ~0x00000008);
         typeName_ = "";
         bitField0_ = (bitField0_ & ~0x00000010);
@@ -5474,20 +9167,20 @@ public final class StudioAPI {
         return create().mergeFrom(buildPartial());
       }
 
-      public StudioAPI.Info getDefaultInstanceForType() {
-        return StudioAPI.Info.getDefaultInstance();
+      public com.cdptech.cdpclient.proto.StudioAPI.Info getDefaultInstanceForType() {
+        return com.cdptech.cdpclient.proto.StudioAPI.Info.getDefaultInstance();
       }
 
-      public StudioAPI.Info build() {
-        StudioAPI.Info result = buildPartial();
+      public com.cdptech.cdpclient.proto.StudioAPI.Info build() {
+        com.cdptech.cdpclient.proto.StudioAPI.Info result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public StudioAPI.Info buildPartial() {
-        StudioAPI.Info result = new StudioAPI.Info(this);
+      public com.cdptech.cdpclient.proto.StudioAPI.Info buildPartial() {
+        com.cdptech.cdpclient.proto.StudioAPI.Info result = new com.cdptech.cdpclient.proto.StudioAPI.Info(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -5530,15 +9223,15 @@ public final class StudioAPI {
         return result;
       }
 
-      public Builder mergeFrom(StudioAPI.Info other) {
-        if (other == StudioAPI.Info.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.cdptech.cdpclient.proto.StudioAPI.Info other) {
+        if (other == com.cdptech.cdpclient.proto.StudioAPI.Info.getDefaultInstance()) return this;
         if (other.hasNodeId()) {
           setNodeId(other.getNodeId());
         }
         if (other.hasName()) {
           bitField0_ |= 0x00000002;
           name_ = other.name_;
-
+          
         }
         if (other.hasNodeType()) {
           setNodeType(other.getNodeType());
@@ -5549,12 +9242,12 @@ public final class StudioAPI {
         if (other.hasTypeName()) {
           bitField0_ |= 0x00000010;
           typeName_ = other.typeName_;
-
+          
         }
         if (other.hasServerAddr()) {
           bitField0_ |= 0x00000020;
           serverAddr_ = other.serverAddr_;
-
+          
         }
         if (other.hasServerPort()) {
           setServerPort(other.getServerPort());
@@ -5571,19 +9264,19 @@ public final class StudioAPI {
 
       public final boolean isInitialized() {
         if (!hasNodeId()) {
-
+          
           return false;
         }
         if (!hasName()) {
-
+          
           return false;
         }
         if (!hasNodeType()) {
-
+          
           return false;
         }
         if (!extensionsAreInitialized()) {
-
+          
           return false;
         }
         return true;
@@ -5593,11 +9286,11 @@ public final class StudioAPI {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        StudioAPI.Info parsedMessage = null;
+        com.cdptech.cdpclient.proto.StudioAPI.Info parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (StudioAPI.Info) e.getUnfinishedMessage();
+          parsedMessage = (com.cdptech.cdpclient.proto.StudioAPI.Info) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -5640,7 +9333,7 @@ public final class StudioAPI {
       public Builder setNodeId(int value) {
         bitField0_ |= 0x00000001;
         nodeId_ = value;
-
+        
         return this;
       }
       /**
@@ -5653,7 +9346,7 @@ public final class StudioAPI {
       public Builder clearNodeId() {
         bitField0_ = (bitField0_ & ~0x00000001);
         nodeId_ = 0;
-
+        
         return this;
       }
 
@@ -5698,7 +9391,7 @@ public final class StudioAPI {
           getNameBytes() {
         java.lang.Object ref = name_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           name_ = b;
@@ -5721,7 +9414,7 @@ public final class StudioAPI {
   }
   bitField0_ |= 0x00000002;
         name_ = value;
-
+        
         return this;
       }
       /**
@@ -5734,7 +9427,7 @@ public final class StudioAPI {
       public Builder clearName() {
         bitField0_ = (bitField0_ & ~0x00000002);
         name_ = getDefaultInstance().getName();
-
+        
         return this;
       }
       /**
@@ -5751,12 +9444,12 @@ public final class StudioAPI {
   }
   bitField0_ |= 0x00000002;
         name_ = value;
-
+        
         return this;
       }
 
       // required .StudioAPI.Proto.CDPNodeType node_type = 3;
-      private StudioAPI.CDPNodeType nodeType_ = StudioAPI.CDPNodeType.CDP_UNDEFINED;
+      private com.cdptech.cdpclient.proto.StudioAPI.CDPNodeType nodeType_ = com.cdptech.cdpclient.proto.StudioAPI.CDPNodeType.CDP_UNDEFINED;
       /**
        * <code>required .StudioAPI.Proto.CDPNodeType node_type = 3;</code>
        *
@@ -5774,7 +9467,7 @@ public final class StudioAPI {
        * Direct base type, type of the class
        * </pre>
        */
-      public StudioAPI.CDPNodeType getNodeType() {
+      public com.cdptech.cdpclient.proto.StudioAPI.CDPNodeType getNodeType() {
         return nodeType_;
       }
       /**
@@ -5784,13 +9477,13 @@ public final class StudioAPI {
        * Direct base type, type of the class
        * </pre>
        */
-      public Builder setNodeType(StudioAPI.CDPNodeType value) {
+      public Builder setNodeType(com.cdptech.cdpclient.proto.StudioAPI.CDPNodeType value) {
         if (value == null) {
           throw new NullPointerException();
         }
         bitField0_ |= 0x00000004;
         nodeType_ = value;
-
+        
         return this;
       }
       /**
@@ -5802,13 +9495,13 @@ public final class StudioAPI {
        */
       public Builder clearNodeType() {
         bitField0_ = (bitField0_ & ~0x00000004);
-        nodeType_ = StudioAPI.CDPNodeType.CDP_UNDEFINED;
-
+        nodeType_ = com.cdptech.cdpclient.proto.StudioAPI.CDPNodeType.CDP_UNDEFINED;
+        
         return this;
       }
 
       // optional .StudioAPI.Proto.CDPValueType value_type = 4;
-      private StudioAPI.CDPValueType valueType_ = StudioAPI.CDPValueType.eUNDEFINED;
+      private com.cdptech.cdpclient.proto.StudioAPI.CDPValueType valueType_ = com.cdptech.cdpclient.proto.StudioAPI.CDPValueType.eUNDEFINED;
       /**
        * <code>optional .StudioAPI.Proto.CDPValueType value_type = 4;</code>
        *
@@ -5826,7 +9519,7 @@ public final class StudioAPI {
        * Value primitive type the node holds if node may hold a value
        * </pre>
        */
-      public StudioAPI.CDPValueType getValueType() {
+      public com.cdptech.cdpclient.proto.StudioAPI.CDPValueType getValueType() {
         return valueType_;
       }
       /**
@@ -5836,13 +9529,13 @@ public final class StudioAPI {
        * Value primitive type the node holds if node may hold a value
        * </pre>
        */
-      public Builder setValueType(StudioAPI.CDPValueType value) {
+      public Builder setValueType(com.cdptech.cdpclient.proto.StudioAPI.CDPValueType value) {
         if (value == null) {
           throw new NullPointerException();
         }
         bitField0_ |= 0x00000008;
         valueType_ = value;
-
+        
         return this;
       }
       /**
@@ -5854,8 +9547,8 @@ public final class StudioAPI {
        */
       public Builder clearValueType() {
         bitField0_ = (bitField0_ & ~0x00000008);
-        valueType_ = StudioAPI.CDPValueType.eUNDEFINED;
-
+        valueType_ = com.cdptech.cdpclient.proto.StudioAPI.CDPValueType.eUNDEFINED;
+        
         return this;
       }
 
@@ -5900,7 +9593,7 @@ public final class StudioAPI {
           getTypeNameBytes() {
         java.lang.Object ref = typeName_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           typeName_ = b;
@@ -5923,7 +9616,7 @@ public final class StudioAPI {
   }
   bitField0_ |= 0x00000010;
         typeName_ = value;
-
+        
         return this;
       }
       /**
@@ -5936,7 +9629,7 @@ public final class StudioAPI {
       public Builder clearTypeName() {
         bitField0_ = (bitField0_ & ~0x00000010);
         typeName_ = getDefaultInstance().getTypeName();
-
+        
         return this;
       }
       /**
@@ -5953,7 +9646,7 @@ public final class StudioAPI {
   }
   bitField0_ |= 0x00000010;
         typeName_ = value;
-
+        
         return this;
       }
 
@@ -5998,7 +9691,7 @@ public final class StudioAPI {
           getServerAddrBytes() {
         java.lang.Object ref = serverAddr_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           serverAddr_ = b;
@@ -6021,7 +9714,7 @@ public final class StudioAPI {
   }
   bitField0_ |= 0x00000020;
         serverAddr_ = value;
-
+        
         return this;
       }
       /**
@@ -6034,7 +9727,7 @@ public final class StudioAPI {
       public Builder clearServerAddr() {
         bitField0_ = (bitField0_ & ~0x00000020);
         serverAddr_ = getDefaultInstance().getServerAddr();
-
+        
         return this;
       }
       /**
@@ -6051,7 +9744,7 @@ public final class StudioAPI {
   }
   bitField0_ |= 0x00000020;
         serverAddr_ = value;
-
+        
         return this;
       }
 
@@ -6087,7 +9780,7 @@ public final class StudioAPI {
       public Builder setServerPort(int value) {
         bitField0_ |= 0x00000040;
         serverPort_ = value;
-
+        
         return this;
       }
       /**
@@ -6100,7 +9793,7 @@ public final class StudioAPI {
       public Builder clearServerPort() {
         bitField0_ = (bitField0_ & ~0x00000040);
         serverPort_ = 0;
-
+        
         return this;
       }
 
@@ -6136,7 +9829,7 @@ public final class StudioAPI {
       public Builder setIsLocal(boolean value) {
         bitField0_ |= 0x00000080;
         isLocal_ = value;
-
+        
         return this;
       }
       /**
@@ -6149,7 +9842,7 @@ public final class StudioAPI {
       public Builder clearIsLocal() {
         bitField0_ = (bitField0_ & ~0x00000080);
         isLocal_ = false;
-
+        
         return this;
       }
 
@@ -6185,7 +9878,7 @@ public final class StudioAPI {
       public Builder setFlags(int value) {
         bitField0_ |= 0x00000100;
         flags_ = value;
-
+        
         return this;
       }
       /**
@@ -6198,7 +9891,7 @@ public final class StudioAPI {
       public Builder clearFlags() {
         bitField0_ = (bitField0_ & ~0x00000100);
         flags_ = 0;
-
+        
         return this;
       }
 
@@ -6213,7 +9906,7 @@ public final class StudioAPI {
     // @@protoc_insertion_point(class_scope:StudioAPI.Proto.Info)
   }
 
-  public interface NodeOrBuilder extends
+  public interface NodeOrBuilder extends 
        com.google.protobuf.GeneratedMessageLite.
             ExtendableMessageOrBuilder<Node> {
 
@@ -6225,18 +9918,18 @@ public final class StudioAPI {
     /**
      * <code>required .StudioAPI.Proto.Info info = 1;</code>
      */
-    StudioAPI.Info getInfo();
+    com.cdptech.cdpclient.proto.StudioAPI.Info getInfo();
 
     // repeated .StudioAPI.Proto.Node node = 2;
     /**
      * <code>repeated .StudioAPI.Proto.Node node = 2;</code>
      */
-    java.util.List<StudioAPI.Node>
+    java.util.List<com.cdptech.cdpclient.proto.StudioAPI.Node> 
         getNodeList();
     /**
      * <code>repeated .StudioAPI.Proto.Node node = 2;</code>
      */
-    StudioAPI.Node getNode(int index);
+    com.cdptech.cdpclient.proto.StudioAPI.Node getNode(int index);
     /**
      * <code>repeated .StudioAPI.Proto.Node node = 2;</code>
      */
@@ -6246,14 +9939,14 @@ public final class StudioAPI {
    * Protobuf type {@code StudioAPI.Proto.Node}
    *
    * <pre>
-   ** CDP structure response data structure, a tree of Info properties.
+   ** CDP structure response data structure, a tree of Info properties. 
    * </pre>
    */
   public static final class Node extends
       com.google.protobuf.GeneratedMessageLite.ExtendableMessage<
         Node> implements NodeOrBuilder {
     // Use Node.newBuilder() to construct.
-    private Node(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<StudioAPI.Node, ?> builder) {
+    private Node(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<com.cdptech.cdpclient.proto.StudioAPI.Node, ?> builder) {
       super(builder);
 
     }
@@ -6290,11 +9983,11 @@ public final class StudioAPI {
               break;
             }
             case 10: {
-              StudioAPI.Info.Builder subBuilder = null;
+              com.cdptech.cdpclient.proto.StudioAPI.Info.Builder subBuilder = null;
               if (((bitField0_ & 0x00000001) == 0x00000001)) {
                 subBuilder = info_.toBuilder();
               }
-              info_ = input.readMessage(StudioAPI.Info.PARSER, extensionRegistry);
+              info_ = input.readMessage(com.cdptech.cdpclient.proto.StudioAPI.Info.PARSER, extensionRegistry);
               if (subBuilder != null) {
                 subBuilder.mergeFrom(info_);
                 info_ = subBuilder.buildPartial();
@@ -6304,10 +9997,10 @@ public final class StudioAPI {
             }
             case 18: {
               if (!((mutable_bitField0_ & 0x00000002) == 0x00000002)) {
-                node_ = new java.util.ArrayList<StudioAPI.Node>();
+                node_ = new java.util.ArrayList<com.cdptech.cdpclient.proto.StudioAPI.Node>();
                 mutable_bitField0_ |= 0x00000002;
               }
-              node_.add(input.readMessage(StudioAPI.Node.PARSER, extensionRegistry));
+              node_.add(input.readMessage(com.cdptech.cdpclient.proto.StudioAPI.Node.PARSER, extensionRegistry));
               break;
             }
           }
@@ -6342,7 +10035,7 @@ public final class StudioAPI {
     private int bitField0_;
     // required .StudioAPI.Proto.Info info = 1;
     public static final int INFO_FIELD_NUMBER = 1;
-    private StudioAPI.Info info_;
+    private com.cdptech.cdpclient.proto.StudioAPI.Info info_;
     /**
      * <code>required .StudioAPI.Proto.Info info = 1;</code>
      */
@@ -6352,23 +10045,23 @@ public final class StudioAPI {
     /**
      * <code>required .StudioAPI.Proto.Info info = 1;</code>
      */
-    public StudioAPI.Info getInfo() {
+    public com.cdptech.cdpclient.proto.StudioAPI.Info getInfo() {
       return info_;
     }
 
     // repeated .StudioAPI.Proto.Node node = 2;
     public static final int NODE_FIELD_NUMBER = 2;
-    private java.util.List<StudioAPI.Node> node_;
+    private java.util.List<com.cdptech.cdpclient.proto.StudioAPI.Node> node_;
     /**
      * <code>repeated .StudioAPI.Proto.Node node = 2;</code>
      */
-    public java.util.List<StudioAPI.Node> getNodeList() {
+    public java.util.List<com.cdptech.cdpclient.proto.StudioAPI.Node> getNodeList() {
       return node_;
     }
     /**
      * <code>repeated .StudioAPI.Proto.Node node = 2;</code>
      */
-    public java.util.List<? extends StudioAPI.NodeOrBuilder>
+    public java.util.List<? extends com.cdptech.cdpclient.proto.StudioAPI.NodeOrBuilder> 
         getNodeOrBuilderList() {
       return node_;
     }
@@ -6381,19 +10074,19 @@ public final class StudioAPI {
     /**
      * <code>repeated .StudioAPI.Proto.Node node = 2;</code>
      */
-    public StudioAPI.Node getNode(int index) {
+    public com.cdptech.cdpclient.proto.StudioAPI.Node getNode(int index) {
       return node_.get(index);
     }
     /**
      * <code>repeated .StudioAPI.Proto.Node node = 2;</code>
      */
-    public StudioAPI.NodeOrBuilder getNodeOrBuilder(
+    public com.cdptech.cdpclient.proto.StudioAPI.NodeOrBuilder getNodeOrBuilder(
         int index) {
       return node_.get(index);
     }
 
     private void initFields() {
-      info_ = StudioAPI.Info.getDefaultInstance();
+      info_ = com.cdptech.cdpclient.proto.StudioAPI.Info.getDefaultInstance();
       node_ = java.util.Collections.emptyList();
     }
     private byte memoizedIsInitialized = -1;
@@ -6427,7 +10120,7 @@ public final class StudioAPI {
                         throws java.io.IOException {
       getSerializedSize();
       com.google.protobuf.GeneratedMessageLite
-        .ExtendableMessage<StudioAPI.Node>.ExtensionWriter extensionWriter =
+        .ExtendableMessage<com.cdptech.cdpclient.proto.StudioAPI.Node>.ExtensionWriter extensionWriter =
           newExtensionWriter();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeMessage(1, info_);
@@ -6464,53 +10157,53 @@ public final class StudioAPI {
       return super.writeReplace();
     }
 
-    public static StudioAPI.Node parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Node parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StudioAPI.Node parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Node parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StudioAPI.Node parseFrom(byte[] data)
+    public static com.cdptech.cdpclient.proto.StudioAPI.Node parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StudioAPI.Node parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Node parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StudioAPI.Node parseFrom(java.io.InputStream input)
+    public static com.cdptech.cdpclient.proto.StudioAPI.Node parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static StudioAPI.Node parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Node parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static StudioAPI.Node parseDelimitedFrom(java.io.InputStream input)
+    public static com.cdptech.cdpclient.proto.StudioAPI.Node parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static StudioAPI.Node parseDelimitedFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Node parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static StudioAPI.Node parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Node parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static StudioAPI.Node parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.Node parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -6519,7 +10212,7 @@ public final class StudioAPI {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(StudioAPI.Node prototype) {
+    public static Builder newBuilder(com.cdptech.cdpclient.proto.StudioAPI.Node prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -6528,13 +10221,13 @@ public final class StudioAPI {
      * Protobuf type {@code StudioAPI.Proto.Node}
      *
      * <pre>
-     ** CDP structure response data structure, a tree of Info properties.
+     ** CDP structure response data structure, a tree of Info properties. 
      * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<
-          StudioAPI.Node, Builder> implements StudioAPI.NodeOrBuilder {
-      // Construct using StudioAPI.Node.newBuilder()
+          com.cdptech.cdpclient.proto.StudioAPI.Node, Builder> implements com.cdptech.cdpclient.proto.StudioAPI.NodeOrBuilder {
+      // Construct using com.cdptech.cdpclient.proto.StudioAPI.Node.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -6547,7 +10240,7 @@ public final class StudioAPI {
 
       public Builder clear() {
         super.clear();
-        info_ = StudioAPI.Info.getDefaultInstance();
+        info_ = com.cdptech.cdpclient.proto.StudioAPI.Info.getDefaultInstance();
         bitField0_ = (bitField0_ & ~0x00000001);
         node_ = java.util.Collections.emptyList();
         bitField0_ = (bitField0_ & ~0x00000002);
@@ -6558,20 +10251,20 @@ public final class StudioAPI {
         return create().mergeFrom(buildPartial());
       }
 
-      public StudioAPI.Node getDefaultInstanceForType() {
-        return StudioAPI.Node.getDefaultInstance();
+      public com.cdptech.cdpclient.proto.StudioAPI.Node getDefaultInstanceForType() {
+        return com.cdptech.cdpclient.proto.StudioAPI.Node.getDefaultInstance();
       }
 
-      public StudioAPI.Node build() {
-        StudioAPI.Node result = buildPartial();
+      public com.cdptech.cdpclient.proto.StudioAPI.Node build() {
+        com.cdptech.cdpclient.proto.StudioAPI.Node result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public StudioAPI.Node buildPartial() {
-        StudioAPI.Node result = new StudioAPI.Node(this);
+      public com.cdptech.cdpclient.proto.StudioAPI.Node buildPartial() {
+        com.cdptech.cdpclient.proto.StudioAPI.Node result = new com.cdptech.cdpclient.proto.StudioAPI.Node(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -6587,8 +10280,8 @@ public final class StudioAPI {
         return result;
       }
 
-      public Builder mergeFrom(StudioAPI.Node other) {
-        if (other == StudioAPI.Node.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.cdptech.cdpclient.proto.StudioAPI.Node other) {
+        if (other == com.cdptech.cdpclient.proto.StudioAPI.Node.getDefaultInstance()) return this;
         if (other.hasInfo()) {
           mergeInfo(other.getInfo());
         }
@@ -6600,7 +10293,7 @@ public final class StudioAPI {
             ensureNodeIsMutable();
             node_.addAll(other.node_);
           }
-
+          
         }
         this.mergeExtensionFields(other);
         return this;
@@ -6608,21 +10301,21 @@ public final class StudioAPI {
 
       public final boolean isInitialized() {
         if (!hasInfo()) {
-
+          
           return false;
         }
         if (!getInfo().isInitialized()) {
-
+          
           return false;
         }
         for (int i = 0; i < getNodeCount(); i++) {
           if (!getNode(i).isInitialized()) {
-
+            
             return false;
           }
         }
         if (!extensionsAreInitialized()) {
-
+          
           return false;
         }
         return true;
@@ -6632,11 +10325,11 @@ public final class StudioAPI {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        StudioAPI.Node parsedMessage = null;
+        com.cdptech.cdpclient.proto.StudioAPI.Node parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (StudioAPI.Node) e.getUnfinishedMessage();
+          parsedMessage = (com.cdptech.cdpclient.proto.StudioAPI.Node) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -6648,7 +10341,7 @@ public final class StudioAPI {
       private int bitField0_;
 
       // required .StudioAPI.Proto.Info info = 1;
-      private StudioAPI.Info info_ = StudioAPI.Info.getDefaultInstance();
+      private com.cdptech.cdpclient.proto.StudioAPI.Info info_ = com.cdptech.cdpclient.proto.StudioAPI.Info.getDefaultInstance();
       /**
        * <code>required .StudioAPI.Proto.Info info = 1;</code>
        */
@@ -6658,13 +10351,13 @@ public final class StudioAPI {
       /**
        * <code>required .StudioAPI.Proto.Info info = 1;</code>
        */
-      public StudioAPI.Info getInfo() {
+      public com.cdptech.cdpclient.proto.StudioAPI.Info getInfo() {
         return info_;
       }
       /**
        * <code>required .StudioAPI.Proto.Info info = 1;</code>
        */
-      public Builder setInfo(StudioAPI.Info value) {
+      public Builder setInfo(com.cdptech.cdpclient.proto.StudioAPI.Info value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -6677,7 +10370,7 @@ public final class StudioAPI {
        * <code>required .StudioAPI.Proto.Info info = 1;</code>
        */
       public Builder setInfo(
-          StudioAPI.Info.Builder builderForValue) {
+          com.cdptech.cdpclient.proto.StudioAPI.Info.Builder builderForValue) {
         info_ = builderForValue.build();
 
         bitField0_ |= 0x00000001;
@@ -6686,11 +10379,11 @@ public final class StudioAPI {
       /**
        * <code>required .StudioAPI.Proto.Info info = 1;</code>
        */
-      public Builder mergeInfo(StudioAPI.Info value) {
+      public Builder mergeInfo(com.cdptech.cdpclient.proto.StudioAPI.Info value) {
         if (((bitField0_ & 0x00000001) == 0x00000001) &&
-            info_ != StudioAPI.Info.getDefaultInstance()) {
+            info_ != com.cdptech.cdpclient.proto.StudioAPI.Info.getDefaultInstance()) {
           info_ =
-            StudioAPI.Info.newBuilder(info_).mergeFrom(value).buildPartial();
+            com.cdptech.cdpclient.proto.StudioAPI.Info.newBuilder(info_).mergeFrom(value).buildPartial();
         } else {
           info_ = value;
         }
@@ -6702,18 +10395,18 @@ public final class StudioAPI {
        * <code>required .StudioAPI.Proto.Info info = 1;</code>
        */
       public Builder clearInfo() {
-        info_ = StudioAPI.Info.getDefaultInstance();
+        info_ = com.cdptech.cdpclient.proto.StudioAPI.Info.getDefaultInstance();
 
         bitField0_ = (bitField0_ & ~0x00000001);
         return this;
       }
 
       // repeated .StudioAPI.Proto.Node node = 2;
-      private java.util.List<StudioAPI.Node> node_ =
+      private java.util.List<com.cdptech.cdpclient.proto.StudioAPI.Node> node_ =
         java.util.Collections.emptyList();
       private void ensureNodeIsMutable() {
         if (!((bitField0_ & 0x00000002) == 0x00000002)) {
-          node_ = new java.util.ArrayList<StudioAPI.Node>(node_);
+          node_ = new java.util.ArrayList<com.cdptech.cdpclient.proto.StudioAPI.Node>(node_);
           bitField0_ |= 0x00000002;
          }
       }
@@ -6721,7 +10414,7 @@ public final class StudioAPI {
       /**
        * <code>repeated .StudioAPI.Proto.Node node = 2;</code>
        */
-      public java.util.List<StudioAPI.Node> getNodeList() {
+      public java.util.List<com.cdptech.cdpclient.proto.StudioAPI.Node> getNodeList() {
         return java.util.Collections.unmodifiableList(node_);
       }
       /**
@@ -6733,14 +10426,14 @@ public final class StudioAPI {
       /**
        * <code>repeated .StudioAPI.Proto.Node node = 2;</code>
        */
-      public StudioAPI.Node getNode(int index) {
+      public com.cdptech.cdpclient.proto.StudioAPI.Node getNode(int index) {
         return node_.get(index);
       }
       /**
        * <code>repeated .StudioAPI.Proto.Node node = 2;</code>
        */
       public Builder setNode(
-          int index, StudioAPI.Node value) {
+          int index, com.cdptech.cdpclient.proto.StudioAPI.Node value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -6753,7 +10446,7 @@ public final class StudioAPI {
        * <code>repeated .StudioAPI.Proto.Node node = 2;</code>
        */
       public Builder setNode(
-          int index, StudioAPI.Node.Builder builderForValue) {
+          int index, com.cdptech.cdpclient.proto.StudioAPI.Node.Builder builderForValue) {
         ensureNodeIsMutable();
         node_.set(index, builderForValue.build());
 
@@ -6762,7 +10455,7 @@ public final class StudioAPI {
       /**
        * <code>repeated .StudioAPI.Proto.Node node = 2;</code>
        */
-      public Builder addNode(StudioAPI.Node value) {
+      public Builder addNode(com.cdptech.cdpclient.proto.StudioAPI.Node value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -6775,7 +10468,7 @@ public final class StudioAPI {
        * <code>repeated .StudioAPI.Proto.Node node = 2;</code>
        */
       public Builder addNode(
-          int index, StudioAPI.Node value) {
+          int index, com.cdptech.cdpclient.proto.StudioAPI.Node value) {
         if (value == null) {
           throw new NullPointerException();
         }
@@ -6788,7 +10481,7 @@ public final class StudioAPI {
        * <code>repeated .StudioAPI.Proto.Node node = 2;</code>
        */
       public Builder addNode(
-          StudioAPI.Node.Builder builderForValue) {
+          com.cdptech.cdpclient.proto.StudioAPI.Node.Builder builderForValue) {
         ensureNodeIsMutable();
         node_.add(builderForValue.build());
 
@@ -6798,7 +10491,7 @@ public final class StudioAPI {
        * <code>repeated .StudioAPI.Proto.Node node = 2;</code>
        */
       public Builder addNode(
-          int index, StudioAPI.Node.Builder builderForValue) {
+          int index, com.cdptech.cdpclient.proto.StudioAPI.Node.Builder builderForValue) {
         ensureNodeIsMutable();
         node_.add(index, builderForValue.build());
 
@@ -6808,7 +10501,7 @@ public final class StudioAPI {
        * <code>repeated .StudioAPI.Proto.Node node = 2;</code>
        */
       public Builder addAllNode(
-          java.lang.Iterable<? extends StudioAPI.Node> values) {
+          java.lang.Iterable<? extends com.cdptech.cdpclient.proto.StudioAPI.Node> values) {
         ensureNodeIsMutable();
         super.addAll(values, node_);
 
@@ -6844,7 +10537,1433 @@ public final class StudioAPI {
     // @@protoc_insertion_point(class_scope:StudioAPI.Proto.Node)
   }
 
-  public interface VariantValueOrBuilder extends
+  public interface ChildAddOrBuilder extends 
+       com.google.protobuf.GeneratedMessageLite.
+            ExtendableMessageOrBuilder<ChildAdd> {
+
+    // required uint32 parent_node_id = 1;
+    /**
+     * <code>required uint32 parent_node_id = 1;</code>
+     *
+     * <pre>
+     * parent to add the node into
+     * </pre>
+     */
+    boolean hasParentNodeId();
+    /**
+     * <code>required uint32 parent_node_id = 1;</code>
+     *
+     * <pre>
+     * parent to add the node into
+     * </pre>
+     */
+    int getParentNodeId();
+
+    // required string child_name = 2;
+    /**
+     * <code>required string child_name = 2;</code>
+     *
+     * <pre>
+     * child name to be added
+     * </pre>
+     */
+    boolean hasChildName();
+    /**
+     * <code>required string child_name = 2;</code>
+     *
+     * <pre>
+     * child name to be added
+     * </pre>
+     */
+    java.lang.String getChildName();
+    /**
+     * <code>required string child_name = 2;</code>
+     *
+     * <pre>
+     * child name to be added
+     * </pre>
+     */
+    com.google.protobuf.ByteString
+        getChildNameBytes();
+
+    // required string child_type_name = 3;
+    /**
+     * <code>required string child_type_name = 3;</code>
+     *
+     * <pre>
+     * child class name
+     * </pre>
+     */
+    boolean hasChildTypeName();
+    /**
+     * <code>required string child_type_name = 3;</code>
+     *
+     * <pre>
+     * child class name
+     * </pre>
+     */
+    java.lang.String getChildTypeName();
+    /**
+     * <code>required string child_type_name = 3;</code>
+     *
+     * <pre>
+     * child class name
+     * </pre>
+     */
+    com.google.protobuf.ByteString
+        getChildTypeNameBytes();
+  }
+  /**
+   * Protobuf type {@code StudioAPI.Proto.ChildAdd}
+   *
+   * <pre>
+   ** ChildAdd Request input structure 
+   * </pre>
+   */
+  public static final class ChildAdd extends
+      com.google.protobuf.GeneratedMessageLite.ExtendableMessage<
+        ChildAdd> implements ChildAddOrBuilder {
+    // Use ChildAdd.newBuilder() to construct.
+    private ChildAdd(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<com.cdptech.cdpclient.proto.StudioAPI.ChildAdd, ?> builder) {
+      super(builder);
+
+    }
+    private ChildAdd(boolean noInit) {}
+
+    private static final ChildAdd defaultInstance;
+    public static ChildAdd getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public ChildAdd getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private ChildAdd(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              parentNodeId_ = input.readUInt32();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              childName_ = input.readBytes();
+              break;
+            }
+            case 26: {
+              bitField0_ |= 0x00000004;
+              childTypeName_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        makeExtensionsImmutable();
+      }
+    }
+    public static com.google.protobuf.Parser<ChildAdd> PARSER =
+        new com.google.protobuf.AbstractParser<ChildAdd>() {
+      public ChildAdd parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ChildAdd(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ChildAdd> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // required uint32 parent_node_id = 1;
+    public static final int PARENT_NODE_ID_FIELD_NUMBER = 1;
+    private int parentNodeId_;
+    /**
+     * <code>required uint32 parent_node_id = 1;</code>
+     *
+     * <pre>
+     * parent to add the node into
+     * </pre>
+     */
+    public boolean hasParentNodeId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required uint32 parent_node_id = 1;</code>
+     *
+     * <pre>
+     * parent to add the node into
+     * </pre>
+     */
+    public int getParentNodeId() {
+      return parentNodeId_;
+    }
+
+    // required string child_name = 2;
+    public static final int CHILD_NAME_FIELD_NUMBER = 2;
+    private java.lang.Object childName_;
+    /**
+     * <code>required string child_name = 2;</code>
+     *
+     * <pre>
+     * child name to be added
+     * </pre>
+     */
+    public boolean hasChildName() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required string child_name = 2;</code>
+     *
+     * <pre>
+     * child name to be added
+     * </pre>
+     */
+    public java.lang.String getChildName() {
+      java.lang.Object ref = childName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          childName_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string child_name = 2;</code>
+     *
+     * <pre>
+     * child name to be added
+     * </pre>
+     */
+    public com.google.protobuf.ByteString
+        getChildNameBytes() {
+      java.lang.Object ref = childName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        childName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    // required string child_type_name = 3;
+    public static final int CHILD_TYPE_NAME_FIELD_NUMBER = 3;
+    private java.lang.Object childTypeName_;
+    /**
+     * <code>required string child_type_name = 3;</code>
+     *
+     * <pre>
+     * child class name
+     * </pre>
+     */
+    public boolean hasChildTypeName() {
+      return ((bitField0_ & 0x00000004) == 0x00000004);
+    }
+    /**
+     * <code>required string child_type_name = 3;</code>
+     *
+     * <pre>
+     * child class name
+     * </pre>
+     */
+    public java.lang.String getChildTypeName() {
+      java.lang.Object ref = childTypeName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          childTypeName_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string child_type_name = 3;</code>
+     *
+     * <pre>
+     * child class name
+     * </pre>
+     */
+    public com.google.protobuf.ByteString
+        getChildTypeNameBytes() {
+      java.lang.Object ref = childTypeName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        childTypeName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private void initFields() {
+      parentNodeId_ = 0;
+      childName_ = "";
+      childTypeName_ = "";
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      if (!hasParentNodeId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasChildName()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasChildTypeName()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!extensionsAreInitialized()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      com.google.protobuf.GeneratedMessageLite
+        .ExtendableMessage<com.cdptech.cdpclient.proto.StudioAPI.ChildAdd>.ExtensionWriter extensionWriter =
+          newExtensionWriter();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeUInt32(1, parentNodeId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getChildNameBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        output.writeBytes(3, getChildTypeNameBytes());
+      }
+      extensionWriter.writeUntil(536870912, output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(1, parentNodeId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getChildNameBytes());
+      }
+      if (((bitField0_ & 0x00000004) == 0x00000004)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(3, getChildTypeNameBytes());
+      }
+      size += extensionsSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static com.cdptech.cdpclient.proto.StudioAPI.ChildAdd parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.cdptech.cdpclient.proto.StudioAPI.ChildAdd parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.cdptech.cdpclient.proto.StudioAPI.ChildAdd parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.cdptech.cdpclient.proto.StudioAPI.ChildAdd parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.cdptech.cdpclient.proto.StudioAPI.ChildAdd parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.cdptech.cdpclient.proto.StudioAPI.ChildAdd parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static com.cdptech.cdpclient.proto.StudioAPI.ChildAdd parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static com.cdptech.cdpclient.proto.StudioAPI.ChildAdd parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static com.cdptech.cdpclient.proto.StudioAPI.ChildAdd parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.cdptech.cdpclient.proto.StudioAPI.ChildAdd parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(com.cdptech.cdpclient.proto.StudioAPI.ChildAdd prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    /**
+     * Protobuf type {@code StudioAPI.Proto.ChildAdd}
+     *
+     * <pre>
+     ** ChildAdd Request input structure 
+     * </pre>
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<
+          com.cdptech.cdpclient.proto.StudioAPI.ChildAdd, Builder> implements com.cdptech.cdpclient.proto.StudioAPI.ChildAddOrBuilder {
+      // Construct using com.cdptech.cdpclient.proto.StudioAPI.ChildAdd.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private void maybeForceBuilderInitialization() {
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        parentNodeId_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        childName_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        childTypeName_ = "";
+        bitField0_ = (bitField0_ & ~0x00000004);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.cdptech.cdpclient.proto.StudioAPI.ChildAdd getDefaultInstanceForType() {
+        return com.cdptech.cdpclient.proto.StudioAPI.ChildAdd.getDefaultInstance();
+      }
+
+      public com.cdptech.cdpclient.proto.StudioAPI.ChildAdd build() {
+        com.cdptech.cdpclient.proto.StudioAPI.ChildAdd result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.cdptech.cdpclient.proto.StudioAPI.ChildAdd buildPartial() {
+        com.cdptech.cdpclient.proto.StudioAPI.ChildAdd result = new com.cdptech.cdpclient.proto.StudioAPI.ChildAdd(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.parentNodeId_ = parentNodeId_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.childName_ = childName_;
+        if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+          to_bitField0_ |= 0x00000004;
+        }
+        result.childTypeName_ = childTypeName_;
+        result.bitField0_ = to_bitField0_;
+        return result;
+      }
+
+      public Builder mergeFrom(com.cdptech.cdpclient.proto.StudioAPI.ChildAdd other) {
+        if (other == com.cdptech.cdpclient.proto.StudioAPI.ChildAdd.getDefaultInstance()) return this;
+        if (other.hasParentNodeId()) {
+          setParentNodeId(other.getParentNodeId());
+        }
+        if (other.hasChildName()) {
+          bitField0_ |= 0x00000002;
+          childName_ = other.childName_;
+          
+        }
+        if (other.hasChildTypeName()) {
+          bitField0_ |= 0x00000004;
+          childTypeName_ = other.childTypeName_;
+          
+        }
+        this.mergeExtensionFields(other);
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasParentNodeId()) {
+          
+          return false;
+        }
+        if (!hasChildName()) {
+          
+          return false;
+        }
+        if (!hasChildTypeName()) {
+          
+          return false;
+        }
+        if (!extensionsAreInitialized()) {
+          
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.cdptech.cdpclient.proto.StudioAPI.ChildAdd parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.cdptech.cdpclient.proto.StudioAPI.ChildAdd) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // required uint32 parent_node_id = 1;
+      private int parentNodeId_ ;
+      /**
+       * <code>required uint32 parent_node_id = 1;</code>
+       *
+       * <pre>
+       * parent to add the node into
+       * </pre>
+       */
+      public boolean hasParentNodeId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required uint32 parent_node_id = 1;</code>
+       *
+       * <pre>
+       * parent to add the node into
+       * </pre>
+       */
+      public int getParentNodeId() {
+        return parentNodeId_;
+      }
+      /**
+       * <code>required uint32 parent_node_id = 1;</code>
+       *
+       * <pre>
+       * parent to add the node into
+       * </pre>
+       */
+      public Builder setParentNodeId(int value) {
+        bitField0_ |= 0x00000001;
+        parentNodeId_ = value;
+        
+        return this;
+      }
+      /**
+       * <code>required uint32 parent_node_id = 1;</code>
+       *
+       * <pre>
+       * parent to add the node into
+       * </pre>
+       */
+      public Builder clearParentNodeId() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        parentNodeId_ = 0;
+        
+        return this;
+      }
+
+      // required string child_name = 2;
+      private java.lang.Object childName_ = "";
+      /**
+       * <code>required string child_name = 2;</code>
+       *
+       * <pre>
+       * child name to be added
+       * </pre>
+       */
+      public boolean hasChildName() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required string child_name = 2;</code>
+       *
+       * <pre>
+       * child name to be added
+       * </pre>
+       */
+      public java.lang.String getChildName() {
+        java.lang.Object ref = childName_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          childName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string child_name = 2;</code>
+       *
+       * <pre>
+       * child name to be added
+       * </pre>
+       */
+      public com.google.protobuf.ByteString
+          getChildNameBytes() {
+        java.lang.Object ref = childName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          childName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string child_name = 2;</code>
+       *
+       * <pre>
+       * child name to be added
+       * </pre>
+       */
+      public Builder setChildName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        childName_ = value;
+        
+        return this;
+      }
+      /**
+       * <code>required string child_name = 2;</code>
+       *
+       * <pre>
+       * child name to be added
+       * </pre>
+       */
+      public Builder clearChildName() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        childName_ = getDefaultInstance().getChildName();
+        
+        return this;
+      }
+      /**
+       * <code>required string child_name = 2;</code>
+       *
+       * <pre>
+       * child name to be added
+       * </pre>
+       */
+      public Builder setChildNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        childName_ = value;
+        
+        return this;
+      }
+
+      // required string child_type_name = 3;
+      private java.lang.Object childTypeName_ = "";
+      /**
+       * <code>required string child_type_name = 3;</code>
+       *
+       * <pre>
+       * child class name
+       * </pre>
+       */
+      public boolean hasChildTypeName() {
+        return ((bitField0_ & 0x00000004) == 0x00000004);
+      }
+      /**
+       * <code>required string child_type_name = 3;</code>
+       *
+       * <pre>
+       * child class name
+       * </pre>
+       */
+      public java.lang.String getChildTypeName() {
+        java.lang.Object ref = childTypeName_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          childTypeName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string child_type_name = 3;</code>
+       *
+       * <pre>
+       * child class name
+       * </pre>
+       */
+      public com.google.protobuf.ByteString
+          getChildTypeNameBytes() {
+        java.lang.Object ref = childTypeName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          childTypeName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string child_type_name = 3;</code>
+       *
+       * <pre>
+       * child class name
+       * </pre>
+       */
+      public Builder setChildTypeName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        childTypeName_ = value;
+        
+        return this;
+      }
+      /**
+       * <code>required string child_type_name = 3;</code>
+       *
+       * <pre>
+       * child class name
+       * </pre>
+       */
+      public Builder clearChildTypeName() {
+        bitField0_ = (bitField0_ & ~0x00000004);
+        childTypeName_ = getDefaultInstance().getChildTypeName();
+        
+        return this;
+      }
+      /**
+       * <code>required string child_type_name = 3;</code>
+       *
+       * <pre>
+       * child class name
+       * </pre>
+       */
+      public Builder setChildTypeNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000004;
+        childTypeName_ = value;
+        
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:StudioAPI.Proto.ChildAdd)
+    }
+
+    static {
+      defaultInstance = new ChildAdd(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:StudioAPI.Proto.ChildAdd)
+  }
+
+  public interface ChildRemoveOrBuilder extends 
+       com.google.protobuf.GeneratedMessageLite.
+            ExtendableMessageOrBuilder<ChildRemove> {
+
+    // required uint32 parent_node_id = 1;
+    /**
+     * <code>required uint32 parent_node_id = 1;</code>
+     *
+     * <pre>
+     * parent to remove the node from
+     * </pre>
+     */
+    boolean hasParentNodeId();
+    /**
+     * <code>required uint32 parent_node_id = 1;</code>
+     *
+     * <pre>
+     * parent to remove the node from
+     * </pre>
+     */
+    int getParentNodeId();
+
+    // required string child_name = 2;
+    /**
+     * <code>required string child_name = 2;</code>
+     *
+     * <pre>
+     * child to be removed
+     * </pre>
+     */
+    boolean hasChildName();
+    /**
+     * <code>required string child_name = 2;</code>
+     *
+     * <pre>
+     * child to be removed
+     * </pre>
+     */
+    java.lang.String getChildName();
+    /**
+     * <code>required string child_name = 2;</code>
+     *
+     * <pre>
+     * child to be removed
+     * </pre>
+     */
+    com.google.protobuf.ByteString
+        getChildNameBytes();
+  }
+  /**
+   * Protobuf type {@code StudioAPI.Proto.ChildRemove}
+   *
+   * <pre>
+   ** ChildRemove Request input structure 
+   * </pre>
+   */
+  public static final class ChildRemove extends
+      com.google.protobuf.GeneratedMessageLite.ExtendableMessage<
+        ChildRemove> implements ChildRemoveOrBuilder {
+    // Use ChildRemove.newBuilder() to construct.
+    private ChildRemove(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<com.cdptech.cdpclient.proto.StudioAPI.ChildRemove, ?> builder) {
+      super(builder);
+
+    }
+    private ChildRemove(boolean noInit) {}
+
+    private static final ChildRemove defaultInstance;
+    public static ChildRemove getDefaultInstance() {
+      return defaultInstance;
+    }
+
+    public ChildRemove getDefaultInstanceForType() {
+      return defaultInstance;
+    }
+
+    private ChildRemove(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      initFields();
+      int mutable_bitField0_ = 0;
+      try {
+        boolean done = false;
+        while (!done) {
+          int tag = input.readTag();
+          switch (tag) {
+            case 0:
+              done = true;
+              break;
+            default: {
+              if (!parseUnknownField(input,
+                                     extensionRegistry, tag)) {
+                done = true;
+              }
+              break;
+            }
+            case 8: {
+              bitField0_ |= 0x00000001;
+              parentNodeId_ = input.readUInt32();
+              break;
+            }
+            case 18: {
+              bitField0_ |= 0x00000002;
+              childName_ = input.readBytes();
+              break;
+            }
+          }
+        }
+      } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+        throw e.setUnfinishedMessage(this);
+      } catch (java.io.IOException e) {
+        throw new com.google.protobuf.InvalidProtocolBufferException(
+            e.getMessage()).setUnfinishedMessage(this);
+      } finally {
+        makeExtensionsImmutable();
+      }
+    }
+    public static com.google.protobuf.Parser<ChildRemove> PARSER =
+        new com.google.protobuf.AbstractParser<ChildRemove>() {
+      public ChildRemove parsePartialFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws com.google.protobuf.InvalidProtocolBufferException {
+        return new ChildRemove(input, extensionRegistry);
+      }
+    };
+
+    @java.lang.Override
+    public com.google.protobuf.Parser<ChildRemove> getParserForType() {
+      return PARSER;
+    }
+
+    private int bitField0_;
+    // required uint32 parent_node_id = 1;
+    public static final int PARENT_NODE_ID_FIELD_NUMBER = 1;
+    private int parentNodeId_;
+    /**
+     * <code>required uint32 parent_node_id = 1;</code>
+     *
+     * <pre>
+     * parent to remove the node from
+     * </pre>
+     */
+    public boolean hasParentNodeId() {
+      return ((bitField0_ & 0x00000001) == 0x00000001);
+    }
+    /**
+     * <code>required uint32 parent_node_id = 1;</code>
+     *
+     * <pre>
+     * parent to remove the node from
+     * </pre>
+     */
+    public int getParentNodeId() {
+      return parentNodeId_;
+    }
+
+    // required string child_name = 2;
+    public static final int CHILD_NAME_FIELD_NUMBER = 2;
+    private java.lang.Object childName_;
+    /**
+     * <code>required string child_name = 2;</code>
+     *
+     * <pre>
+     * child to be removed
+     * </pre>
+     */
+    public boolean hasChildName() {
+      return ((bitField0_ & 0x00000002) == 0x00000002);
+    }
+    /**
+     * <code>required string child_name = 2;</code>
+     *
+     * <pre>
+     * child to be removed
+     * </pre>
+     */
+    public java.lang.String getChildName() {
+      java.lang.Object ref = childName_;
+      if (ref instanceof java.lang.String) {
+        return (java.lang.String) ref;
+      } else {
+        com.google.protobuf.ByteString bs = 
+            (com.google.protobuf.ByteString) ref;
+        java.lang.String s = bs.toStringUtf8();
+        if (bs.isValidUtf8()) {
+          childName_ = s;
+        }
+        return s;
+      }
+    }
+    /**
+     * <code>required string child_name = 2;</code>
+     *
+     * <pre>
+     * child to be removed
+     * </pre>
+     */
+    public com.google.protobuf.ByteString
+        getChildNameBytes() {
+      java.lang.Object ref = childName_;
+      if (ref instanceof java.lang.String) {
+        com.google.protobuf.ByteString b = 
+            com.google.protobuf.ByteString.copyFromUtf8(
+                (java.lang.String) ref);
+        childName_ = b;
+        return b;
+      } else {
+        return (com.google.protobuf.ByteString) ref;
+      }
+    }
+
+    private void initFields() {
+      parentNodeId_ = 0;
+      childName_ = "";
+    }
+    private byte memoizedIsInitialized = -1;
+    public final boolean isInitialized() {
+      byte isInitialized = memoizedIsInitialized;
+      if (isInitialized != -1) return isInitialized == 1;
+
+      if (!hasParentNodeId()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!hasChildName()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      if (!extensionsAreInitialized()) {
+        memoizedIsInitialized = 0;
+        return false;
+      }
+      memoizedIsInitialized = 1;
+      return true;
+    }
+
+    public void writeTo(com.google.protobuf.CodedOutputStream output)
+                        throws java.io.IOException {
+      getSerializedSize();
+      com.google.protobuf.GeneratedMessageLite
+        .ExtendableMessage<com.cdptech.cdpclient.proto.StudioAPI.ChildRemove>.ExtensionWriter extensionWriter =
+          newExtensionWriter();
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        output.writeUInt32(1, parentNodeId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        output.writeBytes(2, getChildNameBytes());
+      }
+      extensionWriter.writeUntil(536870912, output);
+    }
+
+    private int memoizedSerializedSize = -1;
+    public int getSerializedSize() {
+      int size = memoizedSerializedSize;
+      if (size != -1) return size;
+
+      size = 0;
+      if (((bitField0_ & 0x00000001) == 0x00000001)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeUInt32Size(1, parentNodeId_);
+      }
+      if (((bitField0_ & 0x00000002) == 0x00000002)) {
+        size += com.google.protobuf.CodedOutputStream
+          .computeBytesSize(2, getChildNameBytes());
+      }
+      size += extensionsSerializedSize();
+      memoizedSerializedSize = size;
+      return size;
+    }
+
+    private static final long serialVersionUID = 0L;
+    @java.lang.Override
+    protected java.lang.Object writeReplace()
+        throws java.io.ObjectStreamException {
+      return super.writeReplace();
+    }
+
+    public static com.cdptech.cdpclient.proto.StudioAPI.ChildRemove parseFrom(
+        com.google.protobuf.ByteString data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.cdptech.cdpclient.proto.StudioAPI.ChildRemove parseFrom(
+        com.google.protobuf.ByteString data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.cdptech.cdpclient.proto.StudioAPI.ChildRemove parseFrom(byte[] data)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data);
+    }
+    public static com.cdptech.cdpclient.proto.StudioAPI.ChildRemove parseFrom(
+        byte[] data,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws com.google.protobuf.InvalidProtocolBufferException {
+      return PARSER.parseFrom(data, extensionRegistry);
+    }
+    public static com.cdptech.cdpclient.proto.StudioAPI.ChildRemove parseFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.cdptech.cdpclient.proto.StudioAPI.ChildRemove parseFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+    public static com.cdptech.cdpclient.proto.StudioAPI.ChildRemove parseDelimitedFrom(java.io.InputStream input)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input);
+    }
+    public static com.cdptech.cdpclient.proto.StudioAPI.ChildRemove parseDelimitedFrom(
+        java.io.InputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseDelimitedFrom(input, extensionRegistry);
+    }
+    public static com.cdptech.cdpclient.proto.StudioAPI.ChildRemove parseFrom(
+        com.google.protobuf.CodedInputStream input)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input);
+    }
+    public static com.cdptech.cdpclient.proto.StudioAPI.ChildRemove parseFrom(
+        com.google.protobuf.CodedInputStream input,
+        com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+        throws java.io.IOException {
+      return PARSER.parseFrom(input, extensionRegistry);
+    }
+
+    public static Builder newBuilder() { return Builder.create(); }
+    public Builder newBuilderForType() { return newBuilder(); }
+    public static Builder newBuilder(com.cdptech.cdpclient.proto.StudioAPI.ChildRemove prototype) {
+      return newBuilder().mergeFrom(prototype);
+    }
+    public Builder toBuilder() { return newBuilder(this); }
+
+    /**
+     * Protobuf type {@code StudioAPI.Proto.ChildRemove}
+     *
+     * <pre>
+     ** ChildRemove Request input structure 
+     * </pre>
+     */
+    public static final class Builder extends
+        com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<
+          com.cdptech.cdpclient.proto.StudioAPI.ChildRemove, Builder> implements com.cdptech.cdpclient.proto.StudioAPI.ChildRemoveOrBuilder {
+      // Construct using com.cdptech.cdpclient.proto.StudioAPI.ChildRemove.newBuilder()
+      private Builder() {
+        maybeForceBuilderInitialization();
+      }
+
+      private void maybeForceBuilderInitialization() {
+      }
+      private static Builder create() {
+        return new Builder();
+      }
+
+      public Builder clear() {
+        super.clear();
+        parentNodeId_ = 0;
+        bitField0_ = (bitField0_ & ~0x00000001);
+        childName_ = "";
+        bitField0_ = (bitField0_ & ~0x00000002);
+        return this;
+      }
+
+      public Builder clone() {
+        return create().mergeFrom(buildPartial());
+      }
+
+      public com.cdptech.cdpclient.proto.StudioAPI.ChildRemove getDefaultInstanceForType() {
+        return com.cdptech.cdpclient.proto.StudioAPI.ChildRemove.getDefaultInstance();
+      }
+
+      public com.cdptech.cdpclient.proto.StudioAPI.ChildRemove build() {
+        com.cdptech.cdpclient.proto.StudioAPI.ChildRemove result = buildPartial();
+        if (!result.isInitialized()) {
+          throw newUninitializedMessageException(result);
+        }
+        return result;
+      }
+
+      public com.cdptech.cdpclient.proto.StudioAPI.ChildRemove buildPartial() {
+        com.cdptech.cdpclient.proto.StudioAPI.ChildRemove result = new com.cdptech.cdpclient.proto.StudioAPI.ChildRemove(this);
+        int from_bitField0_ = bitField0_;
+        int to_bitField0_ = 0;
+        if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+          to_bitField0_ |= 0x00000001;
+        }
+        result.parentNodeId_ = parentNodeId_;
+        if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+          to_bitField0_ |= 0x00000002;
+        }
+        result.childName_ = childName_;
+        result.bitField0_ = to_bitField0_;
+        return result;
+      }
+
+      public Builder mergeFrom(com.cdptech.cdpclient.proto.StudioAPI.ChildRemove other) {
+        if (other == com.cdptech.cdpclient.proto.StudioAPI.ChildRemove.getDefaultInstance()) return this;
+        if (other.hasParentNodeId()) {
+          setParentNodeId(other.getParentNodeId());
+        }
+        if (other.hasChildName()) {
+          bitField0_ |= 0x00000002;
+          childName_ = other.childName_;
+          
+        }
+        this.mergeExtensionFields(other);
+        return this;
+      }
+
+      public final boolean isInitialized() {
+        if (!hasParentNodeId()) {
+          
+          return false;
+        }
+        if (!hasChildName()) {
+          
+          return false;
+        }
+        if (!extensionsAreInitialized()) {
+          
+          return false;
+        }
+        return true;
+      }
+
+      public Builder mergeFrom(
+          com.google.protobuf.CodedInputStream input,
+          com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+          throws java.io.IOException {
+        com.cdptech.cdpclient.proto.StudioAPI.ChildRemove parsedMessage = null;
+        try {
+          parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+        } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+          parsedMessage = (com.cdptech.cdpclient.proto.StudioAPI.ChildRemove) e.getUnfinishedMessage();
+          throw e;
+        } finally {
+          if (parsedMessage != null) {
+            mergeFrom(parsedMessage);
+          }
+        }
+        return this;
+      }
+      private int bitField0_;
+
+      // required uint32 parent_node_id = 1;
+      private int parentNodeId_ ;
+      /**
+       * <code>required uint32 parent_node_id = 1;</code>
+       *
+       * <pre>
+       * parent to remove the node from
+       * </pre>
+       */
+      public boolean hasParentNodeId() {
+        return ((bitField0_ & 0x00000001) == 0x00000001);
+      }
+      /**
+       * <code>required uint32 parent_node_id = 1;</code>
+       *
+       * <pre>
+       * parent to remove the node from
+       * </pre>
+       */
+      public int getParentNodeId() {
+        return parentNodeId_;
+      }
+      /**
+       * <code>required uint32 parent_node_id = 1;</code>
+       *
+       * <pre>
+       * parent to remove the node from
+       * </pre>
+       */
+      public Builder setParentNodeId(int value) {
+        bitField0_ |= 0x00000001;
+        parentNodeId_ = value;
+        
+        return this;
+      }
+      /**
+       * <code>required uint32 parent_node_id = 1;</code>
+       *
+       * <pre>
+       * parent to remove the node from
+       * </pre>
+       */
+      public Builder clearParentNodeId() {
+        bitField0_ = (bitField0_ & ~0x00000001);
+        parentNodeId_ = 0;
+        
+        return this;
+      }
+
+      // required string child_name = 2;
+      private java.lang.Object childName_ = "";
+      /**
+       * <code>required string child_name = 2;</code>
+       *
+       * <pre>
+       * child to be removed
+       * </pre>
+       */
+      public boolean hasChildName() {
+        return ((bitField0_ & 0x00000002) == 0x00000002);
+      }
+      /**
+       * <code>required string child_name = 2;</code>
+       *
+       * <pre>
+       * child to be removed
+       * </pre>
+       */
+      public java.lang.String getChildName() {
+        java.lang.Object ref = childName_;
+        if (!(ref instanceof java.lang.String)) {
+          java.lang.String s = ((com.google.protobuf.ByteString) ref)
+              .toStringUtf8();
+          childName_ = s;
+          return s;
+        } else {
+          return (java.lang.String) ref;
+        }
+      }
+      /**
+       * <code>required string child_name = 2;</code>
+       *
+       * <pre>
+       * child to be removed
+       * </pre>
+       */
+      public com.google.protobuf.ByteString
+          getChildNameBytes() {
+        java.lang.Object ref = childName_;
+        if (ref instanceof String) {
+          com.google.protobuf.ByteString b = 
+              com.google.protobuf.ByteString.copyFromUtf8(
+                  (java.lang.String) ref);
+          childName_ = b;
+          return b;
+        } else {
+          return (com.google.protobuf.ByteString) ref;
+        }
+      }
+      /**
+       * <code>required string child_name = 2;</code>
+       *
+       * <pre>
+       * child to be removed
+       * </pre>
+       */
+      public Builder setChildName(
+          java.lang.String value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        childName_ = value;
+        
+        return this;
+      }
+      /**
+       * <code>required string child_name = 2;</code>
+       *
+       * <pre>
+       * child to be removed
+       * </pre>
+       */
+      public Builder clearChildName() {
+        bitField0_ = (bitField0_ & ~0x00000002);
+        childName_ = getDefaultInstance().getChildName();
+        
+        return this;
+      }
+      /**
+       * <code>required string child_name = 2;</code>
+       *
+       * <pre>
+       * child to be removed
+       * </pre>
+       */
+      public Builder setChildNameBytes(
+          com.google.protobuf.ByteString value) {
+        if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x00000002;
+        childName_ = value;
+        
+        return this;
+      }
+
+      // @@protoc_insertion_point(builder_scope:StudioAPI.Proto.ChildRemove)
+    }
+
+    static {
+      defaultInstance = new ChildRemove(true);
+      defaultInstance.initFields();
+    }
+
+    // @@protoc_insertion_point(class_scope:StudioAPI.Proto.ChildRemove)
+  }
+
+  public interface VariantValueOrBuilder extends 
        com.google.protobuf.GeneratedMessageLite.
             ExtendableMessageOrBuilder<VariantValue> {
 
@@ -7037,14 +12156,14 @@ public final class StudioAPI {
    * Protobuf type {@code StudioAPI.Proto.VariantValue}
    *
    * <pre>
-   ** Common Variant value type for a remote node.
+   ** Common Variant value type for a remote node. 
    * </pre>
    */
   public static final class VariantValue extends
       com.google.protobuf.GeneratedMessageLite.ExtendableMessage<
         VariantValue> implements VariantValueOrBuilder {
     // Use VariantValue.newBuilder() to construct.
-    private VariantValue(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<StudioAPI.VariantValue, ?> builder) {
+    private VariantValue(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<com.cdptech.cdpclient.proto.StudioAPI.VariantValue, ?> builder) {
       super(builder);
 
     }
@@ -7418,7 +12537,7 @@ public final class StudioAPI {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs =
+        com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         if (bs.isValidUtf8()) {
@@ -7434,7 +12553,7 @@ public final class StudioAPI {
         getStrValueBytes() {
       java.lang.Object ref = strValue_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b =
+        com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         strValue_ = b;
@@ -7501,7 +12620,7 @@ public final class StudioAPI {
                         throws java.io.IOException {
       getSerializedSize();
       com.google.protobuf.GeneratedMessageLite
-        .ExtendableMessage<StudioAPI.VariantValue>.ExtensionWriter extensionWriter =
+        .ExtendableMessage<com.cdptech.cdpclient.proto.StudioAPI.VariantValue>.ExtensionWriter extensionWriter =
           newExtensionWriter();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeUInt32(1, nodeId_);
@@ -7622,53 +12741,53 @@ public final class StudioAPI {
       return super.writeReplace();
     }
 
-    public static StudioAPI.VariantValue parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.VariantValue parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StudioAPI.VariantValue parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.VariantValue parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StudioAPI.VariantValue parseFrom(byte[] data)
+    public static com.cdptech.cdpclient.proto.StudioAPI.VariantValue parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StudioAPI.VariantValue parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.VariantValue parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StudioAPI.VariantValue parseFrom(java.io.InputStream input)
+    public static com.cdptech.cdpclient.proto.StudioAPI.VariantValue parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static StudioAPI.VariantValue parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.VariantValue parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static StudioAPI.VariantValue parseDelimitedFrom(java.io.InputStream input)
+    public static com.cdptech.cdpclient.proto.StudioAPI.VariantValue parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static StudioAPI.VariantValue parseDelimitedFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.VariantValue parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static StudioAPI.VariantValue parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.VariantValue parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static StudioAPI.VariantValue parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.VariantValue parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -7677,7 +12796,7 @@ public final class StudioAPI {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(StudioAPI.VariantValue prototype) {
+    public static Builder newBuilder(com.cdptech.cdpclient.proto.StudioAPI.VariantValue prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -7686,13 +12805,13 @@ public final class StudioAPI {
      * Protobuf type {@code StudioAPI.Proto.VariantValue}
      *
      * <pre>
-     ** Common Variant value type for a remote node.
+     ** Common Variant value type for a remote node. 
      * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<
-          StudioAPI.VariantValue, Builder> implements StudioAPI.VariantValueOrBuilder {
-      // Construct using StudioAPI.VariantValue.newBuilder()
+          com.cdptech.cdpclient.proto.StudioAPI.VariantValue, Builder> implements com.cdptech.cdpclient.proto.StudioAPI.VariantValueOrBuilder {
+      // Construct using com.cdptech.cdpclient.proto.StudioAPI.VariantValue.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -7740,20 +12859,20 @@ public final class StudioAPI {
         return create().mergeFrom(buildPartial());
       }
 
-      public StudioAPI.VariantValue getDefaultInstanceForType() {
-        return StudioAPI.VariantValue.getDefaultInstance();
+      public com.cdptech.cdpclient.proto.StudioAPI.VariantValue getDefaultInstanceForType() {
+        return com.cdptech.cdpclient.proto.StudioAPI.VariantValue.getDefaultInstance();
       }
 
-      public StudioAPI.VariantValue build() {
-        StudioAPI.VariantValue result = buildPartial();
+      public com.cdptech.cdpclient.proto.StudioAPI.VariantValue build() {
+        com.cdptech.cdpclient.proto.StudioAPI.VariantValue result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public StudioAPI.VariantValue buildPartial() {
-        StudioAPI.VariantValue result = new StudioAPI.VariantValue(this);
+      public com.cdptech.cdpclient.proto.StudioAPI.VariantValue buildPartial() {
+        com.cdptech.cdpclient.proto.StudioAPI.VariantValue result = new com.cdptech.cdpclient.proto.StudioAPI.VariantValue(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -7816,8 +12935,8 @@ public final class StudioAPI {
         return result;
       }
 
-      public Builder mergeFrom(StudioAPI.VariantValue other) {
-        if (other == StudioAPI.VariantValue.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.cdptech.cdpclient.proto.StudioAPI.VariantValue other) {
+        if (other == com.cdptech.cdpclient.proto.StudioAPI.VariantValue.getDefaultInstance()) return this;
         if (other.hasNodeId()) {
           setNodeId(other.getNodeId());
         }
@@ -7857,7 +12976,7 @@ public final class StudioAPI {
         if (other.hasStrValue()) {
           bitField0_ |= 0x00001000;
           strValue_ = other.strValue_;
-
+          
         }
         if (other.hasTimestamp()) {
           setTimestamp(other.getTimestamp());
@@ -7868,7 +12987,7 @@ public final class StudioAPI {
 
       public final boolean isInitialized() {
         if (!extensionsAreInitialized()) {
-
+          
           return false;
         }
         return true;
@@ -7878,11 +12997,11 @@ public final class StudioAPI {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        StudioAPI.VariantValue parsedMessage = null;
+        com.cdptech.cdpclient.proto.StudioAPI.VariantValue parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (StudioAPI.VariantValue) e.getUnfinishedMessage();
+          parsedMessage = (com.cdptech.cdpclient.proto.StudioAPI.VariantValue) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {
@@ -7913,7 +13032,7 @@ public final class StudioAPI {
       public Builder setNodeId(int value) {
         bitField0_ |= 0x00000001;
         nodeId_ = value;
-
+        
         return this;
       }
       /**
@@ -7922,7 +13041,7 @@ public final class StudioAPI {
       public Builder clearNodeId() {
         bitField0_ = (bitField0_ & ~0x00000001);
         nodeId_ = 0;
-
+        
         return this;
       }
 
@@ -7946,7 +13065,7 @@ public final class StudioAPI {
       public Builder setDValue(double value) {
         bitField0_ |= 0x00000002;
         dValue_ = value;
-
+        
         return this;
       }
       /**
@@ -7955,7 +13074,7 @@ public final class StudioAPI {
       public Builder clearDValue() {
         bitField0_ = (bitField0_ & ~0x00000002);
         dValue_ = 0D;
-
+        
         return this;
       }
 
@@ -7979,7 +13098,7 @@ public final class StudioAPI {
       public Builder setFValue(float value) {
         bitField0_ |= 0x00000004;
         fValue_ = value;
-
+        
         return this;
       }
       /**
@@ -7988,7 +13107,7 @@ public final class StudioAPI {
       public Builder clearFValue() {
         bitField0_ = (bitField0_ & ~0x00000004);
         fValue_ = 0F;
-
+        
         return this;
       }
 
@@ -8012,7 +13131,7 @@ public final class StudioAPI {
       public Builder setUi64Value(long value) {
         bitField0_ |= 0x00000008;
         ui64Value_ = value;
-
+        
         return this;
       }
       /**
@@ -8021,7 +13140,7 @@ public final class StudioAPI {
       public Builder clearUi64Value() {
         bitField0_ = (bitField0_ & ~0x00000008);
         ui64Value_ = 0L;
-
+        
         return this;
       }
 
@@ -8045,7 +13164,7 @@ public final class StudioAPI {
       public Builder setI64Value(long value) {
         bitField0_ |= 0x00000010;
         i64Value_ = value;
-
+        
         return this;
       }
       /**
@@ -8054,7 +13173,7 @@ public final class StudioAPI {
       public Builder clearI64Value() {
         bitField0_ = (bitField0_ & ~0x00000010);
         i64Value_ = 0L;
-
+        
         return this;
       }
 
@@ -8078,7 +13197,7 @@ public final class StudioAPI {
       public Builder setUiValue(int value) {
         bitField0_ |= 0x00000020;
         uiValue_ = value;
-
+        
         return this;
       }
       /**
@@ -8087,7 +13206,7 @@ public final class StudioAPI {
       public Builder clearUiValue() {
         bitField0_ = (bitField0_ & ~0x00000020);
         uiValue_ = 0;
-
+        
         return this;
       }
 
@@ -8111,7 +13230,7 @@ public final class StudioAPI {
       public Builder setIValue(int value) {
         bitField0_ |= 0x00000040;
         iValue_ = value;
-
+        
         return this;
       }
       /**
@@ -8120,7 +13239,7 @@ public final class StudioAPI {
       public Builder clearIValue() {
         bitField0_ = (bitField0_ & ~0x00000040);
         iValue_ = 0;
-
+        
         return this;
       }
 
@@ -8156,7 +13275,7 @@ public final class StudioAPI {
       public Builder setUsValue(int value) {
         bitField0_ |= 0x00000080;
         usValue_ = value;
-
+        
         return this;
       }
       /**
@@ -8169,7 +13288,7 @@ public final class StudioAPI {
       public Builder clearUsValue() {
         bitField0_ = (bitField0_ & ~0x00000080);
         usValue_ = 0;
-
+        
         return this;
       }
 
@@ -8205,7 +13324,7 @@ public final class StudioAPI {
       public Builder setSValue(int value) {
         bitField0_ |= 0x00000100;
         sValue_ = value;
-
+        
         return this;
       }
       /**
@@ -8218,7 +13337,7 @@ public final class StudioAPI {
       public Builder clearSValue() {
         bitField0_ = (bitField0_ & ~0x00000100);
         sValue_ = 0;
-
+        
         return this;
       }
 
@@ -8254,7 +13373,7 @@ public final class StudioAPI {
       public Builder setUcValue(int value) {
         bitField0_ |= 0x00000200;
         ucValue_ = value;
-
+        
         return this;
       }
       /**
@@ -8267,7 +13386,7 @@ public final class StudioAPI {
       public Builder clearUcValue() {
         bitField0_ = (bitField0_ & ~0x00000200);
         ucValue_ = 0;
-
+        
         return this;
       }
 
@@ -8303,7 +13422,7 @@ public final class StudioAPI {
       public Builder setCValue(int value) {
         bitField0_ |= 0x00000400;
         cValue_ = value;
-
+        
         return this;
       }
       /**
@@ -8316,7 +13435,7 @@ public final class StudioAPI {
       public Builder clearCValue() {
         bitField0_ = (bitField0_ & ~0x00000400);
         cValue_ = 0;
-
+        
         return this;
       }
 
@@ -8340,7 +13459,7 @@ public final class StudioAPI {
       public Builder setBValue(boolean value) {
         bitField0_ |= 0x00000800;
         bValue_ = value;
-
+        
         return this;
       }
       /**
@@ -8349,7 +13468,7 @@ public final class StudioAPI {
       public Builder clearBValue() {
         bitField0_ = (bitField0_ & ~0x00000800);
         bValue_ = false;
-
+        
         return this;
       }
 
@@ -8382,7 +13501,7 @@ public final class StudioAPI {
           getStrValueBytes() {
         java.lang.Object ref = strValue_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b =
+          com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           strValue_ = b;
@@ -8401,7 +13520,7 @@ public final class StudioAPI {
   }
   bitField0_ |= 0x00001000;
         strValue_ = value;
-
+        
         return this;
       }
       /**
@@ -8410,7 +13529,7 @@ public final class StudioAPI {
       public Builder clearStrValue() {
         bitField0_ = (bitField0_ & ~0x00001000);
         strValue_ = getDefaultInstance().getStrValue();
-
+        
         return this;
       }
       /**
@@ -8423,7 +13542,7 @@ public final class StudioAPI {
   }
   bitField0_ |= 0x00001000;
         strValue_ = value;
-
+        
         return this;
       }
 
@@ -8459,7 +13578,7 @@ public final class StudioAPI {
       public Builder setTimestamp(long value) {
         bitField0_ |= 0x00002000;
         timestamp_ = value;
-
+        
         return this;
       }
       /**
@@ -8472,7 +13591,7 @@ public final class StudioAPI {
       public Builder clearTimestamp() {
         bitField0_ = (bitField0_ & ~0x00002000);
         timestamp_ = 0L;
-
+        
         return this;
       }
 
@@ -8487,7 +13606,7 @@ public final class StudioAPI {
     // @@protoc_insertion_point(class_scope:StudioAPI.Proto.VariantValue)
   }
 
-  public interface ValueRequestOrBuilder extends
+  public interface ValueRequestOrBuilder extends 
        com.google.protobuf.GeneratedMessageLite.
             ExtendableMessageOrBuilder<ValueRequest> {
 
@@ -8549,14 +13668,14 @@ public final class StudioAPI {
    * Protobuf type {@code StudioAPI.Proto.ValueRequest}
    *
    * <pre>
-   ** Single and periodic value request message.
+   ** Single and periodic value request message. 
    * </pre>
    */
   public static final class ValueRequest extends
       com.google.protobuf.GeneratedMessageLite.ExtendableMessage<
         ValueRequest> implements ValueRequestOrBuilder {
     // Use ValueRequest.newBuilder() to construct.
-    private ValueRequest(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<StudioAPI.ValueRequest, ?> builder) {
+    private ValueRequest(com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<com.cdptech.cdpclient.proto.StudioAPI.ValueRequest, ?> builder) {
       super(builder);
 
     }
@@ -8732,7 +13851,7 @@ public final class StudioAPI {
                         throws java.io.IOException {
       getSerializedSize();
       com.google.protobuf.GeneratedMessageLite
-        .ExtendableMessage<StudioAPI.ValueRequest>.ExtensionWriter extensionWriter =
+        .ExtendableMessage<com.cdptech.cdpclient.proto.StudioAPI.ValueRequest>.ExtensionWriter extensionWriter =
           newExtensionWriter();
       if (((bitField0_ & 0x00000001) == 0x00000001)) {
         output.writeUInt32(1, nodeId_);
@@ -8776,53 +13895,53 @@ public final class StudioAPI {
       return super.writeReplace();
     }
 
-    public static StudioAPI.ValueRequest parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.ValueRequest parseFrom(
         com.google.protobuf.ByteString data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StudioAPI.ValueRequest parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.ValueRequest parseFrom(
         com.google.protobuf.ByteString data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StudioAPI.ValueRequest parseFrom(byte[] data)
+    public static com.cdptech.cdpclient.proto.StudioAPI.ValueRequest parseFrom(byte[] data)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data);
     }
-    public static StudioAPI.ValueRequest parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.ValueRequest parseFrom(
         byte[] data,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws com.google.protobuf.InvalidProtocolBufferException {
       return PARSER.parseFrom(data, extensionRegistry);
     }
-    public static StudioAPI.ValueRequest parseFrom(java.io.InputStream input)
+    public static com.cdptech.cdpclient.proto.StudioAPI.ValueRequest parseFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static StudioAPI.ValueRequest parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.ValueRequest parseFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseFrom(input, extensionRegistry);
     }
-    public static StudioAPI.ValueRequest parseDelimitedFrom(java.io.InputStream input)
+    public static com.cdptech.cdpclient.proto.StudioAPI.ValueRequest parseDelimitedFrom(java.io.InputStream input)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input);
     }
-    public static StudioAPI.ValueRequest parseDelimitedFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.ValueRequest parseDelimitedFrom(
         java.io.InputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
       return PARSER.parseDelimitedFrom(input, extensionRegistry);
     }
-    public static StudioAPI.ValueRequest parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.ValueRequest parseFrom(
         com.google.protobuf.CodedInputStream input)
         throws java.io.IOException {
       return PARSER.parseFrom(input);
     }
-    public static StudioAPI.ValueRequest parseFrom(
+    public static com.cdptech.cdpclient.proto.StudioAPI.ValueRequest parseFrom(
         com.google.protobuf.CodedInputStream input,
         com.google.protobuf.ExtensionRegistryLite extensionRegistry)
         throws java.io.IOException {
@@ -8831,7 +13950,7 @@ public final class StudioAPI {
 
     public static Builder newBuilder() { return Builder.create(); }
     public Builder newBuilderForType() { return newBuilder(); }
-    public static Builder newBuilder(StudioAPI.ValueRequest prototype) {
+    public static Builder newBuilder(com.cdptech.cdpclient.proto.StudioAPI.ValueRequest prototype) {
       return newBuilder().mergeFrom(prototype);
     }
     public Builder toBuilder() { return newBuilder(this); }
@@ -8840,13 +13959,13 @@ public final class StudioAPI {
      * Protobuf type {@code StudioAPI.Proto.ValueRequest}
      *
      * <pre>
-     ** Single and periodic value request message.
+     ** Single and periodic value request message. 
      * </pre>
      */
     public static final class Builder extends
         com.google.protobuf.GeneratedMessageLite.ExtendableBuilder<
-          StudioAPI.ValueRequest, Builder> implements StudioAPI.ValueRequestOrBuilder {
-      // Construct using StudioAPI.ValueRequest.newBuilder()
+          com.cdptech.cdpclient.proto.StudioAPI.ValueRequest, Builder> implements com.cdptech.cdpclient.proto.StudioAPI.ValueRequestOrBuilder {
+      // Construct using com.cdptech.cdpclient.proto.StudioAPI.ValueRequest.newBuilder()
       private Builder() {
         maybeForceBuilderInitialization();
       }
@@ -8872,20 +13991,20 @@ public final class StudioAPI {
         return create().mergeFrom(buildPartial());
       }
 
-      public StudioAPI.ValueRequest getDefaultInstanceForType() {
-        return StudioAPI.ValueRequest.getDefaultInstance();
+      public com.cdptech.cdpclient.proto.StudioAPI.ValueRequest getDefaultInstanceForType() {
+        return com.cdptech.cdpclient.proto.StudioAPI.ValueRequest.getDefaultInstance();
       }
 
-      public StudioAPI.ValueRequest build() {
-        StudioAPI.ValueRequest result = buildPartial();
+      public com.cdptech.cdpclient.proto.StudioAPI.ValueRequest build() {
+        com.cdptech.cdpclient.proto.StudioAPI.ValueRequest result = buildPartial();
         if (!result.isInitialized()) {
           throw newUninitializedMessageException(result);
         }
         return result;
       }
 
-      public StudioAPI.ValueRequest buildPartial() {
-        StudioAPI.ValueRequest result = new StudioAPI.ValueRequest(this);
+      public com.cdptech.cdpclient.proto.StudioAPI.ValueRequest buildPartial() {
+        com.cdptech.cdpclient.proto.StudioAPI.ValueRequest result = new com.cdptech.cdpclient.proto.StudioAPI.ValueRequest(this);
         int from_bitField0_ = bitField0_;
         int to_bitField0_ = 0;
         if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
@@ -8904,8 +14023,8 @@ public final class StudioAPI {
         return result;
       }
 
-      public Builder mergeFrom(StudioAPI.ValueRequest other) {
-        if (other == StudioAPI.ValueRequest.getDefaultInstance()) return this;
+      public Builder mergeFrom(com.cdptech.cdpclient.proto.StudioAPI.ValueRequest other) {
+        if (other == com.cdptech.cdpclient.proto.StudioAPI.ValueRequest.getDefaultInstance()) return this;
         if (other.hasNodeId()) {
           setNodeId(other.getNodeId());
         }
@@ -8921,11 +14040,11 @@ public final class StudioAPI {
 
       public final boolean isInitialized() {
         if (!hasNodeId()) {
-
+          
           return false;
         }
         if (!extensionsAreInitialized()) {
-
+          
           return false;
         }
         return true;
@@ -8935,11 +14054,11 @@ public final class StudioAPI {
           com.google.protobuf.CodedInputStream input,
           com.google.protobuf.ExtensionRegistryLite extensionRegistry)
           throws java.io.IOException {
-        StudioAPI.ValueRequest parsedMessage = null;
+        com.cdptech.cdpclient.proto.StudioAPI.ValueRequest parsedMessage = null;
         try {
           parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
         } catch (com.google.protobuf.InvalidProtocolBufferException e) {
-          parsedMessage = (StudioAPI.ValueRequest) e.getUnfinishedMessage();
+          parsedMessage = (com.cdptech.cdpclient.proto.StudioAPI.ValueRequest) e.getUnfinishedMessage();
           throw e;
         } finally {
           if (parsedMessage != null) {

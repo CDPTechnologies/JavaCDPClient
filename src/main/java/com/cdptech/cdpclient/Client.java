@@ -4,9 +4,21 @@
 
 package com.cdptech.cdpclient;
 
+import lombok.SneakyThrows;
+
+import javax.net.SocketFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLParameters;
+import javax.net.ssl.TrustManagerFactory;
+import java.io.File;
+import java.io.FileInputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.KeyStore;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateFactory;
 import java.util.*;
+import java.util.function.BiConsumer;
 
 /**
  * Main Client class for initializing the CDP Java client.
@@ -14,51 +26,82 @@ import java.util.*;
  * Following is a small example:
  * <pre>
  * {@code
-Client client = new Client();
-
-// Connect the client. The CDP application will print its StudioAPIServer IP and port on startup.
-client.init("127.0.0.1", 7689, new NotificationListener() {
-    public void clientReady(Client client) {
-        System.out.println("Client connected");
-
-        // Find a node and print its value changes
-        client.findNode("myApp.CPULoad").then((node, status) -> {
-            if (status == Request.Status.RESOLVED)
-                node.subscribeToValueChanges(value -> System.out.println(value + "\t" + value.getTimestamp()), 10);
-        });
-
-        // Find a node and change its value
-        client.findNode("myApp.MySignal").then((node, status) -> {
-            if (status == Request.Status.RESOLVED)
-                node.postValue(new Variant.Builder(StudioAPI.CDPValueType.eDOUBLE).parse("4").build());
-        });
-
-        // To connect to other CDP applications in the system, a listener should be used to detect when they come up
-        root.addSubtreeListener((Node changedNode, SubtreeChangeType changeType) -> {
-            if (changedNode.getNodeType() == StudioAPI.CDPNodeType.CDP_APPLICATION
-                    && changeType == SubtreeChangeType.eChildAdded) {
-                changedNode.find("CPULoad").then((node, status) -> {
-                    node.subscribeToValueChanges(value -> System.out.println(node.getLongName() + ": " + value));
-                });
-            }
-        });
-    }
-    public void clientClosed(Client client) {
-        System.out.println("Client closed");
-    }
-});
-client.run();
-}
+ * Client client = new Client();
+ *
+ * // Optionally trust a self-signed certificate when encryption is enabled (by default it is disabled)
+ * // client.setTrustedCertificates(Collections.singletonList(new File("/path/to/application/StudioAPI.crt")), false);
+ *
+ * // Connect the client. The CDP application will print its StudioAPIServer IP and port on startup.
+ * client.init("127.0.0.1", 7689, new NotificationListener() {
+ *     public void clientReady(Client client) {
+ *         System.out.println("Client connected");
+ *
+ *         // Find a node and print its value changes
+ *         client.findNode("myApp.CPULoad").then((node, status) -> {
+ *             if (status == Request.Status.RESOLVED)
+ *                 node.subscribeToValueChanges(value -> System.out.println(value + "\t" + value.getTimestamp()), 10);
+ *         });
+ *
+ *         // Find a node and change its value
+ *         client.findNode("myApp.MySignal").then((node, status) -> {
+ *             if (status == Request.Status.RESOLVED)
+ *                 node.postValue(new Variant.Builder(StudioAPI.CDPValueType.eDOUBLE).parse("4").build());
+ *         });
+ *
+ *         // To connect to other CDP applications in the system, a listener should be used to detect when they come up
+ *         root.addSubtreeListener((Node changedNode, SubtreeChangeType changeType) -> {
+ *             if (changedNode.getNodeType() == StudioAPI.CDPNodeType.CDP_APPLICATION
+ *                     && changeType == SubtreeChangeType.eChildAdded) {
+ *                 changedNode.find("CPULoad").then((node, status) -> {
+ *                     node.subscribeToValueChanges(value -> System.out.println(node.getLongName() + ": " + value));
+ *                 });
+ *             }
+ *         });
+ *     }
+ *     public void connectionError(URI serverURI, Exception e) { e.printStackTrace(); }
+ *     public void clientClosed(Client client) { System.out.println("Client closed"); }
+ *
+ *     public void credentialsRequested(AuthRequest request) {
+ *         if (request.getAuthResult().getCode() == CREDENTIALS_REQUIRED) {
+ *             request.accept(AuthResponse.password(user, password));
+ *         } else {
+ *             System.out.println("Authentication failed: " + request.getAuthResult());
+ *             request.reject();
+ *         }
+ *     }
+ *
+ *     // Optionally override to manually verify/cache certificates and approve/reject connections to applications
+ *     // public void applicationAcceptanceRequested(AuthRequest request) { request.accept(); }
+ *     // public void handshakeAcceptanceRequested(AuthRequest request) { request.accept(); }
+ *
+ * });
+ * client.run();
+ * }
  * </pre>
+ *
+ * Note that when using a self-signed certificate (e.g. the one generated by CDP Studio), make sure to do
+ * one of the following:
+ * <ul>
+ *   <li>Force the client to trust your certificate by calling {@link #setTrustedCertificates}.</li>
+ *   <li>Set a custom SocketFactory with {@link #setSocketFactory} to fine-tune the certificate handling.</li>
+ *   <li>Disable any certificate validation with {@link #setIgnoreCertificates}.</li>
+ * </ul>
+ * In production code it is recommended to instead use a trusted CA signed certificate.
+ *
+ * @see NotificationListener#credentialsRequested
+ * @see NotificationListener#applicationAcceptanceRequested
+ * @see NotificationListener#handshakeAcceptanceRequested
  */
 public class Client implements Runnable {
 
-  private Map<URI, RequestDispatch> connections = new HashMap<>();
+  private Map<URI, Connection> connections = new HashMap<>();
   private Set<URI> lostConnections = new HashSet<>();
   private Node rootNode;
   private Set<Node> lostApps = new HashSet<>();
+
+  private SocketFactory socketFactory;
+  private BiConsumer<URI, SSLParameters> socketParameterHandler;
   private NotificationListener listener;
-  private IOHandler ioHandler;
   private long lastReconnectTimeMs = 0;
   private boolean cleanupConnections = false;
   private boolean timeSyncEnabled = true;
@@ -69,22 +112,139 @@ public class Client implements Runnable {
   public Client() {
   }
 
-  /** Initialise the client. Connects to the server and notifies @a listener. */
-  public void init(String addr, int port, NotificationListener listener) {
+  /**
+   * Initialise the client. Connects to the server and notifies @a listener.
+   */
+  public void init(String address, int port, NotificationListener listener) {
     this.listener = listener;
     clientClosed = false;
-  try {
-    URI wsURI = new URI("ws", null, addr, port, null, null, null);
-    if (connections.containsKey(wsURI))
-      return;
-    ioHandler = new IOHandler(wsURI);
-    ioHandler.setTimeSyncEnabled(timeSyncEnabled);
-    RequestDispatch d = new RequestDispatch(this, ioHandler);
-    d.init();
-    connections.put(wsURI, d);
-  } catch (URISyntaxException e) {
-    throw new IllegalArgumentException("Unable to parse server URI");
+    try {
+      URI wsURI = new URI(getDefaultScheme(), null, address, port, null, null, null);
+      if (connections.containsKey(wsURI))
+        return;
+      Connection c = new Connection(this, wsURI, socketFactory, socketParameterHandler);
+      c.init();
+      connections.put(wsURI, c);
+    } catch (URISyntaxException e) {
+      throw new IllegalArgumentException("Unable to parse server URI");
+    }
   }
+
+  private String getDefaultScheme() {
+    return socketFactory == null ? "ws" : "wss";
+  }
+
+  /**
+   * Must be called before {@link Client#init}. Allows to fine-tune which server certificates are accepted
+   * for a secure connection. Note that calling this method will override {@link #setTrustedCertificates}
+   * and {@link #setIgnoreCertificates}.
+   *
+   * @param socketFactory A custom SocketFactory which for example be used to configure a Keystore which would trust
+   *                      self-signed SSL certificates.
+   * @param socketParameterHandler Allows to configure the SSL parameters of a created socket. Can for example be
+   *                               used to disable end-point identification in testing environment.
+   * @apiNote
+   *
+   * Following is a small example. Use CDP Studio to create a system and enable encryption in the Security tab.
+   *
+   * <pre>
+   * {@code
+   * Client client = new Client();
+   *
+   * // Create a custom SocketFactory which would trust the default self-signed StudioAPI.crt generated by CDP Studio.
+   * // Useful for testing but for production code it is recommended to use a trusted CA signed certificate.
+   * File crtFile = new File("/path/to/application/StudioAPI.crt");
+   * Certificate certificate = CertificateFactory.getInstance("X.509").generateCertificate(new FileInputStream(crtFile));
+   *
+   * KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+   * keyStore.load(null, null);
+   * keyStore.setCertificateEntry("StudioAPI", certificate);
+   *
+   * TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+   * trustManagerFactory.init(keyStore);
+   *
+   * SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+   * sslContext.init(null, trustManagerFactory.getTrustManagers(), null);
+   *
+   * client.setSocketFactory(sslContext.getSocketFactory(),
+   *     (uri, sslParameters) -> sslParameters.setEndpointIdentificationAlgorithm(null)); // Use only in a test environment
+   *
+   * client.init(...);
+   * ...
+   * }
+   * </pre>
+   */
+  public void setSocketFactory(SocketFactory socketFactory, BiConsumer<URI, SSLParameters> socketParameterHandler) {
+    this.socketFactory = socketFactory;
+    this.socketParameterHandler = socketParameterHandler;
+  }
+
+  /**
+   * Must be called before {@link #init}. This method should be used to make the client trust self-signed
+   * certificates, for example the default StudioAPI.crt generated by CDP Studio. In production code
+   * it is recommended to instead use a trusted CA signed certificate.
+   *
+   * <pre>
+   * {@code
+   * Client client = new Client();
+   *
+   * // Trust the default self-signed StudioAPI.crt generated by CDP Studio and disable
+   * // domain name verification (use the latter only in a test environment).
+   * client.setTrustedCertificates(Collections.singletonList(new File("/path/to/application/StudioAPI.crt")), false);
+   *
+   * client.init(...);
+   * ...
+   * }
+   * </pre>
+   *
+   * @apiNote Calling this method will override {@link #setIgnoreCertificates} and {@link #setSocketFactory}
+   *
+   * @param certificates List of .crt files.
+   * @param endpointIdentificationEnabled When enabled, verifies that the certificate is issued for the domain name
+   *                                      where the server is running. This might be necessary when testing with
+   *                                      the StudioAPI.crt that CDP Studio generated by default.
+   */
+  @SneakyThrows
+  public void setTrustedCertificates(List<File> certificates, boolean endpointIdentificationEnabled) {
+    KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+    keyStore.load(null, null);
+
+    for (File crtFile : certificates) {
+      Certificate certificate = CertificateFactory.getInstance("X.509").generateCertificate(new FileInputStream(crtFile));
+      keyStore.setCertificateEntry(crtFile.getAbsolutePath(), certificate);
+    }
+
+    TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+    trustManagerFactory.init(keyStore);
+
+    SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
+    sslContext.init(null, trustManagerFactory.getTrustManagers(), null);
+
+    setSocketFactory(sslContext.getSocketFactory(), (uri, sslParameters) -> {
+      if (!endpointIdentificationEnabled)
+        sslParameters.setEndpointIdentificationAlgorithm(null);
+    });
+  }
+
+  /**
+   * Must be called before {@link #init}. Makes the client accepts all certificates from the server,
+   * even when the hostname does not match or the certificate is self-signed. This is useful:
+   * <ul>
+   *   <li>In a testing environment where security is not important</li>
+   *   <li>
+   *     When user has implemented the {@link NotificationListener#applicationAcceptanceRequested} callback
+   *     and will make a manual verification of the certificate using the
+   *     {@link AuthRequest#getPeerCertificates()}
+   *   </li>
+   * </ul>
+   *
+   * In production code it is recommended to instead use a trusted CA signed certificate.
+   *
+   * @apiNote Calling this method will override {@link #setTrustedCertificates} and {@link #setSocketFactory}
+   */
+  @SneakyThrows
+  public void setIgnoreCertificates(boolean ignoreCertificates) {
+    setSocketFactory(ignoreCertificates ? new TrustingSSLSocketFactory() : null, null);
   }
 
   /** Get a reference to the system node. CDP applications are children of this node. */
@@ -107,8 +267,8 @@ public class Client implements Runnable {
     */
   public void setTimeSync(boolean enabled) {
     timeSyncEnabled = enabled;
-    if (ioHandler != null)
-      ioHandler.setTimeSyncEnabled(timeSyncEnabled);
+    for (Connection c : connections.values())
+      c.setTimeSync(enabled);
   }
 
   /**
@@ -121,8 +281,13 @@ public class Client implements Runnable {
 
   /** Event-loop method for use in single-threaded applications. */
   public void process() {
-    for (RequestDispatch dispatch : connections.values())
-      dispatch.service();
+    for (Connection c : connections.values()) {
+      try {
+        c.service();
+      } catch (Exception e) {
+        connectionError(c.getURI(), e);
+      }
+    }
     if (cleanupConnections)
       removeDroppedConnections();
     if (autoReconnect && !clientClosed  && (System.currentTimeMillis() - lastReconnectTimeMs > 200)) {
@@ -141,7 +306,8 @@ public class Client implements Runnable {
     try {
       Thread.sleep(10);
     } catch (InterruptedException e) {
-      e.printStackTrace();
+      Thread.currentThread().interrupt();
+      close();
     }
   }
   }
@@ -149,8 +315,8 @@ public class Client implements Runnable {
   /** Closes all connections. */
   public void close() {
     clientClosed = true;
-    for (RequestDispatch dispatch : connections.values())
-      dispatch.close();
+    for (Connection c : connections.values())
+      c.close();
   }
 
   /** Called internally to set the root node of the system. */
@@ -160,11 +326,11 @@ public class Client implements Runnable {
 
   /** Called by a dispatch to notify it's ready. */
   void dispatchReady(RequestDispatch dispatch) {
-    for (RequestDispatch d : connections.values()) {
-      if (d.getState() != RequestDispatch.State.ESTABLISHED)
+    for (Connection c : connections.values()) {
+      if (c.getDispatch().getState() != RequestDispatch.State.ESTABLISHED)
         break;
     }
-  listener.clientReady(this);
+    listener.clientReady(this);
   }
 
   /** Called by a dispatch to notify it's connection was lost. */
@@ -187,16 +353,15 @@ public class Client implements Runnable {
     if (app.getDispatch() == null) {
       Node.ConnectionData data = app.getConnectionData();
       try {
-        URI wsURI = new URI("ws", null,
+        URI wsURI = new URI(getDefaultScheme(), null,
                 data.serverAddr, data.serverPort,
                 null, null, null);
         if (connections.containsKey(wsURI))
           return;
-        IOHandler io = new IOHandler(wsURI);
-        ioHandler.setTimeSyncEnabled(timeSyncEnabled);
-        RequestDispatch d = new RequestDispatch(this, io);
-        d.init(app);
-        connections.put(wsURI, d);
+        Connection c = new Connection(this, wsURI, socketFactory, socketParameterHandler);
+        c.setTimeSync(timeSyncEnabled);
+        c.init();
+        connections.put(wsURI, c);
       } catch (URISyntaxException e) {
         cleanupConnections = true;
       }
@@ -206,10 +371,10 @@ public class Client implements Runnable {
   /** Post-process cleanup method. */
   private void removeDroppedConnections() {
     // remove dispatches
-    Iterator<Map.Entry<URI, RequestDispatch>> it = connections.entrySet().iterator();
+    Iterator<Map.Entry<URI, Connection>> it = connections.entrySet().iterator();
     while (it.hasNext()) {
-      Map.Entry<URI, RequestDispatch> entry = it.next();
-      if (entry.getValue().getState() != RequestDispatch.State.ESTABLISHED) {
+      Map.Entry<URI, Connection> entry = it.next();
+      if (entry.getValue().getDispatch().getState() != RequestDispatch.State.ESTABLISHED) {
         lostConnections.add(entry.getKey());
         it.remove();
       }
@@ -220,7 +385,7 @@ public class Client implements Runnable {
       ListIterator<Node> iter = rootNode.getChildList().listIterator();
       while (iter.hasNext()) {
         Node n = iter.next();
-        if (n.getDispatch() == null || !connections.containsValue(n.getDispatch())) {
+        if (n.getDispatch() == null || !isConnected(n.getDispatch())) {
           lostApps.add(n);
           n.setParent(null);
           iter.remove();
@@ -235,20 +400,46 @@ public class Client implements Runnable {
       }
       return;
     }
-    if (rootNode != null && !connections.containsValue(rootNode.getDispatch()))
-      rootNode.setDispatch(connections.values().iterator().next());
+    if (rootNode != null && !isConnected(rootNode.getDispatch()))
+      rootNode.setDispatch(connections.values().iterator().next().getDispatch());
+  }
+
+  private boolean isConnected(RequestDispatch dispatch) {
+    for (Connection c : connections.values()) {
+      if (c.getDispatch() == dispatch) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /** Broadcast a root structure subscription to everyone but its handler. */
   void broadcastStructureSubscription() {
-    for (RequestDispatch d : connections.values()) {
-      if (rootNode.getDispatch() != d && d.getState() == RequestDispatch.State.ESTABLISHED)
+    for (Connection c : connections.values()) {
+      RequestDispatch d = c.getDispatch();
+      if (rootNode.getDispatch() != d && c.getState() == RequestDispatch.State.ESTABLISHED)
         d.subscribeToNodeStructure(rootNode);
     }
   }
 
   Set<Node> getLostApps() {
     return lostApps;
+  }
+
+  void requestApplicationAcceptance(AuthRequest request) {
+    listener.applicationAcceptanceRequested(request);
+  }
+
+  void requestCredentials(AuthRequest request) {
+    listener.credentialsRequested(request);
+  }
+
+  void requestHandshakeAcceptance(AuthRequest request) {
+    listener.handshakeAcceptanceRequested(request);
+  }
+
+  void connectionError(URI serverURI, Exception e) {
+    listener.connectionError(serverURI, e);
   }
 
 }
