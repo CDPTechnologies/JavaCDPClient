@@ -45,4 +45,8 @@ class HelloProtocol implements Protocol {
   int getCDPVersionMinor() {
     return helloMessage.getCdpVersionMinor();
   }
+
+  public String getSystemUseNotification() {
+    return helloMessage.getSystemUseNotification();
+  }
 }

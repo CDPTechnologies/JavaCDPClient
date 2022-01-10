@@ -70,6 +70,8 @@ public interface AuthRequest {
   CDPVersion getCDPVersion();
   /** Application certificates */
   Certificate[] getPeerCertificates();
+  /** A message to be shown to user for acceptance before proceeding with the connection */
+  String getSystemUseNotification();
   /** State of the authentication  */
   UserAuthResult getAuthResult();
 

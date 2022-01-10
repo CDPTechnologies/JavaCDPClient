@@ -207,6 +207,11 @@ class Connection {
     }
 
     @Override
+    public String getSystemUseNotification() {
+      return helloHandler.getSystemUseNotification();
+    }
+
+    @Override
     public UserAuthResult getAuthResult() {
       return authHandler.getUserAuthResult();
     }
