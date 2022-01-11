@@ -17,6 +17,7 @@ import java.net.URISyntaxException;
 import java.security.KeyStore;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
+import java.time.Instant;
 import java.util.*;
 import java.util.function.BiConsumer;
 
@@ -61,8 +62,21 @@ import java.util.function.BiConsumer;
  *     public void connectionError(URI serverURI, Exception e) { e.printStackTrace(); }
  *     public void clientClosed(Client client) { System.out.println("Client closed"); }
  *
+ *     public void applicationAcceptanceRequested(AuthRequest request) {
+ *         // Print the system use message and accept the connection. In a real system should prompt the user.
+ *         // Optionally can also verify system name and certificate and call request.reject() when they don't match.
+ *         if (!request.getSystemUseNotification().isEmpty()) {
+ *             System.out.println(request.getSystemUseNotification());
+ *         }
+ *         request.accept();
+ *     }
+ *
  *     public void credentialsRequested(AuthRequest request) {
  *         if (request.getAuthResult().getCode() == CREDENTIALS_REQUIRED) {
+ *             request.accept(AuthResponse.password(user, password));
+ *         } else if (request.getAuthResult().getCode() == REAUTHENTICATION_REQUIRED) {
+ *             // Re-authentication is requested when the connection has been idle for too long.
+ *             // It is strongly recommended to NOT use previously cached credentials. Prompt the user for a password.
  *             request.accept(AuthResponse.password(user, password));
  *         } else {
  *             System.out.println("Authentication failed: " + request.getAuthResult());
@@ -70,8 +84,7 @@ import java.util.function.BiConsumer;
  *         }
  *     }
  *
- *     // Optionally override to manually verify/cache certificates and approve/reject connections to applications
- *     // public void applicationAcceptanceRequested(AuthRequest request) { request.accept(); }
+ *     // Optionally override. Called after a successful authentication. Useful for caching certificates and credentials
  *     // public void handshakeAcceptanceRequested(AuthRequest request) { request.accept(); }
  *
  * });
@@ -91,8 +104,12 @@ import java.util.function.BiConsumer;
  * @see NotificationListener#credentialsRequested
  * @see NotificationListener#applicationAcceptanceRequested
  * @see NotificationListener#handshakeAcceptanceRequested
+ * @see AuthRequest#getSystemUseNotification
+ * @see AuthRequest#getIdleLockoutPeriod
  */
 public class Client implements Runnable {
+
+  private static final int REAUTH_CACHE_LENGTH_SECONDS = 5;
 
   private Map<URI, Connection> connections = new HashMap<>();
   private Set<URI> lostConnections = new HashSet<>();
@@ -102,6 +119,7 @@ public class Client implements Runnable {
   private SocketFactory socketFactory;
   private BiConsumer<URI, SSLParameters> socketParameterHandler;
   private NotificationListener listener;
+  private CompositeAuthRequest compositeReauthRequest;
   private long lastReconnectTimeMs = 0;
   private boolean cleanupConnections = false;
   private boolean timeSyncEnabled = true;
@@ -295,6 +313,20 @@ public class Client implements Runnable {
         init(uri.getHost(), uri.getPort(), this.listener);
       lastReconnectTimeMs = System.currentTimeMillis();
     }
+    handleReauthentications();
+    syncConnectionActivity();
+  }
+
+  private void handleReauthentications() {
+    if (compositeReauthRequest != null && compositeReauthRequest.isReady()) {
+      if (compositeReauthRequest.isRejected()) {
+        close();
+      }
+      long cacheLength = Instant.now().getEpochSecond() - compositeReauthRequest.getReadyTimestamp().getEpochSecond();
+      if (cacheLength >= REAUTH_CACHE_LENGTH_SECONDS) {
+        compositeReauthRequest = null;
+      }
+    }
   }
 
   /** Runnable interface auto-creates event loop in a new Thread. */
@@ -413,6 +445,32 @@ public class Client implements Runnable {
     return false;
   }
 
+  private void syncConnectionActivity() {
+    if (connections.size() > 1 && compositeReauthRequest == null) {
+      Connection mostRecentlyRequestingConnection = findMostRecentlyRequestingConnection();
+      for (Connection c : connections.values()) {
+        if (c != mostRecentlyRequestingConnection) {
+          c.notifySiblingConnectionHadRequest(mostRecentlyRequestingConnection.getLastRequestTimestamp());
+        }
+      }
+    }
+  }
+
+  private Connection findMostRecentlyRequestingConnection() {
+    if (!connections.isEmpty()) {
+      Iterator<Connection> it = connections.values().iterator();
+      Connection recentlyRequestingConnection = it.next();
+      while (it.hasNext()) {
+        Connection c = it.next();
+        if (c.getLastRequestTimestamp().getEpochSecond()
+            > recentlyRequestingConnection.getLastRequestTimestamp().getEpochSecond())
+          recentlyRequestingConnection = c;
+      }
+      return recentlyRequestingConnection;
+    }
+    return null;
+  }
+
   /** Broadcast a root structure subscription to everyone but its handler. */
   void broadcastStructureSubscription() {
     for (Connection c : connections.values()) {
@@ -432,6 +490,15 @@ public class Client implements Runnable {
 
   void requestCredentials(AuthRequest request) {
     listener.credentialsRequested(request);
+  }
+
+  void requestReauthentication(AuthRequest request) {
+    if (compositeReauthRequest == null) {
+      compositeReauthRequest = new CompositeAuthRequest(request);
+      listener.credentialsRequested(compositeReauthRequest);
+    } else {
+      compositeReauthRequest.add(request);
+    }
   }
 
   void requestHandshakeAcceptance(AuthRequest request) {

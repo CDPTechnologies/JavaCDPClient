@@ -7,7 +7,15 @@ package com.cdptech.cdpclient;
 import com.cdptech.cdpclient.proto.StudioAPI;
 import com.cdptech.cdpclient.proto.StudioAPI.CDPValueType;
 import com.cdptech.cdpclient.proto.StudioAPI.Container;
+import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
+
+import java.time.Instant;
+import java.util.Map;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+
+import static com.cdptech.cdpclient.proto.StudioAPI.RemoteErrorCode.eAUTH_RESPONSE_EXPIRED;
 
 /**
  * IOHandler polls the WebSocket thread for new data and deserializes and 
@@ -16,9 +24,13 @@ import com.google.protobuf.InvalidProtocolBufferException;
  */
 class IOHandler implements Protocol {
 
+  private Authenticator authenticator = new Authenticator();
   private Transport transport;
   private IOListener listener;
   private TimeSync timeSync;
+  private Consumer<Long> idleLockoutPeriodChangeCallback;
+  private BiConsumer<AuthRequest.UserAuthResult, String> credentialsRequester;
+  private Instant lastRequestTimestamp;
 
   /** Initialize an IOHandler with the given server URI. */
   IOHandler(Transport transport) {
@@ -54,6 +66,7 @@ class IOHandler implements Protocol {
       pb.addStructureRequest(node.getNodeID());
 
     transport.send(pb.build().toByteArray());
+    updateLastRequestTimestamp();
   }
 
   void addChildRequest(Node parentNode, String childName, String childTypeName) {
@@ -68,6 +81,7 @@ class IOHandler implements Protocol {
     }
 
     transport.send(pb.build().toByteArray());
+    updateLastRequestTimestamp();
   }
 
   void removeChildRequest(Node parentNode, String childName) {
@@ -81,6 +95,7 @@ class IOHandler implements Protocol {
     }
 
     transport.send(pb.build().toByteArray());
+    updateLastRequestTimestamp();
   }
   
   /** Create a value request for a Node. Nonzero fs indicates subscription. */
@@ -95,6 +110,7 @@ class IOHandler implements Protocol {
         .addGetterRequest(pbv)
         .build()
         .toByteArray());
+    updateLastRequestTimestamp();
   }
   
   /** Cancel a value subscrition to a Node. */
@@ -108,6 +124,7 @@ class IOHandler implements Protocol {
         .addGetterRequest(pbv)
         .build()
         .toByteArray());
+    updateLastRequestTimestamp();
   }
   
   /** Create a value change request for @a node, setting it to @a value. */
@@ -162,6 +179,7 @@ class IOHandler implements Protocol {
         .addSetterRequest(pbv)
         .build()
         .toByteArray());
+    updateLastRequestTimestamp();
   }
   
   /** Start a structure subscription. */
@@ -171,6 +189,7 @@ class IOHandler implements Protocol {
         .addStructureRequest(nodeId)
         .build()
         .toByteArray());
+    updateLastRequestTimestamp();
   }
   
   /** Cancel a structure subscription. */
@@ -209,10 +228,29 @@ class IOHandler implements Protocol {
           timeSync.responseReceived(pb.getCurrentTimeResponse());
           break;
 
+        case eReauthResponse:
+          authenticator.updateUserAuthResult(pb.getReAuthResponse());
+          if (credentialsRequester != null) {
+            credentialsRequester.accept(authenticator.getUserAuthResult(), null);
+          }
+          break;
+
         case eRemoteError:
-          if (pb.getError().hasCode() || pb.getError().hasText())
-            System.err.println("CDP Client received following error (code " + pb.getError().getCode() + "): "
-                    + pb.getError().getText());
+          if (pb.getError().hasCode() || pb.getError().hasText()) {
+            if (pb.getError().getCode() == eAUTH_RESPONSE_EXPIRED.getNumber()) {
+              String challenge = pb.getError().getChallenge().toStringUtf8();
+              if (idleLockoutPeriodChangeCallback != null) {
+                idleLockoutPeriodChangeCallback.accept(Integer.toUnsignedLong(pb.getError().getIdleLockoutPeriod()));
+              }
+              AuthRequest.UserAuthResult userAuthResult = new AuthRequest.UserAuthResult();
+              userAuthResult.setCode(AuthRequest.AuthResultCode.REAUTHENTICATION_REQUIRED);
+              userAuthResult.setText(pb.getError().getText());
+              credentialsRequester.accept(userAuthResult, challenge.toString());
+            } else {
+              System.err.println("CDP Client received following error (code " + pb.getError().getCode() + "): "
+                  + pb.getError().getText());
+            }
+          }
           break;
       default:
         System.err.println("CDP Client received unparseable data from server: " + pb.getMessageType().toString());
@@ -256,8 +294,7 @@ class IOHandler implements Protocol {
     
     return node;
   }
-  
-  
+
   /** Create a StudioAPI Variant from a StudioAPI.VariantValue. */
   static Variant createVariant(StudioAPI.VariantValue pbv, long timeDiff) {
     long ts = pbv.hasTimestamp() ? pbv.getTimestamp() + timeDiff : 0;
@@ -291,4 +328,33 @@ class IOHandler implements Protocol {
     return value;
   }
 
+  void setIdleLockoutPeriodChangeCallback(Consumer<Long> idleLockoutPeriodChangeCallback) {
+    this.idleLockoutPeriodChangeCallback = idleLockoutPeriodChangeCallback;
+  }
+
+  void setCredentialsRequester(BiConsumer<AuthRequest.UserAuthResult, String> credentialsRequester) {
+    this.credentialsRequester = credentialsRequester;
+  }
+
+  void reauthenticate(String challenge, Map<String, String> data) {
+    StudioAPI.AuthRequest authMessage = authenticator.createAuthMessage(challenge, data);
+    if (authMessage == null) {
+      credentialsRequester.accept(authenticator.getUserAuthResult(), challenge);
+    } else {
+      transport.send(Container.newBuilder()
+          .setMessageType(Container.Type.eReauthRequest)
+          .setReAuthRequest(authMessage)
+          .build()
+          .toByteArray());
+      updateLastRequestTimestamp();
+    }
+  }
+
+  Instant getLastRequestTimestamp() {
+    return lastRequestTimestamp;
+  }
+
+  private void updateLastRequestTimestamp() {
+    lastRequestTimestamp = Instant.now();
+  }
 }

@@ -49,4 +49,8 @@ class HelloProtocol implements Protocol {
   public String getSystemUseNotification() {
     return helloMessage.getSystemUseNotification();
   }
+
+  public long getIdleLockoutPeriod() {
+    return Integer.toUnsignedLong(helloMessage.getIdleLockoutPeriod());
+  }
 }

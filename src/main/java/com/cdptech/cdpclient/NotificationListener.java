@@ -43,6 +43,10 @@ public interface NotificationListener {
    *     public void credentialsRequested(AuthRequest request) {
    *         if (request.getAuthResult().getCode() == CREDENTIALS_REQUIRED) {
    *             request.accept(AuthResponse.password(user, password));
+   *         } else if (request.getAuthResult().getCode() == REAUTHENTICATION_REQUIRED) {
+   *             // Re-authentication is requested when the connection has been idle for too long.
+   *             // It is strongly recommended to NOT use previously cached credentials. Prompt the user for a password.
+   *             request.accept(AuthResponse.password(user, password));
    *         } else if (request.getAuthResult().getCode() == NEW_PASSWORD_REQUIRED) {
    *             request.accept(AuthResponse.newPassword(user, password, "NewPassword"));
    *         } else {
@@ -50,7 +54,13 @@ public interface NotificationListener {
    *             request.reject(); // Or retry with different credentials
    *         }
    *     }
+   * }
    * </pre>
+   *
+   *  Note, that when request.getAuthResult().getCode() == REAUTHENTICATION_REQUIRED, then user should be notified that the
+   *  server requires re-authentication (e.g. because of being idle), and prompted for user approval to re-authenticate
+   *  (must not silently send cached credentials). The idle timeout length is specified by
+   *  {@link AuthRequest#getIdleLockoutPeriod()}.
    */
   default void credentialsRequested(AuthRequest request) {
     throw new UnsupportedOperationException("Please implement credentialsRequested() method to connect to "
@@ -59,8 +69,9 @@ public interface NotificationListener {
 
   /**
    * Called by the Client before authentication when either a TLS or a plain TCP connection is established
-   * with a new application. Implementation must call either accept() or reject() on the request
-   * either immediately or asynchronously. Optionally save the certificate using
+   * with a new application. Implementation should check {@link AuthRequest#getSystemUseNotification()} and
+   * either call either accept() or reject() on the request either immediately or asynchronously.
+   * Optionally save the certificate using
    * {@link AuthRequest#getPeerCertificates()} and verify it in future connections to detect
    * man-in-the-middle attacks.
    */

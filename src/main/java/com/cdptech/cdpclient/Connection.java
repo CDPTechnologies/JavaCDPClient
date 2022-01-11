@@ -4,6 +4,8 @@
 
 package com.cdptech.cdpclient;
 
+import com.cdptech.cdpclient.proto.StudioAPI;
+
 import javax.net.SocketFactory;
 import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLPeerUnverifiedException;
@@ -11,6 +13,7 @@ import javax.net.ssl.SSLSocket;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.cert.Certificate;
+import java.time.Instant;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -18,6 +21,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 class Connection {
+
+  private static final long SECONDS_BEFORE_IDLE_LOCKOUT_TO_RESEND_ACTIVITY = 10;
 
   private Client client;
   private URI serverUri;
@@ -31,8 +36,9 @@ class Connection {
   private AuthenticationProtocol authHandler;
   private IOHandler ioHandler;
 
-  private AuthRequest.UserAuthResult userAuthResult = new AuthRequest.UserAuthResult();
   private RequestDispatch dispatch;
+  private Instant lastActivityNotificationTimestamp = Instant.now();
+  private long idleLockoutPeriod;
   private boolean initInProgress;
 
   /** Initialize an IOHandler with the given server URI. */
@@ -51,6 +57,7 @@ class Connection {
     setUpHelloHandler();
     setUpAuthHandler();
     setUpIOHandler();
+    setUpReauthentication();
     transport.connect();
     initInProgress = true;
   }
@@ -71,7 +78,8 @@ class Connection {
 
   private void setUpHelloHandler() {
     helloHandler = new HelloProtocol(() -> {
-      client.requestApplicationAcceptance(new ConnectionAuthRequest(ignored ->  {
+      idleLockoutPeriod = helloHandler.getIdleLockoutPeriod();
+      client.requestApplicationAcceptance(new ConnectionAuthRequest(authHandler.getUserAuthResult(), ignored ->  {
         if (helloHandler.getChallenge().isEmpty()) {
           switchToIOHandler();
         } else {
@@ -83,7 +91,7 @@ class Connection {
   }
 
   private void requestCredentials() {
-    client.requestCredentials(new ConnectionAuthRequest(data -> {
+    client.requestCredentials(new ConnectionAuthRequest(authHandler.getUserAuthResult(), data -> {
       authHandler.authenticate(helloHandler.getChallenge(), data);
     }));
   }
@@ -93,9 +101,22 @@ class Connection {
       AuthRequest.AuthResultCode code = authHandler.getUserAuthResult().getCode();
       if (code == AuthRequest.AuthResultCode.GRANTED
           || code == AuthRequest.AuthResultCode.GRANTED_PASSWORD_WILL_EXPIRE_SOON) {
-        client.requestHandshakeAcceptance(new ConnectionAuthRequest(data -> switchToIOHandler()));
+        client.requestHandshakeAcceptance(new ConnectionAuthRequest(authHandler.getUserAuthResult(), data -> switchToIOHandler()));
       } else {
         requestCredentials();
+      }
+    });
+  }
+
+  private void setUpReauthentication() {
+    ioHandler.setIdleLockoutPeriodChangeCallback((Long idleLockoutPeriod) -> this.idleLockoutPeriod = idleLockoutPeriod);
+    ioHandler.setCredentialsRequester((userAuthResult, challenge) -> {
+      AuthRequest.AuthResultCode code = userAuthResult.getCode();
+      if (code != AuthRequest.AuthResultCode.GRANTED
+          && code != AuthRequest.AuthResultCode.GRANTED_PASSWORD_WILL_EXPIRE_SOON) {
+        client.requestReauthentication(new ConnectionAuthRequest(userAuthResult, data -> {
+          ioHandler.reauthenticate(challenge, data);
+        }));
       }
     });
   }
@@ -167,11 +188,54 @@ class Connection {
     return serverUri;
   }
 
+  void notifySiblingConnectionHadRequest(Instant siblingRequestTime) {
+    if (activeProtocol != ioHandler || !isUserAuthRequired() || idleLockoutPeriod == 0) {
+      return;
+    }
+    Instant lastRequestOrActivityTimestamp = getLastRequestOrActivityTimestamp();
+    long resendTimeout = getResendTimeout();
+
+    if (siblingRequestTime.getEpochSecond() > lastRequestOrActivityTimestamp.getEpochSecond()
+        && Instant.now().getEpochSecond() - lastRequestOrActivityTimestamp.getEpochSecond() >= resendTimeout) {
+      transport.send(StudioAPI.Container.newBuilder()
+          .setMessageType(StudioAPI.Container.Type.eActivityNotification)
+          .build()
+          .toByteArray());
+      lastActivityNotificationTimestamp = Instant.now();
+    }
+  }
+
+  private Instant getLastRequestOrActivityTimestamp() {
+    return lastActivityNotificationTimestamp.getEpochSecond() > getLastRequestTimestamp().getEpochSecond()
+        ? lastActivityNotificationTimestamp : getLastRequestTimestamp();
+  }
+
+  private long getResendTimeout() {
+    long resendTimeout = 1;
+    if (idleLockoutPeriod > SECONDS_BEFORE_IDLE_LOCKOUT_TO_RESEND_ACTIVITY) {
+      resendTimeout = idleLockoutPeriod - SECONDS_BEFORE_IDLE_LOCKOUT_TO_RESEND_ACTIVITY;
+    }
+    return resendTimeout;
+  }
+
+  private boolean isUserAuthRequired() {
+    return !helloHandler.getChallenge().isEmpty();
+  }
+
+  Instant getLastRequestTimestamp() {
+    if (activeProtocol == ioHandler) {
+      return ioHandler.getLastRequestTimestamp();
+    }
+    return Instant.EPOCH;
+  }
+
   private class ConnectionAuthRequest implements AuthRequest {
 
+    private final UserAuthResult userAuthResult;
     private final Consumer<Map<String, String>> onAccept;
 
-    ConnectionAuthRequest(Consumer<Map<String, String>> onAccept) {
+    ConnectionAuthRequest(UserAuthResult userAuthResult, Consumer<Map<String, String>> onAccept) {
+      this.userAuthResult = userAuthResult;
       this.onAccept = onAccept;
     }
 
@@ -207,19 +271,25 @@ class Connection {
     }
 
     @Override
+    public long getIdleLockoutPeriod() {
+      return idleLockoutPeriod;
+    }
+
+    @Override
     public String getSystemUseNotification() {
       return helloHandler.getSystemUseNotification();
     }
 
     @Override
     public UserAuthResult getAuthResult() {
-      return authHandler.getUserAuthResult();
+      return userAuthResult;
     }
 
     @Override
     public void accept(Map<String, String> data) {
-      onAccept.accept(data);
-
+      if (onAccept != null) {
+        onAccept.accept(data);
+      }
     }
 
     @Override

@@ -6407,13 +6407,37 @@ public final class StudioAPI {
        */
       eNewPasswordRequired(10),
       /**
+       * <pre>
+       * challenge response sent was invalid
+       * </pre>
+       *
        * <code>eInvalidChallengeResponse = 11;</code>
        */
       eInvalidChallengeResponse(11),
       /**
+       * <pre>
+       * additional challenge responses based on additional credential types are required
+       * </pre>
+       *
        * <code>eAdditionalResponseRequired = 12;</code>
        */
       eAdditionalResponseRequired(12),
+      /**
+       * <pre>
+       * authentication is temporarily blocked because of too many failed attempts
+       * </pre>
+       *
+       * <code>eTemporarilyBlocked = 13;</code>
+       */
+      eTemporarilyBlocked(13),
+      /**
+       * <pre>
+       * server requires re-authentication (e.g. because of being idle), implementation
+       * </pre>
+       *
+       * <code>eReauthenticationRequired = 14;</code>
+       */
+      eReauthenticationRequired(14),
       ;
 
       /**
@@ -6441,13 +6465,37 @@ public final class StudioAPI {
        */
       public static final int eNewPasswordRequired_VALUE = 10;
       /**
+       * <pre>
+       * challenge response sent was invalid
+       * </pre>
+       *
        * <code>eInvalidChallengeResponse = 11;</code>
        */
       public static final int eInvalidChallengeResponse_VALUE = 11;
       /**
+       * <pre>
+       * additional challenge responses based on additional credential types are required
+       * </pre>
+       *
        * <code>eAdditionalResponseRequired = 12;</code>
        */
       public static final int eAdditionalResponseRequired_VALUE = 12;
+      /**
+       * <pre>
+       * authentication is temporarily blocked because of too many failed attempts
+       * </pre>
+       *
+       * <code>eTemporarilyBlocked = 13;</code>
+       */
+      public static final int eTemporarilyBlocked_VALUE = 13;
+      /**
+       * <pre>
+       * server requires re-authentication (e.g. because of being idle), implementation
+       * </pre>
+       *
+       * <code>eReauthenticationRequired = 14;</code>
+       */
+      public static final int eReauthenticationRequired_VALUE = 14;
 
 
       public final int getNumber() {
@@ -6476,6 +6524,8 @@ public final class StudioAPI {
           case 10: return eNewPasswordRequired;
           case 11: return eInvalidChallengeResponse;
           case 12: return eAdditionalResponseRequired;
+          case 13: return eTemporarilyBlocked;
+          case 14: return eReauthenticationRequired;
           default: return null;
         }
       }
@@ -8030,13 +8080,13 @@ public final class StudioAPI {
        */
       eChildRemoveRequest(10),
       /**
-       * <code>eReAuthRequest = 11;</code>
+       * <code>eReauthRequest = 11;</code>
        */
-      eReAuthRequest(11),
+      eReauthRequest(11),
       /**
-       * <code>eReAuthResponse = 12;</code>
+       * <code>eReauthResponse = 12;</code>
        */
-      eReAuthResponse(12),
+      eReauthResponse(12),
       /**
        * <code>eActivityNotification = 13;</code>
        */
@@ -8088,13 +8138,13 @@ public final class StudioAPI {
        */
       public static final int eChildRemoveRequest_VALUE = 10;
       /**
-       * <code>eReAuthRequest = 11;</code>
+       * <code>eReauthRequest = 11;</code>
        */
-      public static final int eReAuthRequest_VALUE = 11;
+      public static final int eReauthRequest_VALUE = 11;
       /**
-       * <code>eReAuthResponse = 12;</code>
+       * <code>eReauthResponse = 12;</code>
        */
-      public static final int eReAuthResponse_VALUE = 12;
+      public static final int eReauthResponse_VALUE = 12;
       /**
        * <code>eActivityNotification = 13;</code>
        */
@@ -8132,8 +8182,8 @@ public final class StudioAPI {
           case 8: return eCurrentTimeResponse;
           case 9: return eChildAddRequest;
           case 10: return eChildRemoveRequest;
-          case 11: return eReAuthRequest;
-          case 12: return eReAuthResponse;
+          case 11: return eReauthRequest;
+          case 12: return eReauthResponse;
           case 13: return eActivityNotification;
           default: return null;
         }
@@ -21414,88 +21464,90 @@ public final class StudioAPI {
       " \001(\t\022Q\n\tparameter\030\003 \003(\0132>.StudioAPI.Prot" +
       "o.AdditionalChallengeResponseRequired.Pa" +
       "rameter\032(\n\tParameter\022\014\n\004name\030\001 \001(\t\022\r\n\005va" +
-      "lue\030\002 \001(\t\"\371\002\n\014AuthResponse\022A\n\013result_cod" +
+      "lue\030\002 \001(\t\"\261\003\n\014AuthResponse\022A\n\013result_cod" +
       "e\030\001 \001(\0162,.StudioAPI.Proto.AuthResponse.A" +
       "uthResultCode\022\023\n\013result_text\030\002 \001(\t\022d\n&ad" +
       "ditional_challenge_response_required\030\003 \003" +
       "(\01324.StudioAPI.Proto.AdditionalChallenge" +
-      "ResponseRequired\"\252\001\n\016AuthResultCode\022\014\n\010e" +
+      "ResponseRequired\"\342\001\n\016AuthResultCode\022\014\n\010e" +
       "Unknown\020\000\022\014\n\010eGranted\020\001\022\"\n\036eGrantedPassw" +
       "ordWillExpireSoon\020\002\022\030\n\024eNewPasswordRequi" +
       "red\020\n\022\035\n\031eInvalidChallengeResponse\020\013\022\037\n\033" +
-      "eAdditionalResponseRequired\020\014\"\326\007\n\tContai" +
-      "ner\0225\n\014message_type\030\001 \001(\0162\037.StudioAPI.Pr" +
-      "oto.Container.Type\022%\n\005error\030\002 \001(\0132\026.Stud" +
-      "ioAPI.Proto.Error\022\031\n\021structure_request\030\003" +
-      " \003(\r\0221\n\022structure_response\030\004 \003(\0132\025.Studi" +
-      "oAPI.Proto.Node\0225\n\016getter_request\030\005 \003(\0132" +
-      "\035.StudioAPI.Proto.ValueRequest\0226\n\017getter" +
-      "_response\030\006 \003(\0132\035.StudioAPI.Proto.Varian" +
-      "tValue\0225\n\016setter_request\030\007 \003(\0132\035.StudioA" +
-      "PI.Proto.VariantValue\022!\n\031structure_chang" +
-      "e_response\030\010 \003(\r\022\035\n\025current_time_respons" +
-      "e\030\t \001(\004\0224\n\021child_add_request\030\n \003(\0132\031.Stu" +
-      "dioAPI.Proto.ChildAdd\022:\n\024child_remove_re" +
-      "quest\030\013 \003(\0132\034.StudioAPI.Proto.ChildRemov" +
-      "e\0225\n\017re_auth_request\030\014 \001(\0132\034.StudioAPI.P" +
-      "roto.AuthRequest\0227\n\020re_auth_response\030\r \001" +
-      "(\0132\035.StudioAPI.Proto.AuthResponse\"\310\002\n\004Ty" +
-      "pe\022\020\n\014eRemoteError\020\000\022\025\n\021eStructureReques" +
-      "t\020\001\022\026\n\022eStructureResponse\020\002\022\022\n\016eGetterRe" +
-      "quest\020\003\022\023\n\017eGetterResponse\020\004\022\022\n\016eSetterR" +
-      "equest\020\005\022\034\n\030eStructureChangeResponse\020\006\022\027" +
-      "\n\023eCurrentTimeRequest\020\007\022\030\n\024eCurrentTimeR" +
-      "esponse\020\010\022\024\n\020eChildAddRequest\020\t\022\027\n\023eChil" +
-      "dRemoveRequest\020\n\022\022\n\016eReAuthRequest\020\013\022\023\n\017" +
-      "eReAuthResponse\020\014\022\031\n\025eActivityNotificati" +
-      "on\020\r*\010\010d\020\200\200\200\200\002\"\201\001\n\005Error\022\014\n\004code\030\001 \002(\r\022\014" +
-      "\n\004text\030\002 \001(\t\022\017\n\007node_id\030\003 \001(\r\022\021\n\tparamet" +
-      "er\030\004 \001(\t\022\021\n\tchallenge\030\005 \001(\014\022\033\n\023idle_lock" +
-      "out_period\030\006 \001(\r*\010\010d\020\200\200\200\200\002\"\266\003\n\004Info\022\017\n\007n" +
-      "ode_id\030\001 \002(\r\022\014\n\004name\030\002 \002(\t\022/\n\tnode_type\030" +
-      "\003 \002(\0162\034.StudioAPI.Proto.CDPNodeType\0221\n\nv" +
-      "alue_type\030\004 \001(\0162\035.StudioAPI.Proto.CDPVal" +
-      "ueType\022\021\n\ttype_name\030\005 \001(\t\022\023\n\013server_addr" +
-      "\030\006 \001(\t\022\023\n\013server_port\030\007 \001(\r\022\020\n\010is_local\030" +
-      "\010 \001(\010\022\r\n\005flags\030\t \001(\r\"\302\001\n\005Flags\022\t\n\005eNone\020" +
-      "\000\022\017\n\013eNodeIsLeaf\020\001\022\026\n\022eValueIsPersistent" +
-      "\020\002\022\024\n\020eValueIsReadOnly\020\004\022\024\n\020eNodeIsRemov" +
-      "able\020\010\022\027\n\023eNodeCanAddChildren\020\020\022\024\n\020eNode" +
-      "IsRenamable\020 \022\023\n\017eNodeIsInternal\020@\022\025\n\020eN" +
-      "odeIsImportant\020\200\001*\010\010d\020\200\200\200\200\002\"Z\n\004Node\022#\n\004i" +
-      "nfo\030\001 \002(\0132\025.StudioAPI.Proto.Info\022#\n\004node" +
-      "\030\002 \003(\0132\025.StudioAPI.Proto.Node*\010\010d\020\200\200\200\200\002\"" +
-      "Y\n\010ChildAdd\022\026\n\016parent_node_id\030\001 \002(\r\022\022\n\nc" +
-      "hild_name\030\002 \002(\t\022\027\n\017child_type_name\030\003 \002(\t" +
-      "*\010\010d\020\200\200\200\200\002\"C\n\013ChildRemove\022\026\n\016parent_node" +
-      "_id\030\001 \002(\r\022\022\n\nchild_name\030\002 \002(\t*\010\010d\020\200\200\200\200\002\"" +
-      "\222\002\n\014VariantValue\022\017\n\007node_id\030\001 \001(\r\022\017\n\007d_v" +
-      "alue\030\002 \001(\001\022\017\n\007f_value\030\003 \001(\002\022\022\n\nui64_valu" +
-      "e\030\004 \001(\004\022\021\n\ti64_value\030\005 \001(\022\022\020\n\010ui_value\030\006" +
-      " \001(\r\022\017\n\007i_value\030\007 \001(\021\022\020\n\010us_value\030\010 \001(\r\022" +
-      "\017\n\007s_value\030\t \001(\021\022\020\n\010uc_value\030\n \001(\r\022\017\n\007c_" +
-      "value\030\013 \001(\021\022\017\n\007b_value\030\014 \001(\010\022\021\n\tstr_valu" +
-      "e\030\r \001(\t\022\021\n\ttimestamp\030\016 \001(\004*\010\010d\020\200\200\200\200\002\"X\n\014" +
-      "ValueRequest\022\017\n\007node_id\030\001 \002(\r\022\n\n\002fs\030\002 \001(" +
-      "\001\022\014\n\004stop\030\003 \001(\010\022\023\n\013sample_rate\030\004 \001(\001*\010\010d" +
-      "\020\200\200\200\200\002*\325\001\n\017RemoteErrorCode\022\032\n\026eAUTH_RESP" +
-      "ONSE_EXPIRED\020\001\022\024\n\020eINVALID_REQUEST\020\n\022\037\n\033" +
-      "eUNSUPPORTED_CONTAINER_TYPE\020\024\022\037\n\033eVALUE_" +
-      "THROTTLING_OCCURRING\020\036\022\035\n\031eVALUE_THROTTL" +
-      "ING_STOPPED\020\037\022\025\n\021eCHILD_ADD_FAILED\020(\022\030\n\024" +
-      "eCHILD_REMOVE_FAILED\0202*\373\001\n\013CDPNodeType\022\032" +
-      "\n\rCDP_UNDEFINED\020\377\377\377\377\377\377\377\377\377\001\022\016\n\nCDP_SYSTEM" +
-      "\020\000\022\023\n\017CDP_APPLICATION\020\001\022\021\n\rCDP_COMPONENT" +
-      "\020\002\022\016\n\nCDP_OBJECT\020\003\022\017\n\013CDP_MESSAGE\020\004\022\023\n\017C" +
-      "DP_BASE_OBJECT\020\005\022\020\n\014CDP_PROPERTY\020\006\022\017\n\013CD" +
-      "P_SETTING\020\007\022\014\n\010CDP_ENUM\020\010\022\020\n\014CDP_OPERATO" +
-      "R\020\t\022\014\n\010CDP_NODE\020\n\022\021\n\rCDP_USER_TYPE\020d*\274\001\n" +
-      "\014CDPValueType\022\016\n\neUNDEFINED\020\000\022\013\n\007eDOUBLE" +
-      "\020\001\022\013\n\007eUINT64\020\002\022\n\n\006eINT64\020\003\022\n\n\006eFLOAT\020\004\022" +
-      "\t\n\005eUINT\020\005\022\010\n\004eINT\020\006\022\013\n\007eUSHORT\020\007\022\n\n\006eSH" +
-      "ORT\020\010\022\n\n\006eUCHAR\020\t\022\t\n\005eCHAR\020\n\022\t\n\005eBOOL\020\013\022" +
-      "\013\n\007eSTRING\020\014\022\r\n\teUSERTYPE\020dB*\n\033com.cdpte" +
-      "ch.cdpclient.protoB\tStudioAPIH\003"
+      "eAdditionalResponseRequired\020\014\022\027\n\023eTempor" +
+      "arilyBlocked\020\r\022\035\n\031eReauthenticationRequi" +
+      "red\020\016\"\326\007\n\tContainer\0225\n\014message_type\030\001 \001(" +
+      "\0162\037.StudioAPI.Proto.Container.Type\022%\n\005er" +
+      "ror\030\002 \001(\0132\026.StudioAPI.Proto.Error\022\031\n\021str" +
+      "ucture_request\030\003 \003(\r\0221\n\022structure_respon" +
+      "se\030\004 \003(\0132\025.StudioAPI.Proto.Node\0225\n\016gette" +
+      "r_request\030\005 \003(\0132\035.StudioAPI.Proto.ValueR" +
+      "equest\0226\n\017getter_response\030\006 \003(\0132\035.Studio" +
+      "API.Proto.VariantValue\0225\n\016setter_request" +
+      "\030\007 \003(\0132\035.StudioAPI.Proto.VariantValue\022!\n" +
+      "\031structure_change_response\030\010 \003(\r\022\035\n\025curr" +
+      "ent_time_response\030\t \001(\004\0224\n\021child_add_req" +
+      "uest\030\n \003(\0132\031.StudioAPI.Proto.ChildAdd\022:\n" +
+      "\024child_remove_request\030\013 \003(\0132\034.StudioAPI." +
+      "Proto.ChildRemove\0225\n\017re_auth_request\030\014 \001" +
+      "(\0132\034.StudioAPI.Proto.AuthRequest\0227\n\020re_a" +
+      "uth_response\030\r \001(\0132\035.StudioAPI.Proto.Aut" +
+      "hResponse\"\310\002\n\004Type\022\020\n\014eRemoteError\020\000\022\025\n\021" +
+      "eStructureRequest\020\001\022\026\n\022eStructureRespons" +
+      "e\020\002\022\022\n\016eGetterRequest\020\003\022\023\n\017eGetterRespon" +
+      "se\020\004\022\022\n\016eSetterRequest\020\005\022\034\n\030eStructureCh" +
+      "angeResponse\020\006\022\027\n\023eCurrentTimeRequest\020\007\022" +
+      "\030\n\024eCurrentTimeResponse\020\010\022\024\n\020eChildAddRe" +
+      "quest\020\t\022\027\n\023eChildRemoveRequest\020\n\022\022\n\016eRea" +
+      "uthRequest\020\013\022\023\n\017eReauthResponse\020\014\022\031\n\025eAc" +
+      "tivityNotification\020\r*\010\010d\020\200\200\200\200\002\"\201\001\n\005Error" +
+      "\022\014\n\004code\030\001 \002(\r\022\014\n\004text\030\002 \001(\t\022\017\n\007node_id\030" +
+      "\003 \001(\r\022\021\n\tparameter\030\004 \001(\t\022\021\n\tchallenge\030\005 " +
+      "\001(\014\022\033\n\023idle_lockout_period\030\006 \001(\r*\010\010d\020\200\200\200" +
+      "\200\002\"\266\003\n\004Info\022\017\n\007node_id\030\001 \002(\r\022\014\n\004name\030\002 \002" +
+      "(\t\022/\n\tnode_type\030\003 \002(\0162\034.StudioAPI.Proto." +
+      "CDPNodeType\0221\n\nvalue_type\030\004 \001(\0162\035.Studio" +
+      "API.Proto.CDPValueType\022\021\n\ttype_name\030\005 \001(" +
+      "\t\022\023\n\013server_addr\030\006 \001(\t\022\023\n\013server_port\030\007 " +
+      "\001(\r\022\020\n\010is_local\030\010 \001(\010\022\r\n\005flags\030\t \001(\r\"\302\001\n" +
+      "\005Flags\022\t\n\005eNone\020\000\022\017\n\013eNodeIsLeaf\020\001\022\026\n\022eV" +
+      "alueIsPersistent\020\002\022\024\n\020eValueIsReadOnly\020\004" +
+      "\022\024\n\020eNodeIsRemovable\020\010\022\027\n\023eNodeCanAddChi" +
+      "ldren\020\020\022\024\n\020eNodeIsRenamable\020 \022\023\n\017eNodeIs" +
+      "Internal\020@\022\025\n\020eNodeIsImportant\020\200\001*\010\010d\020\200\200" +
+      "\200\200\002\"Z\n\004Node\022#\n\004info\030\001 \002(\0132\025.StudioAPI.Pr" +
+      "oto.Info\022#\n\004node\030\002 \003(\0132\025.StudioAPI.Proto" +
+      ".Node*\010\010d\020\200\200\200\200\002\"Y\n\010ChildAdd\022\026\n\016parent_no" +
+      "de_id\030\001 \002(\r\022\022\n\nchild_name\030\002 \002(\t\022\027\n\017child" +
+      "_type_name\030\003 \002(\t*\010\010d\020\200\200\200\200\002\"C\n\013ChildRemov" +
+      "e\022\026\n\016parent_node_id\030\001 \002(\r\022\022\n\nchild_name\030" +
+      "\002 \002(\t*\010\010d\020\200\200\200\200\002\"\222\002\n\014VariantValue\022\017\n\007node" +
+      "_id\030\001 \001(\r\022\017\n\007d_value\030\002 \001(\001\022\017\n\007f_value\030\003 " +
+      "\001(\002\022\022\n\nui64_value\030\004 \001(\004\022\021\n\ti64_value\030\005 \001" +
+      "(\022\022\020\n\010ui_value\030\006 \001(\r\022\017\n\007i_value\030\007 \001(\021\022\020\n" +
+      "\010us_value\030\010 \001(\r\022\017\n\007s_value\030\t \001(\021\022\020\n\010uc_v" +
+      "alue\030\n \001(\r\022\017\n\007c_value\030\013 \001(\021\022\017\n\007b_value\030\014" +
+      " \001(\010\022\021\n\tstr_value\030\r \001(\t\022\021\n\ttimestamp\030\016 \001" +
+      "(\004*\010\010d\020\200\200\200\200\002\"X\n\014ValueRequest\022\017\n\007node_id\030" +
+      "\001 \002(\r\022\n\n\002fs\030\002 \001(\001\022\014\n\004stop\030\003 \001(\010\022\023\n\013sampl" +
+      "e_rate\030\004 \001(\001*\010\010d\020\200\200\200\200\002*\325\001\n\017RemoteErrorCo" +
+      "de\022\032\n\026eAUTH_RESPONSE_EXPIRED\020\001\022\024\n\020eINVAL" +
+      "ID_REQUEST\020\n\022\037\n\033eUNSUPPORTED_CONTAINER_T" +
+      "YPE\020\024\022\037\n\033eVALUE_THROTTLING_OCCURRING\020\036\022\035" +
+      "\n\031eVALUE_THROTTLING_STOPPED\020\037\022\025\n\021eCHILD_" +
+      "ADD_FAILED\020(\022\030\n\024eCHILD_REMOVE_FAILED\0202*\373" +
+      "\001\n\013CDPNodeType\022\032\n\rCDP_UNDEFINED\020\377\377\377\377\377\377\377\377" +
+      "\377\001\022\016\n\nCDP_SYSTEM\020\000\022\023\n\017CDP_APPLICATION\020\001\022" +
+      "\021\n\rCDP_COMPONENT\020\002\022\016\n\nCDP_OBJECT\020\003\022\017\n\013CD" +
+      "P_MESSAGE\020\004\022\023\n\017CDP_BASE_OBJECT\020\005\022\020\n\014CDP_" +
+      "PROPERTY\020\006\022\017\n\013CDP_SETTING\020\007\022\014\n\010CDP_ENUM\020" +
+      "\010\022\020\n\014CDP_OPERATOR\020\t\022\014\n\010CDP_NODE\020\n\022\021\n\rCDP" +
+      "_USER_TYPE\020d*\274\001\n\014CDPValueType\022\016\n\neUNDEFI" +
+      "NED\020\000\022\013\n\007eDOUBLE\020\001\022\013\n\007eUINT64\020\002\022\n\n\006eINT6" +
+      "4\020\003\022\n\n\006eFLOAT\020\004\022\t\n\005eUINT\020\005\022\010\n\004eINT\020\006\022\013\n\007" +
+      "eUSHORT\020\007\022\n\n\006eSHORT\020\010\022\n\n\006eUCHAR\020\t\022\t\n\005eCH" +
+      "AR\020\n\022\t\n\005eBOOL\020\013\022\013\n\007eSTRING\020\014\022\r\n\teUSERTYP" +
+      "E\020dB*\n\033com.cdptech.cdpclient.protoB\tStud" +
+      "ioAPIH\003"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,

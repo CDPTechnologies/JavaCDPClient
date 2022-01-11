@@ -100,6 +100,36 @@
   Note that in production it is highly recommended to use a trusted CA signed certificate which will make the
   code above unnecessary.
 
+  <h2>Application Acceptance</h2>
+
+  When establishing a connection, the first step is to verify and accept the found application. For that the
+  NotificationListener can implement the optional applicationAcceptanceRequested() callback where
+  it is possible to check the system use notification and also verify things like system name or certificate.
+  For the system use notification it is recommended to prompt the user and allow them to either accept or reject the
+  connection.
+
+  <pre>
+    <code>
+      client.init("127.0.0.1", 7689, new NotificationListener() {
+
+          ...
+
+          public void applicationAcceptanceRequested(AuthRequest request) {
+              // Print the system use message and accept the connection. In a real system should prompt the user.
+              if (!request.getSystemUseNotification().isEmpty()) {
+                  System.out.println(request.getSystemUseNotification());
+              }
+              request.accept();
+          }
+
+          ...
+      });
+    </code>
+  </pre>
+
+  Note that if the applicationAcceptanceRequested callback is not implemented, then by default
+  all applications are accepted.
+
   <h2>Authentication</h2>
 
   If the "Require Authentication" in CDP Studio Security settings is enabled, the Java client must specify
@@ -113,6 +143,12 @@
           public void credentialsRequested(AuthRequest request) {
               if (request.getAuthResult().getCode() == CREDENTIALS_REQUIRED) {
                   request.accept(AuthResponse.password("MyUser", "MyPassword"));
+              } else if (request.getAuthResult().getCode() == REAUTHENTICATION_REQUIRED) {
+                  // Re-authentication is requested when the connection has been idle for too long.
+                  // It is strongly recommended to prompt the user for a password instead of using cached credentials.
+                  request.accept(AuthResponse.password("MyUser", "MyPassword"));
+              } else if (request.getAuthResult().getCode() == NEW_PASSWORD_REQUIRED) {
+                  request.accept(AuthResponse.newPassword("MyUser", "MyPassword", "NewPassword"));
               } else {
                   System.out.println("Authentication failed: " + request.getAuthResult());
                   request.reject(); // Close the connection. Alternatively, call request.accept() with new credentials.

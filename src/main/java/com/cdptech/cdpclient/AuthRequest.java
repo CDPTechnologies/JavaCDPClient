@@ -36,6 +36,12 @@ public interface AuthRequest {
     NEW_PASSWORD_REQUIRED,
     INVALID_CHALLENGE_RESPONSE,
     ADDITIONAL_RESPONSE_REQUIRED,
+    TEMPORARILY_BLOCKED,
+    /**
+     * Server requires re-authentication (e.g. because of being idle), implementation
+     * should prompt the user for re-authentication (must not silently send cached credentials)
+     */
+    REAUTHENTICATION_REQUIRED,
     // results, that are sent by the client (not by the remote server)
     USERNAME_REQUIRED
   }
@@ -70,6 +76,8 @@ public interface AuthRequest {
   CDPVersion getCDPVersion();
   /** Application certificates */
   Certificate[] getPeerCertificates();
+  /** When > 0, idle authentications will expire after this period (seconds) */
+  long getIdleLockoutPeriod();
   /** A message to be shown to user for acceptance before proceeding with the connection */
   String getSystemUseNotification();
   /** State of the authentication  */
