@@ -112,8 +112,10 @@ class Connection {
     ioHandler.setIdleLockoutPeriodChangeCallback((Long idleLockoutPeriod) -> this.idleLockoutPeriod = idleLockoutPeriod);
     ioHandler.setCredentialsRequester((userAuthResult, challenge) -> {
       AuthRequest.AuthResultCode code = userAuthResult.getCode();
-      if (code != AuthRequest.AuthResultCode.GRANTED
-          && code != AuthRequest.AuthResultCode.GRANTED_PASSWORD_WILL_EXPIRE_SOON) {
+      if (code == AuthRequest.AuthResultCode.GRANTED
+          || code == AuthRequest.AuthResultCode.GRANTED_PASSWORD_WILL_EXPIRE_SOON) {
+        client.requestHandshakeAcceptance(new ConnectionAuthRequest(authHandler.getUserAuthResult(), null));
+      } else {
         client.requestReauthentication(new ConnectionAuthRequest(userAuthResult, data -> {
           ioHandler.reauthenticate(challenge, data);
         }));
