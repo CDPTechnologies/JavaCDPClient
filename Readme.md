@@ -7,8 +7,8 @@ CDP Java Client
 ### Project description
 
 A simple Java interface for the CDP Studio development platform that allows Java applications to interact with
-CDP Applications - retrieve CDP Application structures and read-write object values. For more information
-about CDP Studio see https://cdpstudio.com/.
+CDP Applications - retrieve CDP Application structures, read-write object values, and authenticate to secured
+applications. For more information about CDP Studio see https://cdpstudio.com/.
 
 ### Usage
 

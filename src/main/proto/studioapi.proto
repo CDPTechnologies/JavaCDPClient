@@ -1,0 +1,401 @@
+// This file describes the StudioAPI wire protocol. It can be compiled with
+// the Google Protobuf protoc compiler into native C++, Java, Python etc.
+
+syntax = "proto2";
+
+package StudioAPI.Proto;
+
+// NOTE: the canonical studioapi.proto declares `option optimize_for = LITE_RUNTIME;`.
+// It is intentionally omitted in this vendored Java copy so protoc generates the
+// full GeneratedMessageV3 runtime that the existing Java client code is written
+// against. optimize_for is a codegen-only directive and does not affect wire bytes.
+option java_package = "com.cdptech.cdpclient.proto";
+option java_outer_classname = "StudioAPI";
+
+/** Initial server connection response. */
+message Hello {
+  required string system_name = 1;
+  required uint32 compat_version = 2 [default = 4];
+  required uint32 incremental_version = 3 [default = 0];
+  repeated bytes public_key = 4;
+  optional bytes challenge = 5; // if challenge exists then server expects authentication (AuthRequest message)
+  optional string application_name = 6;
+  optional uint32 cdp_version_major = 7;
+  optional uint32 cdp_version_minor = 8;
+  optional uint32 cdp_version_patch = 9;
+  optional uint32 idle_lockout_period = 10;
+  optional string system_use_notification = 11;
+  message SuggestedUser {
+    optional string user_id = 1;
+    optional string first_name = 2;
+    optional string last_name = 3;
+  }
+  repeated SuggestedUser suggested_users = 12;
+}
+
+/** Server expects this response if it sent a auth_required true. */
+message AuthRequest {
+  optional string user_id = 1; // case-insensitive (can be sent in any casing)
+  message ChallengeResponse {
+    optional string type = 1;
+    optional bytes response = 2; // data corresponding to the type, eg. hash(challenge + password)
+  }
+  repeated ChallengeResponse challenge_response = 2;
+}
+
+message AdditionalChallengeResponseRequired {
+  optional string type = 1;
+  optional string prompt = 2;
+  message Parameter {
+    optional string name = 1;
+    optional string value = 2;
+  }
+  repeated Parameter parameter = 3;
+}
+
+/** Sent by server as a response to a AuthRequest. */
+message AuthResponse {
+  enum AuthResultCode {
+    eCredentialsRequired = 0;
+    eGranted = 1;
+    eGrantedPasswordWillExpireSoon = 2; // expiry timestamp is provided in result_text
+    eNewPasswordRequired = 10; // AuthRequest with additional response with new username + password hash is required
+    eInvalidChallengeResponse = 11; // challenge response sent was invalid
+    eAdditionalResponseRequired = 12; // additional challenge responses based on additional credential types are required
+    eTemporarilyBlocked = 13; // authentication is temporarily blocked because of too many failed attempts
+    eReauthenticationRequired = 14; // server requires re-authentication (e.g. because of being idle), implementation
+                                    // should prompt the user for re-authentication (must not silently send challenge response based on cached credentials)
+  }
+  optional AuthResultCode result_code = 1;
+  optional string result_text = 2;
+  repeated AdditionalChallengeResponseRequired additional_challenge_response_required = 3;
+  repeated string role_assigned = 4; // role name assigned (only when AuthResultCode = eGranted or eGrantedPasswordWillExpireSoon)
+}
+
+/** Common union-style base type for all Protobuf messages in StudioAPI. */
+message Container {
+  enum Type {
+    eRemoteError = 0;
+    eStructureRequest = 1;
+    eStructureResponse = 2;
+    eGetterRequest = 3;
+    eGetterResponse = 4;
+    eSetterRequest = 5; // since compat_version=3, it will be responded with eGetterResponse with actually set value
+    eStructureChangeResponse = 6;
+    eCurrentTimeRequest = 7;
+    eCurrentTimeResponse = 8;
+    eChildAddRequest = 9;
+    eChildRemoveRequest = 10;
+    eReauthRequest = 11;
+    eReauthResponse = 12;
+    eActivityNotification = 13;
+    eEventRequest = 14; // supported since compat_version=2
+    eEventResponse = 15; // supported since compat_version=2
+    eServicesRequest = 16; // supported since compat_version=4
+    eServicesNotification = 17; // supported since compat_version=4
+    eServiceMessage = 18; // supported since version compat_version=4
+    eMetadataRequest = 19; // supported since compat_version=4
+    eMetadataUpdateRequest = 20; // supported since compat_version=4
+    eMetadataResponse = 21; // supported since compat_version=4, will be automatically sent also later on, on metadata changes
+  }
+  optional Type message_type = 1;
+  optional Error error = 2;
+  repeated uint32 structure_request = 3;
+  repeated Node structure_response = 4;
+  repeated ValueRequest getter_request = 5;
+  repeated VariantValue getter_response = 6;
+  repeated VariantValue setter_request = 7;
+  repeated uint32 structure_change_response = 8; // node ID's which need new structure request. For resilience reasons, client must respond to it with either 
+                                                 // structure_requests for all these node ID's or with empty structure_request with corresponding 
+                                                 // structure_change_response requestId(s) added, whose structure is not needed any more for the client
+  optional uint64 current_time_response = 9;
+  repeated ChildAdd child_add_request = 10;
+  repeated ChildRemove child_remove_request = 11;
+  optional AuthRequest re_auth_request = 12;
+  optional AuthResponse re_auth_response = 13;
+  repeated EventRequest event_request = 14; // supported since compat_version=2
+  repeated EventInfo event_response = 15; // supported since compat_version=2
+  repeated uint32 request_ids = 16 [packed=true] ; // Supported since compat_version=3. If present, it is a list of client-generated
+                                    // request id-s in same order as individual requests in the Container
+                                    // When present, server responses the same request id values back the same way
+                                    // corresponding by order to every response element in the Container. On error the
+                                    // id will be echoed back within the Error message.
+                                    // Note, that subsequent subscription value change or event Containers (except the first,
+                                    // subscription confirmation response message Container), that are not a direct
+                                    // response to any request, do not have this field set.
+                                    // Note, that zero value means that the request corresponding to that position in Container
+                                    // has no actual requestId assigned, and is packed to the list only to match the vector
+                                    // size in case when some other requests in the Container has requestId.
+  optional ServicesRequest services_request = 17; // supported since compat_version=4
+  optional ServicesNotification services_notification = 18; // supported since compat_version=4
+  repeated ServiceMessage service_message = 19; // supported since compat_version=4
+  repeated MetadataRequest metadata_request = 20; // supported since compat_version=4
+  repeated Metadata metadata = 21; // supported since compat_version=4, used for eMetadataUpdateRequest and eMetadataResponse
+  extensions 100 to max;
+}
+
+/** Error message type. */
+message Error {
+  required uint32 code = 1;
+  optional string text = 2;
+  optional uint32 node_id = 3;
+  optional string parameter = 4;
+  optional bytes challenge = 5; // new challenge for re-authentication, used with code = eAUTH_RESPONSE_EXPIRED
+  optional uint32 idle_lockout_period = 6; // updated value for idle lockout period, used with code = eAUTH_RESPONSE_EXPIRED
+  extensions 100 to max;
+}
+
+enum RemoteErrorCode {
+  eAUTH_RESPONSE_EXPIRED = 1; // connection is in non-authenticated state (e.g. because of session inactivity timeout) -
+                              // full reconnect or new AuthRequest with ChallengeResponse is needed to continue
+  eINVALID_REQUEST = 10;
+  eUNSUPPORTED_CONTAINER_TYPE = 20;
+  eVALUE_THROTTLING_OCCURRING = 30;
+  eVALUE_THROTTLING_STOPPED = 31;
+  eCHILD_ADD_FAILED = 40;
+  eCHILD_REMOVE_FAILED = 50;
+  eNODE_NOT_FOUND = 60;
+  eINTERNAL_ERROR = 70;
+}
+
+/** CDP Node base type identifier. */
+enum CDPNodeType {
+  CDP_UNDEFINED = -1;
+  CDP_SYSTEM = 0;
+  CDP_APPLICATION = 1;
+  CDP_COMPONENT = 2;
+  CDP_OBJECT = 3;
+  CDP_MESSAGE = 4;
+  CDP_BASE_OBJECT = 5;
+  CDP_PROPERTY = 6;
+  CDP_SETTING = 7;
+  CDP_ENUM = 8;
+  CDP_OPERATOR = 9;
+  CDP_NODE = 10;
+  CDP_USER_TYPE = 100;
+}
+
+/** CDP Node value type identifier. */
+enum CDPValueType {
+  eUNDEFINED = 0;
+  eDOUBLE = 1;
+  eUINT64 = 2;
+  eINT64 = 3;
+  eFLOAT = 4;
+  eUINT = 5;
+  eINT = 6;
+  eUSHORT = 7;
+  eSHORT = 8;
+  eUCHAR = 9;
+  eCHAR = 10;
+  eBOOL = 11;
+  eSTRING = 12;
+  eUSERTYPE = 100;
+}
+
+/** A single CDPNode property container. */
+message Info {
+  enum Flags {
+    eNone = 0;
+    eNodeIsLeaf = 1;
+    eValueIsPersistent = 2;
+    eValueIsReadOnly = 4;
+    eNodeIsRemovable = 8;
+    eNodeCanAddChildren = 16;
+    eNodeIsRenamable = 32;
+    eNodeIsInternal = 64;
+    eNodeIsImportant = 128;
+  }
+  required uint32 node_id = 1; // Application wide unique ID for each instance in CDP structure
+  required string name = 2; // Local short name
+  required CDPNodeType node_type = 3; // Direct base type, type of the class
+  optional CDPValueType value_type = 4; // Value primitive type the node holds if node may hold a value
+  optional string type_name = 5; // Real class name
+  optional string server_addr = 6; // If this node signifies another CDP application,
+                                 // this field will be the IP of said application's StudioAPIServer
+  optional uint32 server_port = 7; // .. and this is the port of the application's StudioAPIServer
+  optional bool is_local = 8; // if multiple applications are sent back from the server,
+                              // this flag is set to true for the app that the data was requested from
+  optional uint32 flags = 9;
+  extensions 100 to max;
+}
+
+/** CDP structure response data structure, a tree of Info properties. */
+message Node {
+  required Info info = 1;
+  repeated Node node = 2;
+  extensions 100 to max;
+}
+
+/** ChildAdd Request input structure */
+message ChildAdd {
+  required uint32 parent_node_id = 1; // parent to add the node into
+  required string child_name = 2; // child name to be added
+  required string child_type_name = 3; // child class name
+  extensions 100 to max;
+}
+
+/** ChildRemove Request input structure */
+message ChildRemove {
+  required uint32 parent_node_id = 1; // parent to remove the node from
+  required string child_name = 2; // child to be removed
+  extensions 100 to max;
+}
+
+/** Common Variant value type for a remote node. */
+message VariantValue {
+  optional uint32 node_id = 1;
+  optional double d_value = 2;
+  optional float f_value = 3;
+  optional uint64 ui64_value = 4;
+  optional sint64 i64_value = 5;
+  optional uint32 ui_value = 6;
+  optional sint32 i_value = 7;
+  optional uint32 us_value = 8;  // uint used as ushort (which protobuf doesnt have)
+  optional sint32 s_value = 9;   // int used as short
+  optional uint32 uc_value = 10; // uint used as uchar
+  optional sint32 c_value = 11;  // int used as char
+  optional bool b_value = 12;
+  optional string str_value = 13;
+  optional uint64 timestamp = 14; // Source may provide timestamp for sent value
+                                  // (UTC nanotime)
+  extensions 100 to max;
+}
+
+/** Single and periodic value request message. */
+message ValueRequest {
+  required uint32 node_id = 1; // Node ID whose value is requested
+  optional double fs = 2; // If present (and stop is not present), indicates that the request is value-change subscription
+                          // and values are expected no often than provided FS rate (server should accumulate and time-stamp values when occurred more often)
+                          // Note, that this also causes server to send a node last known value immediately,
+                          // on subscription start, to confirm the subscription was started.
+  optional bool stop = 3; // If true target must stop updates on the provided values else this is start
+  optional double sample_rate = 4; // If non zero indicates that values should be
+                                   // sampled with given sampling rate frequency (samples/second)
+                                   // missing or zero means all samples must be provided
+  optional uint32 inactivity_resend_interval = 5; // Supported since compat_version=3. If provided, then server will start to
+                                                  // resend the current value, whenever the node_id had no value-changes
+                                                  // during given interval (in seconds), useful for confirmation that the
+                                                  // subscription is still alive and server is still able to send this node values.
+  extensions 100 to max;
+}
+
+/** CDP Event request message. */
+message EventRequest {
+  optional uint32 node_id = 1; // Target should forward events sent by this node ID (and its children)
+  optional uint64 starting_from = 2; // If present, target should re-forward history of past events starting from this timestamp
+  optional bool stop = 3; // If true, target must stop sending any new events, else this is subscribe request for future events
+  optional uint32 inactivity_resend_interval = 4; // Supported since compat_version=3. If provided, then server will start
+                                                  // to resend the last event (or "empty" event with code=0, and timestamp=0,
+                                                  // when no event matches the request parameters), whenever the node_id (or its children)
+                                                  // had no new events during given interval (in seconds), useful for confirmation
+                                                  // that the subscription is still alive and server is still able to send this node events.
+                                                  // Note, that this also causes server to send a last happened event immediately,
+                                                  // on subscription start, to confirm the subscription was started.
+  extensions 100 to max;
+}
+
+/** CDP Event info */
+message EventInfo {
+  repeated uint32 node_id = 1; // List of node ID's (requesters) that this event relates to (is sent by it or its children)
+  optional uint64 id = 2; // system unique eventId (CDP eventId + handle)
+  optional string sender = 3; // event sender full name
+  enum CodeFlags {
+    aAlarmSet = 1;                  // The alarm's Set flag/state was set. The alarm changed state to "Unack-Set" (The Unack flag was set if not already set)
+    eAlarmClr = 2;                  // The alarm's Set flag was cleared. The Unack state is unchanged.
+    eAlarmAck = 4;                  // The alarm changed state from "Unacknowledged" to "Acknowledged". The Set state is unchanged.
+    eReprise = 64;                  // A repetition/update of an event that has been reported before. Courtesy of late subscribers.
+    eSourceObjectUnavailable = 256; // The provider of the event has become unavailable (disconnected or similar)
+    eNodeBoot = 1073741824;         // The provider reports that the CDPEventNode just have booted.
+  }
+  optional uint32 code = 4; // event code flags
+  optional uint32 status = 5; // new status of the object caused event, after the event
+  optional uint64 timestamp = 6; // time stamp, when this event was sent (in UTC nanotime)
+  message EventData {
+    optional string name = 1;
+    optional string value = 2;
+  }
+  repeated EventData data = 7;
+  optional string ack_handler_node_name = 8; // Node name that should be set to ack the alarm. Can be either sender child name or full name of the node.
+  repeated string ack_handler_param_data_names = 9; // EventData names, whose values should be posted to the ack handler node (in form of semicolon-separated list of name=value pairs)
+  extensions 100 to max;
+}
+
+/**
+ * Generic Services Support - supported since compat_version=4.
+ *
+ * This allows users to register and handle custom services within a CDP application (using the
+ * `ICDPAdapter::GetCDPAdapter().GetServiceRegistry()` interface), and clients to discover
+ * and connect to these services. Services are application-specific, and their semantics and protocols are outside
+ * of the StudioAPI scope. StudioAPI only provides the discovery and connection management
+ * functionality. Service messages are exchanged using the ServiceMessage message type.
+ *
+ * Note, all service-related messages must be wrapped within the Container message.
+ */
+
+/**
+ * A request to get the list of available services, and optionally subscribe to changes.
+ * Sent by the client. The server responds with a ServicesNotification message.
+ */
+message ServicesRequest {
+  optional bool subscribe = 1; // If true, target must send ServicesNotification every time the list of services changes
+  optional bool stop = 2; // If true, target must stop sending any new ServicesNotifications
+  optional uint32 inactivity_resend_interval = 3; // Supported since compat_version=4. If provided, then server will start to
+                                                  // resend the current services list, whenever there were no changes
+                                                  // during given interval (in seconds), useful for confirmation that the
+                                                  // subscription is still alive and server is still able to send this info.
+}
+
+/**
+ * A response to ServicesRequest. Sent by the server to announce the available services.
+ * If subscribed, the message is resent every time the list changes.
+ */
+message ServicesNotification {
+  repeated ServiceInfo services = 1; // list of available services or empty if no services are available
+}
+
+message ServiceInfo {
+  optional uint64 service_id = 1; // unique ID (unique within one app). Matches ServiceMessage.service_id
+  optional string name = 2; // human-readable name
+  optional string type = 3; // service type, e.g. "websocketproxy"
+  map<string, string> metadata = 4; // optional extra data describing the service
+}
+
+/** The main message type for service communication */
+message ServiceMessage {
+  enum Kind {
+    eConnect = 0; // connects to a new service instance (sent by the client and the client sets the instance_id).
+                  // Note, requiring eConnect to be sent first is optional for a service,
+                  // services can allow sending eData directly without prior eConnect.
+    eConnected = 1; // response to eConnect (sent by the server and contains the same instance_id as the eConnect did)
+    eDisconnect = 2; // close and disconnect the service instance (can be sent by either client or server)
+    eData = 3; // fills payload with service-specific data (can be sent by either client or server)
+    eError = 4; // instance cannot be initialized or has an error (implies eDisconnect)
+  }
+  optional uint64 service_id = 1; // matches ServiceInfo.id
+  optional uint64 instance_id = 2 [default = 0]; // allows having multiple instances of a service
+  optional Kind kind = 3; // type of the message
+  optional bytes payload = 4; // message data - usually used with eData but any Kind may have a service-specific payload
+}
+
+
+message MetadataRequest {
+  required uint32 node_id = 1; // Node ID, whose metadata it is
+  optional bool stop = 2;      // When existing it alters the metadata subscription status:
+                               // if true, target must stop sending any new metadata, else this is subscribe start
+  optional uint32 inactivity_resend_interval = 3; // If provided, then server will start to resend the current metadata,
+                                                  // whenever the node_id had no metadata-changes during given interval
+                                                  // (in seconds), useful for confirmation that the subscription is still
+                                                  // alive and server is still able to send this node metadata.
+}
+
+/** Node Metadata entry */
+message MetadataEntry {
+  optional string name = 1;
+  optional string value = 2;
+}
+
+message Metadata {
+  required uint32 node_id = 1; // Node ID, whose metadata it is
+  repeated MetadataEntry metadata = 2;
+}

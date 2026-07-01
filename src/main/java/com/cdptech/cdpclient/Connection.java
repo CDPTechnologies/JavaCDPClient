@@ -41,7 +41,7 @@ class Connection {
   private long idleLockoutPeriod;
   private boolean initInProgress;
 
-  /** Initialize an IOHandler with the given server URI. */
+  /** Store the connection parameters; the transport and protocol handlers are created in init(). */
   Connection(Client client, URI serverUri, SocketFactory socketFactory,
              BiConsumer<URI, SSLParameters> socketParameterHandler) {
     this.client = client;
@@ -51,7 +51,7 @@ class Connection {
     initInProgress = false;
   }
 
-  /** Create the WebSocket connection and return true if succeeded. */
+  /** Set up the transport and protocol handlers, then start connecting. */
   void init() {
     setUpTransport();
     setUpHelloHandler();
@@ -101,6 +101,7 @@ class Connection {
       AuthRequest.AuthResultCode code = authHandler.getUserAuthResult().getCode();
       if (code == AuthRequest.AuthResultCode.GRANTED
           || code == AuthRequest.AuthResultCode.GRANTED_PASSWORD_WILL_EXPIRE_SOON) {
+        authHandler.clearCachedCredentials();
         client.requestHandshakeAcceptance(new ConnectionAuthRequest(authHandler.getUserAuthResult(), data -> switchToIOHandler()));
       } else {
         requestCredentials();
@@ -110,21 +111,23 @@ class Connection {
 
   private void setUpReauthentication() {
     ioHandler.setIdleLockoutPeriodChangeCallback((Long idleLockoutPeriod) -> this.idleLockoutPeriod = idleLockoutPeriod);
-    ioHandler.setCredentialsRequester((userAuthResult, challenge) -> {
+    ioHandler.setCredentialsRequester(userAuthResult -> {
       AuthRequest.AuthResultCode code = userAuthResult.getCode();
       if (code == AuthRequest.AuthResultCode.GRANTED
           || code == AuthRequest.AuthResultCode.GRANTED_PASSWORD_WILL_EXPIRE_SOON) {
-        client.requestHandshakeAcceptance(new ConnectionAuthRequest(authHandler.getUserAuthResult(), null));
+        // Report this reauth round's own result (userAuthResult, from the IOHandler authenticator),
+        // not authHandler's initial-auth result.
+        ioHandler.clearCachedCredentials();
+        client.requestHandshakeAcceptance(new ConnectionAuthRequest(userAuthResult, null));
       } else {
-        client.requestReauthentication(new ConnectionAuthRequest(userAuthResult, data -> {
-          ioHandler.reauthenticate(challenge, data);
-        }));
+        client.requestReauthentication(new ConnectionAuthRequest(userAuthResult, data ->
+            ioHandler.reauthenticate(data)));
       }
     });
   }
 
   private void setUpIOHandler() {
-    ioHandler = new IOHandler(transport);
+    ioHandler = new IOHandler(transport, helloHandler);
     dispatch = new RequestDispatch(client, ioHandler);
     ioHandler.setDispatch(dispatch);
   }
@@ -157,7 +160,7 @@ class Connection {
     }
   }
 
-  /** Call back state updates if monitored transport state has changed. */
+  /** React to the current transport state: drive the init handshake, and always forward a drop as init-not-ready. */
   private void updateState() {
     if (initInProgress) {
       if (transport.getState() == Transport.State.CONNECTED) {
@@ -285,6 +288,11 @@ class Connection {
     @Override
     public UserAuthResult getAuthResult() {
       return userAuthResult;
+    }
+
+    @Override
+    public java.util.List<SuggestedUser> getSuggestedUsers() {
+      return helloHandler.getSuggestedUsers();
     }
 
     @Override

@@ -12,15 +12,13 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 import java.time.Instant;
 import java.util.Map;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static com.cdptech.cdpclient.proto.StudioAPI.RemoteErrorCode.eAUTH_RESPONSE_EXPIRED;
 
 /**
- * IOHandler polls the WebSocket thread for new data and deserializes and 
- * creates events based on it. It also takes requests, serializes them and
- * forwards them to WebSocket thread.
+ * IOHandler deserializes messages read from the WebSocket queue and creates events based on them.
+ * It also takes requests, serializes them and forwards them to the WebSocket thread.
  */
 class IOHandler implements Protocol {
 
@@ -29,12 +27,15 @@ class IOHandler implements Protocol {
   private IOListener listener;
   private TimeSync timeSync;
   private Consumer<Long> idleLockoutPeriodChangeCallback;
-  private BiConsumer<AuthRequest.UserAuthResult, String> credentialsRequester;
+  private Consumer<AuthRequest.UserAuthResult> credentialsRequester;
+  private boolean reauthRequestPending;
+  private String reauthChallenge;
   private Instant lastRequestTimestamp;
+  private HelloProtocol helloProtocol;
 
-  /** Initialize an IOHandler with the given server URI. */
-  IOHandler(Transport transport) {
+  IOHandler(Transport transport, HelloProtocol helloProtocol) {
     this.transport = transport;
+    this.helloProtocol = helloProtocol;
     timeSync = new TimeSync(this::timeRequest);
   }
 
@@ -48,6 +49,27 @@ class IOHandler implements Protocol {
 
   void setTimeSyncEnabled(boolean enabled) {
     timeSync.setEnabled(enabled);
+  }
+
+  boolean eventsSupported() {
+    return Versions.eventsSupported(helloProtocol.getCompatVersion());
+  }
+
+  boolean requestIdSupported() {
+    return Versions.requestIdSupported(helloProtocol.getCompatVersion());
+  }
+
+  boolean servicesSupported() {
+    return Versions.servicesSupported(helloProtocol.getCompatVersion());
+  }
+
+  boolean metadataSupported() {
+    return Versions.metadataSupported(helloProtocol.getCompatVersion());
+  }
+
+  boolean samplingSupported() {
+    return Versions.samplingSupported(helloProtocol.getCDPVersionMajor(), helloProtocol.getCDPVersionMinor(),
+        helloProtocol.getCDPVersionPatch());
   }
 
   /** Create and send a time request. */
@@ -155,16 +177,16 @@ class IOHandler implements Protocol {
       pbv.setIValue((Integer) value.getValue());
       break;
     case eUSHORT:
-      pbv.setUsValue((Short) value.getValue());
+      pbv.setUsValue(((Number) value.getValue()).intValue());
       break;
     case eSHORT:
-      pbv.setSValue((Short) value.getValue());
+      pbv.setSValue(((Number) value.getValue()).intValue());
       break;
     case eUCHAR:
-      pbv.setUcValue((Short) value.getValue());
+      pbv.setUcValue(((Number) value.getValue()).intValue());
       break;
     case eCHAR:
-      pbv.setCValue((Byte) value.getValue());
+      pbv.setCValue(((Number) value.getValue()).intValue());
       break;
     case eBOOL:
       pbv.setBValue((Boolean) value.getValue());
@@ -192,7 +214,7 @@ class IOHandler implements Protocol {
     updateLastRequestTimestamp();
   }
   
-  /** Cancel a structure subscription. */
+  /** No-op: structure-subscription cancellation is not sent to the server. */
   void cancelStructureSubscription(Node node) {
     // TODO (kar): Not allowed by protocol anymore?
   }
@@ -230,22 +252,41 @@ class IOHandler implements Protocol {
 
         case eReauthResponse:
           authenticator.updateUserAuthResult(pb.getReAuthResponse());
-          if (credentialsRequester != null) {
-            credentialsRequester.accept(authenticator.getUserAuthResult(), null);
+          AuthRequest.AuthResultCode reauthCode = authenticator.getUserAuthResult().getCode();
+          if (reauthCode == AuthRequest.AuthResultCode.GRANTED
+              || reauthCode == AuthRequest.AuthResultCode.GRANTED_PASSWORD_WILL_EXPIRE_SOON) {
+            // The cycle is granted; a later idle lockout starts a fresh cycle that may prompt again. A
+            // non-granting response keeps the cycle in progress so repeated errors stay suppressed.
+            reauthRequestPending = false;
+          }
+          StudioAPI.AuthRequest reissue = authenticator.encryptedPasswordReissueRequest(reauthChallenge);
+          if (reissue != null) {
+            // Answer an EncryptedPassword challenge automatically instead of re-prompting the user.
+            sendReauthMessage(reissue);
+          } else if (credentialsRequester != null) {
+            credentialsRequester.accept(authenticator.getUserAuthResult());
           }
           break;
 
         case eRemoteError:
           if (pb.getError().hasCode() || pb.getError().hasText()) {
             if (pb.getError().getCode() == eAUTH_RESPONSE_EXPIRED.getNumber()) {
-              String challenge = pb.getError().getChallenge().toStringUtf8();
+              // Store the latest challenge on every error: the server issues a fresh one per expiry, so the
+              // re-authentication must answer the most recent challenge even when the prompt below is suppressed.
+              reauthChallenge = pb.getError().getChallenge().toStringUtf8();
               if (idleLockoutPeriodChangeCallback != null) {
                 idleLockoutPeriodChangeCallback.accept(Integer.toUnsignedLong(pb.getError().getIdleLockoutPeriod()));
               }
-              AuthRequest.UserAuthResult userAuthResult = new AuthRequest.UserAuthResult();
-              userAuthResult.setCode(AuthRequest.AuthResultCode.REAUTHENTICATION_REQUIRED);
-              userAuthResult.setText(pb.getError().getText());
-              credentialsRequester.accept(userAuthResult, challenge.toString());
+              // Mark the re-authentication cycle in progress before prompting, so repeated
+              // eAUTH_RESPONSE_EXPIRED errors (e.g. one per in-flight request during idle lockout) raise a
+              // single prompt and a single re-auth request. The flag clears once the cycle is granted.
+              if (!reauthRequestPending) {
+                reauthRequestPending = true;
+                AuthRequest.UserAuthResult userAuthResult = new AuthRequest.UserAuthResult();
+                userAuthResult.setCode(AuthRequest.AuthResultCode.REAUTHENTICATION_REQUIRED);
+                userAuthResult.setText(pb.getError().getText());
+                credentialsRequester.accept(userAuthResult);
+              }
             } else {
               System.err.println("CDP Client received following error (code " + pb.getError().getCode() + "): "
                   + pb.getError().getText());
@@ -263,7 +304,7 @@ class IOHandler implements Protocol {
     timeSync.refreshDeltaIfNeeded();
   }
 
-  /** Recursively parse a StudioAPI.Node into a StudioAPI Node. */
+  /** Recursively convert a protobuf StudioAPI.Node into this package's Node, including its children. */
   private Node parseNodeData(StudioAPI.Node pb) {
     
     StudioAPI.Info info = pb.getInfo();
@@ -297,16 +338,18 @@ class IOHandler implements Protocol {
 
   /** Create a StudioAPI Variant from a StudioAPI.VariantValue. */
   static Variant createVariant(StudioAPI.VariantValue pbv, long timeDiff) {
-    long ts = pbv.hasTimestamp() ? pbv.getTimestamp() + timeDiff : 0;
+    // The per-host clock delta applies only to a non-zero remote timestamp; a present-but-zero timestamp
+    // stays zero rather than becoming the bare delta.
+    long ts = (pbv.hasTimestamp() && pbv.getTimestamp() != 0) ? pbv.getTimestamp() + timeDiff : 0;
     Variant value;
     if (pbv.hasDValue())
       value = new Variant(CDPValueType.eDOUBLE, pbv.getDValue(), ts);
+    else if (pbv.hasFValue())
+      value = new Variant(CDPValueType.eFLOAT, pbv.getFValue(), ts);
     else if (pbv.hasUi64Value())
       value = new Variant(CDPValueType.eUINT64, pbv.getUi64Value(), ts);
     else if (pbv.hasI64Value())
       value = new Variant(CDPValueType.eINT64, pbv.getI64Value(), ts);
-    else if (pbv.hasFValue())
-      value = new Variant(CDPValueType.eFLOAT, pbv.getFValue(), ts);
     else if (pbv.hasUiValue())
       value = new Variant(CDPValueType.eUINT, pbv.getUiValue(), ts);
     else if (pbv.hasIValue())
@@ -324,7 +367,7 @@ class IOHandler implements Protocol {
     else if (pbv.hasStrValue())
       value = new Variant(CDPValueType.eSTRING, pbv.getStrValue(), ts);
     else
-      value = new Variant(CDPValueType.eUNDEFINED, "<no value>", 0);
+      value = new Variant(CDPValueType.eUNDEFINED, null, 0);
     return value;
   }
 
@@ -332,22 +375,30 @@ class IOHandler implements Protocol {
     this.idleLockoutPeriodChangeCallback = idleLockoutPeriodChangeCallback;
   }
 
-  void setCredentialsRequester(BiConsumer<AuthRequest.UserAuthResult, String> credentialsRequester) {
+  void setCredentialsRequester(Consumer<AuthRequest.UserAuthResult> credentialsRequester) {
     this.credentialsRequester = credentialsRequester;
   }
 
-  void reauthenticate(String challenge, Map<String, String> data) {
-    StudioAPI.AuthRequest authMessage = authenticator.createAuthMessage(challenge, data);
+  void reauthenticate(Map<String, String> data) {
+    StudioAPI.AuthRequest authMessage = authenticator.createAuthMessage(reauthChallenge, data);
     if (authMessage == null) {
-      credentialsRequester.accept(authenticator.getUserAuthResult(), challenge);
+      credentialsRequester.accept(authenticator.getUserAuthResult());
     } else {
-      transport.send(Container.newBuilder()
-          .setMessageType(Container.Type.eReauthRequest)
-          .setReAuthRequest(authMessage)
-          .build()
-          .toByteArray());
-      updateLastRequestTimestamp();
+      sendReauthMessage(authMessage);
     }
+  }
+
+  private void sendReauthMessage(StudioAPI.AuthRequest authMessage) {
+    transport.send(Container.newBuilder()
+        .setMessageType(Container.Type.eReauthRequest)
+        .setReAuthRequest(authMessage)
+        .build()
+        .toByteArray());
+    updateLastRequestTimestamp();
+  }
+
+  void clearCachedCredentials() {
+    authenticator.clearCachedCredentials();
   }
 
   Instant getLastRequestTimestamp() {

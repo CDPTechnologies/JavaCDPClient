@@ -51,23 +51,24 @@ public class Variant {
     return valueType;
   }
   
-  /** Get the value timestamp. @returns 0.0 if no timestamp was specified. */
+  /**
+   * The value's timestamp. A server-delivered value that carried no timestamp reports {@code Instant.EPOCH};
+   * a Variant built via {@link Builder} without {@link Builder#setTimestamp} reports {@code null}.
+   */
   public Instant getTimestamp() {
     return timestamp;
   }
 
-  /** Get the Variant's value as a printable String. */
+  /** Get the Variant's value as a printable String. Unsigned types print their unsigned value. */
   public String toString() {
     if (valueType == CDPValueType.eUNDEFINED) return "<invalid variant>";
+    if (valueType == CDPValueType.eUINT)
+      return Integer.toUnsignedString((Integer) value);
+    if (valueType == CDPValueType.eUINT64)
+      return Long.toUnsignedString((Long) value);
     return value.toString();
   }
-  
-  
-  // accounted value types:
-  // double, float, char, boolean, String
-  // unaccounted value types:
-  // (unsigned) int, (unsigned) short, unsigned char, i64 / ui64
-  
+
   /** Builder class for constructing immutable Variant objects. */
   public static class Builder {
     private final CDPValueType valueType;
@@ -92,7 +93,7 @@ public class Variant {
         value = Double.valueOf(strValue);
         break;
       case eUINT64:
-        value = Long.valueOf(strValue); // sign bit represents top bit
+        value = Long.parseUnsignedLong(strValue); // sign bit represents top bit
         break;
       case eINT64:
         value = Long.valueOf(strValue);
@@ -101,27 +102,22 @@ public class Variant {
         value = Float.valueOf(strValue);
         break;
       case eUINT:
-        value = Integer.valueOf(strValue); // sign bit represents top bit
+        value = Integer.parseUnsignedInt(strValue); // sign bit represents top bit
         break;
       case eINT:
         value = Integer.valueOf(strValue);
         break;
       case eUSHORT:
-        Integer v = Integer.valueOf(strValue);
-        if (v.intValue() < 0 || v.intValue() > 65535)
-          throw new IllegalArgumentException("unsigned short out of bounds");
-        value = v;
+        value = parseRangedInt(strValue, 0, 65535, "unsigned short");
         break;
       case eSHORT:
-        value = Short.valueOf(strValue);
+        value = parseRangedInt(strValue, Short.MIN_VALUE, Short.MAX_VALUE, "short");
         break;
       case eUCHAR:
-        value = Integer.valueOf(strValue.charAt(0));
-        if (strValue.charAt(0) > 255 || strValue.charAt(0) < 0)
-          throw new IllegalArgumentException("unsigned char out of bounds");
+        value = parseRangedInt(strValue, 0, 255, "unsigned char");
         break;
       case eCHAR:
-        value = Byte.valueOf(strValue);
+        value = parseRangedInt(strValue, Byte.MIN_VALUE, Byte.MAX_VALUE, "char");
         break;
       case eBOOL:
         value = Boolean.valueOf(strValue);
@@ -132,7 +128,15 @@ public class Variant {
       }
       return this;
     }
-    
+
+    /** Parse a decimal integer and bound it to [min, max], boxing as Integer so all narrow int types share one box. */
+    private static Integer parseRangedInt(String strValue, int min, int max, String typeName) {
+      int v = Integer.parseInt(strValue);
+      if (v < min || v > max)
+        throw new IllegalArgumentException(typeName + " out of bounds: " + strValue);
+      return v;
+    }
+
     public Builder setTimestamp(Instant timestamp) {
       this.timestamp = timestamp;
       return this;

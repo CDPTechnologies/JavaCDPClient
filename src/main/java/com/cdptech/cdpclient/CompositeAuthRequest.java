@@ -72,6 +72,11 @@ class CompositeAuthRequest implements AuthRequest {
   }
 
   @Override
+  public List<SuggestedUser> getSuggestedUsers() {
+    return requests.get(0).getSuggestedUsers();
+  }
+
+  @Override
   public void accept(Map<String, String> data) {
     cachedData = data;
     accepted = true;
