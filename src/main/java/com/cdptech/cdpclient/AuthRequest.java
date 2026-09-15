@@ -58,6 +58,14 @@ public interface AuthRequest {
     private AuthResultCode code;
     private String text;
     private List<Credential> additionalCredentials = new ArrayList<>();
+    private List<String> rolesAssigned = new ArrayList<>();
+  }
+
+  @Data
+  class SuggestedUser {
+    private String username;
+    private String firstName;
+    private String lastName;
   }
 
   @Data
@@ -82,6 +90,8 @@ public interface AuthRequest {
   String getSystemUseNotification();
   /** State of the authentication  */
   UserAuthResult getAuthResult();
+  /** Users the application suggests choosing from for login */
+  List<SuggestedUser> getSuggestedUsers();
 
   /**
    * Method to call to accept the application and provide requested credentials.

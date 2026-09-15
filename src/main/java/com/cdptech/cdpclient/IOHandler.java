@@ -12,15 +12,13 @@ import com.google.protobuf.InvalidProtocolBufferException;
 
 import java.time.Instant;
 import java.util.Map;
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 import static com.cdptech.cdpclient.proto.StudioAPI.RemoteErrorCode.eAUTH_RESPONSE_EXPIRED;
 
 /**
- * IOHandler polls the WebSocket thread for new data and deserializes and 
- * creates events based on it. It also takes requests, serializes them and
- * forwards them to WebSocket thread.
+ * IOHandler deserializes messages read from the RX queue and creates events based on them.
+ * It also takes requests, serializes them and forwards them to the WebSocket thread.
  */
 class IOHandler implements Protocol {
 
@@ -29,10 +27,11 @@ class IOHandler implements Protocol {
   private IOListener listener;
   private TimeSync timeSync;
   private Consumer<Long> idleLockoutPeriodChangeCallback;
-  private BiConsumer<AuthRequest.UserAuthResult, String> credentialsRequester;
+  private Consumer<AuthRequest.UserAuthResult> credentialsRequester;
+  private boolean reauthRequestPending;
+  private String reauthChallenge;
   private Instant lastRequestTimestamp;
 
-  /** Initialize an IOHandler with the given server URI. */
   IOHandler(Transport transport) {
     this.transport = transport;
     timeSync = new TimeSync(this::timeRequest);
@@ -155,16 +154,16 @@ class IOHandler implements Protocol {
       pbv.setIValue((Integer) value.getValue());
       break;
     case eUSHORT:
-      pbv.setUsValue((Short) value.getValue());
+      pbv.setUsValue(((Number) value.getValue()).intValue());
       break;
     case eSHORT:
-      pbv.setSValue((Short) value.getValue());
+      pbv.setSValue(((Number) value.getValue()).intValue());
       break;
     case eUCHAR:
-      pbv.setUcValue((Short) value.getValue());
+      pbv.setUcValue(((Number) value.getValue()).intValue());
       break;
     case eCHAR:
-      pbv.setCValue((Byte) value.getValue());
+      pbv.setCValue(((Number) value.getValue()).intValue());
       break;
     case eBOOL:
       pbv.setBValue((Boolean) value.getValue());
@@ -192,7 +191,6 @@ class IOHandler implements Protocol {
     updateLastRequestTimestamp();
   }
   
-  /** Cancel a structure subscription. */
   void cancelStructureSubscription(Node node) {
     // TODO (kar): Not allowed by protocol anymore?
   }
@@ -230,22 +228,41 @@ class IOHandler implements Protocol {
 
         case eReauthResponse:
           authenticator.updateUserAuthResult(pb.getReAuthResponse());
-          if (credentialsRequester != null) {
-            credentialsRequester.accept(authenticator.getUserAuthResult(), null);
+          AuthRequest.AuthResultCode reauthCode = authenticator.getUserAuthResult().getCode();
+          if (reauthCode == AuthRequest.AuthResultCode.GRANTED
+              || reauthCode == AuthRequest.AuthResultCode.GRANTED_PASSWORD_WILL_EXPIRE_SOON) {
+            // The cycle is granted. A later idle lockout starts a fresh cycle that may prompt again, and a
+            // non-granting response keeps the cycle in progress so repeated errors stay suppressed.
+            reauthRequestPending = false;
+          }
+          StudioAPI.AuthRequest reissue = authenticator.encryptedPasswordReissueRequest(reauthChallenge);
+          if (reissue != null) {
+            // The server's EncryptedPassword request is answered from the cached credentials.
+            sendReauthMessage(reissue);
+          } else if (credentialsRequester != null) {
+            credentialsRequester.accept(authenticator.getUserAuthResult());
           }
           break;
 
         case eRemoteError:
           if (pb.getError().hasCode() || pb.getError().hasText()) {
             if (pb.getError().getCode() == eAUTH_RESPONSE_EXPIRED.getNumber()) {
-              String challenge = pb.getError().getChallenge().toStringUtf8();
+              // Store the latest challenge on every expiry error: the server issues a fresh one per expiry, so the
+              // re-authentication must answer the most recent challenge even when the prompt below is suppressed.
+              reauthChallenge = pb.getError().getChallenge().toStringUtf8();
               if (idleLockoutPeriodChangeCallback != null) {
                 idleLockoutPeriodChangeCallback.accept(Integer.toUnsignedLong(pb.getError().getIdleLockoutPeriod()));
               }
-              AuthRequest.UserAuthResult userAuthResult = new AuthRequest.UserAuthResult();
-              userAuthResult.setCode(AuthRequest.AuthResultCode.REAUTHENTICATION_REQUIRED);
-              userAuthResult.setText(pb.getError().getText());
-              credentialsRequester.accept(userAuthResult, challenge.toString());
+              // Mark the re-authentication cycle in progress before prompting, so repeated
+              // eAUTH_RESPONSE_EXPIRED errors (e.g. one per in-flight request during idle lockout) raise a
+              // single prompt and a single re-auth request. The flag clears once the cycle is granted.
+              if (!reauthRequestPending) {
+                reauthRequestPending = true;
+                AuthRequest.UserAuthResult userAuthResult = new AuthRequest.UserAuthResult();
+                userAuthResult.setCode(AuthRequest.AuthResultCode.REAUTHENTICATION_REQUIRED);
+                userAuthResult.setText(pb.getError().getText());
+                credentialsRequester.accept(userAuthResult);
+              }
             } else {
               System.err.println("CDP Client received following error (code " + pb.getError().getCode() + "): "
                   + pb.getError().getText());
@@ -263,7 +280,7 @@ class IOHandler implements Protocol {
     timeSync.refreshDeltaIfNeeded();
   }
 
-  /** Recursively parse a StudioAPI.Node into a StudioAPI Node. */
+  /** Recursively convert a protobuf StudioAPI.Node into this package's Node, including its children. */
   private Node parseNodeData(StudioAPI.Node pb) {
     
     StudioAPI.Info info = pb.getInfo();
@@ -297,7 +314,8 @@ class IOHandler implements Protocol {
 
   /** Create a StudioAPI Variant from a StudioAPI.VariantValue. */
   static Variant createVariant(StudioAPI.VariantValue pbv, long timeDiff) {
-    long ts = pbv.hasTimestamp() ? pbv.getTimestamp() + timeDiff : 0;
+    // The clock delta applies to a remote timestamp only. An absent or zero timestamp stays zero.
+    long ts = (pbv.hasTimestamp() && pbv.getTimestamp() != 0) ? pbv.getTimestamp() + timeDiff : 0;
     Variant value;
     if (pbv.hasDValue())
       value = new Variant(CDPValueType.eDOUBLE, pbv.getDValue(), ts);
@@ -332,22 +350,30 @@ class IOHandler implements Protocol {
     this.idleLockoutPeriodChangeCallback = idleLockoutPeriodChangeCallback;
   }
 
-  void setCredentialsRequester(BiConsumer<AuthRequest.UserAuthResult, String> credentialsRequester) {
+  void setCredentialsRequester(Consumer<AuthRequest.UserAuthResult> credentialsRequester) {
     this.credentialsRequester = credentialsRequester;
   }
 
-  void reauthenticate(String challenge, Map<String, String> data) {
-    StudioAPI.AuthRequest authMessage = authenticator.createAuthMessage(challenge, data);
+  void reauthenticate(Map<String, String> data) {
+    StudioAPI.AuthRequest authMessage = authenticator.createAuthMessage(reauthChallenge, data);
     if (authMessage == null) {
-      credentialsRequester.accept(authenticator.getUserAuthResult(), challenge);
+      credentialsRequester.accept(authenticator.getUserAuthResult());
     } else {
-      transport.send(Container.newBuilder()
-          .setMessageType(Container.Type.eReauthRequest)
-          .setReAuthRequest(authMessage)
-          .build()
-          .toByteArray());
-      updateLastRequestTimestamp();
+      sendReauthMessage(authMessage);
     }
+  }
+
+  private void sendReauthMessage(StudioAPI.AuthRequest authMessage) {
+    transport.send(Container.newBuilder()
+        .setMessageType(Container.Type.eReauthRequest)
+        .setReAuthRequest(authMessage)
+        .build()
+        .toByteArray());
+    updateLastRequestTimestamp();
+  }
+
+  void clearCachedCredentials() {
+    authenticator.clearCachedCredentials();
   }
 
   Instant getLastRequestTimestamp() {
