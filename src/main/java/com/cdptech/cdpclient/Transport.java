@@ -78,6 +78,7 @@ class Transport extends org.java_websocket.client.WebSocketClient {
 
   @Override
   protected void onSetSSLParameters(SSLParameters sslParameters) {
+    super.onSetSSLParameters(sslParameters); // enables TLS endpoint identification, which the handler may disable
     if (socketParameterHandler != null) {
       socketParameterHandler.accept(serverURI, sslParameters);
     }

@@ -7,8 +7,8 @@ CDP Java Client
 ### Project description
 
 A simple Java interface for the CDP Studio development platform that allows Java applications to interact with
-CDP Applications - retrieve CDP Application structures and read-write object values. For more information
-about CDP Studio see https://cdpstudio.com/.
+CDP Applications - retrieve CDP Application structures, read-write object values, and authenticate to secured
+applications. For more information about CDP Studio see https://cdpstudio.com/.
 
 ### Usage
 
@@ -18,7 +18,8 @@ described in the javadoc (https://www.javadoc.io/doc/com.cdptech/cdpclient/).
 
 ### Dependencies
 
-* [Maven](https://maven.apache.org/) - Downloads necessary dependencies and builds the library.
+* [Maven](https://maven.apache.org/) - Downloads necessary dependencies, including the protocol compiler (`protoc`)
+  that generates the StudioAPI classes, and builds the library.
 * [Project Lombok](https://projectlombok.org/) plugin - Install it to your IDE when developing this library
   or the auto-complete will not find some generated getters-setters.
 

@@ -10,24 +10,34 @@ import java.util.Map;
 
 class CompositeAuthRequest implements AuthRequest {
 
-  private List<AuthRequest> requests = new ArrayList<>();
+  private List<ReauthRequest> requests = new ArrayList<>();
   private Map<String, String> cachedData = new HashMap<>();
 
   private Instant readyTimestamp;
   private boolean accepted;
   private boolean rejected;
 
-  CompositeAuthRequest(AuthRequest firstRequest) {
+  CompositeAuthRequest(ReauthRequest firstRequest) {
     requests.add(firstRequest);
   }
 
-  void add(AuthRequest request) {
+  void add(ReauthRequest request) {
     if (accepted) {
-      request.accept(cachedData);
+      deliver(request, true);
     } else if (rejected) {
-      request.reject();
+      deliver(request, false);
     } else {
       requests.add(request);
+    }
+  }
+
+  /** Hands this composite's answer to one connection, which remembers where it came from. */
+  private void deliver(ReauthRequest request, boolean accept) {
+    request.setAnsweringPrompt(this);
+    if (accept) {
+      request.accept(cachedData);
+    } else {
+      request.reject();
     }
   }
 
@@ -72,12 +82,17 @@ class CompositeAuthRequest implements AuthRequest {
   }
 
   @Override
+  public List<SuggestedUser> getSuggestedUsers() {
+    return requests.get(0).getSuggestedUsers();
+  }
+
+  @Override
   public void accept(Map<String, String> data) {
     cachedData = data;
     accepted = true;
     readyTimestamp = Instant.now();
-    for (AuthRequest r : requests) {
-      r.accept(cachedData);
+    for (ReauthRequest r : requests) {
+      deliver(r, true);
     }
   }
 
@@ -85,8 +100,8 @@ class CompositeAuthRequest implements AuthRequest {
   public void reject() {
     rejected = true;
     readyTimestamp = Instant.now();
-    for (AuthRequest r : requests) {
-      r.reject();
+    for (ReauthRequest r : requests) {
+      deliver(r, false);
     }
   }
 

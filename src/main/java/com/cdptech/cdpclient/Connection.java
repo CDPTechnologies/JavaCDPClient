@@ -14,6 +14,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.cert.Certificate;
 import java.time.Instant;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -39,6 +40,7 @@ class Connection {
   private RequestDispatch dispatch;
   private Instant lastActivityNotificationTimestamp = Instant.now();
   private long idleLockoutPeriod;
+  private CompositeAuthRequest reauthAnsweringPrompt;
   private boolean initInProgress;
 
   /** Initialize an IOHandler with the given server URI. */
@@ -101,6 +103,7 @@ class Connection {
       AuthRequest.AuthResultCode code = authHandler.getUserAuthResult().getCode();
       if (code == AuthRequest.AuthResultCode.GRANTED
           || code == AuthRequest.AuthResultCode.GRANTED_PASSWORD_WILL_EXPIRE_SOON) {
+        authHandler.clearCachedCredentials();
         client.requestHandshakeAcceptance(new ConnectionAuthRequest(authHandler.getUserAuthResult(), data -> switchToIOHandler()));
       } else {
         requestCredentials();
@@ -110,15 +113,16 @@ class Connection {
 
   private void setUpReauthentication() {
     ioHandler.setIdleLockoutPeriodChangeCallback((Long idleLockoutPeriod) -> this.idleLockoutPeriod = idleLockoutPeriod);
-    ioHandler.setCredentialsRequester((userAuthResult, challenge) -> {
+    ioHandler.setCredentialsRequester(userAuthResult -> {
       AuthRequest.AuthResultCode code = userAuthResult.getCode();
       if (code == AuthRequest.AuthResultCode.GRANTED
           || code == AuthRequest.AuthResultCode.GRANTED_PASSWORD_WILL_EXPIRE_SOON) {
-        client.requestHandshakeAcceptance(new ConnectionAuthRequest(authHandler.getUserAuthResult(), null));
+        ioHandler.clearCachedCredentials();
+        reauthAnsweringPrompt = null;
+        client.requestHandshakeAcceptance(new ConnectionAuthRequest(userAuthResult, null));
       } else {
-        client.requestReauthentication(new ConnectionAuthRequest(userAuthResult, data -> {
-          ioHandler.reauthenticate(challenge, data);
-        }));
+        client.requestReauthentication(new ConnectionAuthRequest(userAuthResult, data ->
+            ioHandler.reauthenticate(data)));
       }
     });
   }
@@ -231,7 +235,7 @@ class Connection {
     return Instant.EPOCH;
   }
 
-  private class ConnectionAuthRequest implements AuthRequest {
+  private class ConnectionAuthRequest implements ReauthRequest {
 
     private final UserAuthResult userAuthResult;
     private final Consumer<Map<String, String>> onAccept;
@@ -285,6 +289,21 @@ class Connection {
     @Override
     public UserAuthResult getAuthResult() {
       return userAuthResult;
+    }
+
+    @Override
+    public CompositeAuthRequest getAnsweringPrompt() {
+      return reauthAnsweringPrompt;
+    }
+
+    @Override
+    public void setAnsweringPrompt(CompositeAuthRequest prompt) {
+      reauthAnsweringPrompt = prompt;
+    }
+
+    @Override
+    public List<SuggestedUser> getSuggestedUsers() {
+      return helloHandler.getSuggestedUsers();
     }
 
     @Override
